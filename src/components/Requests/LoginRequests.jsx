@@ -1,9 +1,5 @@
-import axios from "axios";
 import { runInAction } from "mobx";
 import userStore from "../Store/UserStore";
-import { nanoid } from "nanoid";
-import { useState } from "react";
-
 export function doLogin(username, password, rememberLogin) {
   const body = {
     username: username,
@@ -12,57 +8,71 @@ export function doLogin(username, password, rememberLogin) {
 
   const requestOptions = {
     method: "POST",
-    url: process.env.REACT_APP_USER_AUTH,
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.REACT_APP_APITOKEN}`,
     },
-    data: JSON.stringify(body),
+    body: JSON.stringify(body),
   };
 
-  makeGetRequest();
+  return getAuthPromise(process.env.REACT_APP_USER_AUTH, requestOptions);
 }
 
-async function makeGetRequest() {
-  console.log("?entrou");
-  let res = await axios.get("http://webcode.me");
+export function validateToken() {
+  let userToken = sessionStorage.getItem("userToken");
+  userToken = JSON.parse(userToken);
 
-  let data = res.data;
-  console.log(data);
-}
+  console.log("TOKEN HERE");
+  console.log(userToken);
 
-async function AuthRequest() {
-  axios(requestOptions)
-    .then((response) => {
-      if (response.data.status === "Authok") {
-        runInAction(() => {
-          userStore.showError = false;
-          userStore.showWarning = false;
-          userStore.loading = false;
-          userStore.isLoggedIn = true;
-          userStore.isAdmin = response.data.is_admin;
-          userStore.username = response.data.username;
-        });
-      }
-      console.log("aqui");
-      runInAction(() => {
-        userStore.showError = false;
-        userStore.showWarning = false;
-        userStore.loading = false;
-        userStore.isLoggedIn = true;
-        userStore.isAdmin = response.data.is_admin;
-        userStore.username = response.data.username;
-      });
-    })
-    .catch((err) => {
-      runInAction(() => {
-        userStore.showError = true;
-        userStore.showWarning = false;
-        userStore.loading = false;
-        userStore.isLoggedIn = false;
-        userStore.username = "";
-      });
-      console.log("aqui");
-      console.log(err);
+  let userID = sessionStorage.getItem("userID");
+  userID = JSON.parse(userID);
+
+  if (userToken === null) {
+    userToken = localStorage.getItem("userToken");
+    userToken = JSON.parse(userToken);
+
+    userID = localStorage.getItem("userID");
+    userID = JSON.parse(userID);
+  }
+
+  if (userID !== null) {
+    let body = {
+      username: userID,
+      token: userToken,
+    };
+
+    let requestOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.REACT_APP_APITOKEN}`,
+      },
+      body: JSON.stringify(body),
+    };
+    return getAuthPromise(process.env.REACT_APP_GET_TOKEN, requestOptions);
+  } else {
+    runInAction(() => {
+      userStore.loading = false;
     });
+  }
+}
+
+async function getAuthPromise(RequestUrl, requestOptions) {
+  return fetch(RequestUrl, requestOptions)
+    .then((response) => response.json())
+    .then((responseData) => {
+      return responseData;
+    })
+    .catch((error) => console.warn(error));
+}
+
+export function setStorage(userName, userToken, rememberLogin) {
+  if (rememberLogin) {
+    localStorage.setItem("userToken", JSON.stringify(userToken));
+    localStorage.setItem("userID", JSON.stringify(userName));
+  } else {
+    sessionStorage.setItem("userToken", JSON.stringify(userToken));
+    sessionStorage.setItem("userID", JSON.stringify(userName));
+  }
 }

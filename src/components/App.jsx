@@ -1,46 +1,103 @@
 import "../styles/index.scss";
-import UserStore from "./Store/UserStore";
 import { observer } from "mobx-react";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { runInAction } from "mobx";
+import UserStore from "./Store/UserStore";
 import Spinner from "./Spinner/Spinner";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import Login from "./Login/Login.Component";
+import HomePage from "./HomePage/HomePage";
+import PrivateRoute from "./Helpers/PrivateRoute";
+import { validateToken } from "./Requests/LoginRequests";
+//import * as apiService from "./components/Users/Services/ApiService";
 
 function App() {
+  const [shouldNavigate, setshouldNavigate] = useState(false);
+  let navigate = useNavigate();
+
   useEffect(() => {
+    const AuthPromise = validateToken();
+    console.log("AQUII MALARDO");
+    console.log(AuthPromise);
+    handleTokenPromise(AuthPromise);
+
     console.log("teste");
     // Your code here
   }, []);
 
+  const handleTokenPromise = (AuthPromise) => {
+    if (AuthPromise === undefined) {
+      return;
+    }
+
+    AuthPromise.then((response) => {
+      console.log(response);
+      if (response !== undefined) {
+        if (response.status === "TokenNok") {
+          console.log(response.username);
+          runInAction(() => {
+            UserStore.loading = false;
+            UserStore.isLoggedIn = false;
+            UserStore.username = "";
+          });
+          setshouldNavigate(false);
+        } else {
+          runInAction(() => {
+            UserStore.loading = false;
+            UserStore.isLoggedIn = true;
+            UserStore.isAdmin = response.is_admin;
+            UserStore.username = response.username;
+          });
+          setshouldNavigate(true);
+        }
+      }
+    });
+
+    return shouldNavigate;
+  };
+
+  useEffect(() => {
+    console.log("aqui");
+    console.log(shouldNavigate);
+    if (shouldNavigate) {
+      navigate("/home");
+    }
+  }, [shouldNavigate]);
+
   return (
     <>
-      <div id="root">
-        <section></section>
-        <main>
-          {UserStore.loading && (
-            <section>
-              <div
-                style={{
-                  alignContent: "center",
-                  marginTop: "20%",
-                }}
-              >
-                <Spinner />
-              </div>
-            </section>
-          )}
-
+      <main id="root">
+        {UserStore.loading && (
+          <section>
+            <div
+              style={{
+                alignContent: "center",
+                marginTop: "20%",
+              }}
+            >
+              <Spinner />
+            </div>
+          </section>
+        )}
+        {!UserStore.loading && (
           <section>
             <Routes>
-              {UserStore.isLoggedIn && <></>}
-
-              {!UserStore.isLoggedIn && (
-                <Route path="*" element={<Login />}></Route>
-              )}
+              <Route path="/" element={<Login />} />
+              <Route path="*" element={<Login />} />
+              <Route
+                element={
+                  <PrivateRoute
+                    isLogged={UserStore.isLoggedIn}
+                    shouldNavigate={shouldNavigate}
+                  />
+                }
+              >
+                <Route path="/home" element={<HomePage />} />
+              </Route>
             </Routes>
           </section>
-        </main>
-      </div>
+        )}
+      </main>
     </>
   );
 }

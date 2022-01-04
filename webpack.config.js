@@ -86,7 +86,7 @@ module.exports = {
 
   // This is unnecessary in Webpack 5, because it's the default.
   // However, react-refresh-webpack-plugin can't find the entry without it.
-  entry: "./src/index.js",
+  entry: ['@babel/polyfill',"./src/index.js"],
 
   output: {
     // output path is required for `clean-webpack-plugin`
@@ -112,7 +112,7 @@ module.exports = {
         ],
       },
       {
-        test: /\.(png|jpe?g|gif|svg)$/i,
+        test: /\.(png|jpe?g|gif|svg|jfif)$/i,
         /**
          * The `type` setting replaces the need for "url-loader"
          * and "file-loader" in Webpack 5.

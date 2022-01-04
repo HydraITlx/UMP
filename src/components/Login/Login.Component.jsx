@@ -1,9 +1,12 @@
-import { useState } from "react";
-import logo from "../../images/logo.jpeg";
-import * as apiService from "../Requests/LoginRequests";
+import { useState, useEffect } from "react";
+import { runInAction } from "mobx";
+import { useNavigate } from "react-router-dom";
+import { doLogin, setStorage } from "../Requests/LoginRequests";
 import Switch from "../Helpers/Switch";
 import Button from "../Helpers/Button";
 import Alert from "../Helpers/Alerts";
+import userStore from "../Store/UserStore";
+import logo from "../../images/logo.jpeg";
 
 export function Login() {
   const [rememberLogin, setrememberLogin] = useState(false);
@@ -11,6 +14,14 @@ export function Login() {
   const [password, setPassword] = useState("");
   const [showError, setShowError] = useState(false);
   const [showWarning, setshowWarning] = useState(false);
+  const [shouldNavigate, setshouldNavigate] = useState(false);
+  let navigate = useNavigate();
+
+  useEffect(() => {
+    if (shouldNavigate) {
+      navigate("/home");
+    }
+  }, [shouldNavigate]);
 
   const handleChangeUser = (prop) => (event) => {
     var val = event.target.value;
@@ -31,8 +42,6 @@ export function Login() {
   };
 
   const handleDoLogin = (username, password) => {
-    console.log("teste");
-
     if (username === "" || password === "") {
       setShowError(false);
       setshowWarning(true);
@@ -42,11 +51,44 @@ export function Login() {
       setshowWarning(false);
     }
 
-    console.log(apiService.doLogin(username, password, rememberLogin));
+    const AuthPromise = doLogin(username, password, rememberLogin);
+
+    setshouldNavigate(handleAuthPromise(AuthPromise));
+  };
+
+  const handleAuthPromise = (AuthPromise) => {
+    if (AuthPromise === undefined) {
+      return;
+    }
+
+    AuthPromise.then((response) => {
+      console.log(response);
+      if (response !== undefined) {
+        if (response.status === "AuthNok") {
+          setShowError(true);
+          runInAction(() => {
+            userStore.loading = false;
+            userStore.isLoggedIn = false;
+            userStore.username = "";
+          });
+          setshouldNavigate(false);
+        } else {
+          runInAction(() => {
+            userStore.loading = false;
+            userStore.isLoggedIn = true;
+            userStore.isAdmin = response.is_admin;
+            userStore.username = response.username;
+          });
+          setshouldNavigate(true);
+          setStorage(username, response.newToken, rememberLogin);
+        }
+      }
+    });
+
+    return shouldNavigate;
   };
 
   const handleRememberLogin = () => {
-    console.log("testetee");
     setrememberLogin(!rememberLogin);
   };
 

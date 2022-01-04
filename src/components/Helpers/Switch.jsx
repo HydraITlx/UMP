@@ -1,4 +1,3 @@
-import * as React from "react";
 import FormGroup from "@mui/material/FormGroup";
 import Switch from "@mui/material/Switch";
 import { alpha, styled } from "@mui/material/styles";

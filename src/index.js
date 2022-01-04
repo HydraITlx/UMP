@@ -4,7 +4,8 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import {render} from 'react-dom';
 import App from './components/App';
-import {BrowserRouter} from 'react-router-dom';
+import {BrowserRouter as Router} from 'react-router-dom'
 
-render(<BrowserRouter><App/></BrowserRouter>,document.getElementById("root"));
+
+render(<Router><App/></Router>,document.getElementById("root"));
 
