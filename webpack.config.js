@@ -3,6 +3,8 @@ const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin"
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { EnvironmentPlugin} = require ('webpack');
+
 
 let mode = "development";
 let target = "web";
@@ -14,15 +16,68 @@ const plugins = [
   }),
 ];
 
+let EnvValues = {};
+
 if (process.env.NODE_ENV === "production") {
   mode = "production";
   // Temporary workaround for 'browserslist' bug that is being patched in the near future
   target = "browserslist";
+
+
+   EnvValues = {
+    SKIP_PREFLIGHT_CHECK:true,
+    REACT_APP_USER_AUTH:'https://apifarma.ump.pt/api/userAuth/',
+    REACT_APP_ALL_USER:'https://apifarma.ump.pt/api/allusers/',
+    REACT_APP_EDIT_USER:'https://apifarma.ump.pt/api/editusers/',
+    REACT_APP_ADD_USER:'https://apifarma.ump.pt/api/addusers/',
+    REACT_APP_ADD_USERUSERGRUPO:'https://apifarma.ump.pt/api/addusergroups/',
+    REACT_APP_DELETE_USERUSERGRUPO:'https://apifarma.ump.pt/api/deleteusergroups/',
+    REACT_APP_GET_TOKEN:'https://apifarma.ump.pt/api/getusertoken/',
+    REACT_APP_GET_PERMISSIONGROUPS:'https://apifarma.ump.pt/api/getpermissiongroups/',
+    REACT_APP_MANAGE_PERMISSIONS:'https://apifarma.ump.pt/api/managepermissiongroups/',
+    REACT_APP_GET_GROUPPAGES:'https://apifarma.ump.pt/api/getgrouppages/',
+    REACT_APP_GET_MANAGEPAGES:'https://apifarma.ump.pt/api/managepages/',
+    REACT_APP_GET_ALLPAGES:'https://apifarma.ump.pt/api/allpages/',
+    REACT_APP_DELETE_ALLPAGES:'https://apifarma.ump.pt/api/deletepagegroups/',
+    REACT_APP_UPDATE_PAGES:'https://apifarma.ump.pt/api/updatepages/',
+    REACT_APP_DELETE_GROUP:'https://apifarma.ump.pt/api/deleteGroup/',
+    REACT_APP_USER_GROUPS:'https://apifarma.ump.pt/api/usergroups/',
+    REACT_APP_UCC_MANAGEMENT:'https://apifarma.ump.pt/api/uccmanagment/',
+    REACT_APP_PLACES_MANAGEMENT:'https://apifarma.ump.pt/api/placesmanagment/',
+    REACT_APP_APITOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMjM0NTU0NTYzIiwidXNlcm5hbWUiOiJVbXAxMjM0NTY3ISIsImVtYWlsIjoiVW1wMTIzNDU2N1VtcDEyMzQ1NjdAdW1wLnB0In0sImlhdCI6MTY0MTIyOTYyNX0.yZo0iX_--395KToDYVvOJZNVDXkdu1jz2ZK1A5LrRII",
+  };
+
+  plugins.push(new EnvironmentPlugin(EnvValues))
+
 }
 
 if (process.env.SERVE) {
   // We only want React Hot Reloading in serve mode
   plugins.push(new ReactRefreshWebpackPlugin());
+
+  EnvValues = {
+    SKIP_PREFLIGHT_CHECK:true,
+    REACT_APP_USER_AUTH:'https://apifarma.ump.pt/api/userAuth/',
+    REACT_APP_ALL_USER:'https://apifarma.ump.pt/api/allusers/',
+    REACT_APP_EDIT_USER:'https://apifarma.ump.pt/api/editusers/',
+    REACT_APP_ADD_USER:'https://apifarma.ump.pt/api/addusers/',
+    REACT_APP_ADD_USERUSERGRUPO:'https://apifarma.ump.pt/api/addusergroups/',
+    REACT_APP_DELETE_USERUSERGRUPO:'https://apifarma.ump.pt/api/deleteusergroups/',
+    REACT_APP_GET_TOKEN:'https://apifarma.ump.pt/api/getusertoken/',
+    REACT_APP_GET_PERMISSIONGROUPS:'https://apifarma.ump.pt/api/getpermissiongroups/',
+    REACT_APP_MANAGE_PERMISSIONS:'https://apifarma.ump.pt/api/managepermissiongroups/',
+    REACT_APP_GET_GROUPPAGES:'https://apifarma.ump.pt/api/getgrouppages/',
+    REACT_APP_GET_MANAGEPAGES:'https://apifarma.ump.pt/api/managepages/',
+    REACT_APP_GET_ALLPAGES:'https://apifarma.ump.pt/api/allpages/',
+    REACT_APP_DELETE_ALLPAGES:'https://apifarma.ump.pt/api/deletepagegroups/',
+    REACT_APP_UPDATE_PAGES:'https://apifarma.ump.pt/api/updatepages/',
+    REACT_APP_DELETE_GROUP:'https://apifarma.ump.pt/api/deleteGroup/',
+    REACT_APP_USER_GROUPS:'https://apifarma.ump.pt/api/usergroups/',
+    REACT_APP_UCC_MANAGEMENT:'https://apifarma.ump.pt/api/uccmanagment/',
+    REACT_APP_PLACES_MANAGEMENT:'https://apifarma.ump.pt/api/placesmanagment/',
+    REACT_APP_APITOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMjM0NTU0NTYzIiwidXNlcm5hbWUiOiJVbXAxMjM0NTY3ISIsImVtYWlsIjoiVW1wMTIzNDU2N1VtcDEyMzQ1NjdAdW1wLnB0In0sImlhdCI6MTY0MTIyOTYyNX0.yZo0iX_--395KToDYVvOJZNVDXkdu1jz2ZK1A5LrRII",
+  };
+  plugins.push(new EnvironmentPlugin(EnvValues))
 }
 
 module.exports = {
@@ -106,11 +161,18 @@ module.exports = {
 
   resolve: {
     extensions: [".js", ".jsx"],
+    
+    alias: {
+      '@mui/styled-engine': '@mui/styled-engine-sc'
+    },
   },
 
   // required if using webpack-dev-server
   devServer: {
+    historyApiFallback: true,
     contentBase: "./dist",
     hot: true,
+    open: true,
+
   },
 };

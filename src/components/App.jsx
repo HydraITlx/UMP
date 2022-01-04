@@ -1,18 +1,48 @@
 import "../styles/index.scss";
-import Recipes from "./Recipes";
+import UserStore from "./Store/UserStore";
+import { observer } from "mobx-react";
+import { useState, useEffect } from "react";
+import Spinner from "./Spinner/Spinner";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import Login from "./Login/Login.Component";
 
 function App() {
+  useEffect(() => {
+    console.log("teste");
+    // Your code here
+  }, []);
+
   return (
     <>
-      <section className="hero"></section>
-      <main>
-        <section>
-          <h1>oh Hai,dsadasdadsadasReadsdt</h1>
-        </section>
-      </main>
-      <Recipes />
+      <div id="root">
+        <section></section>
+        <main>
+          {UserStore.loading && (
+            <section>
+              <div
+                style={{
+                  alignContent: "center",
+                  marginTop: "20%",
+                }}
+              >
+                <Spinner />
+              </div>
+            </section>
+          )}
+
+          <section>
+            <Routes>
+              {UserStore.isLoggedIn && <></>}
+
+              {!UserStore.isLoggedIn && (
+                <Route path="*" element={<Login />}></Route>
+              )}
+            </Routes>
+          </section>
+        </main>
+      </div>
     </>
   );
 }
 
-export default App;
+export default observer(App);
