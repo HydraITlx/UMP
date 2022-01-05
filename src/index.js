@@ -5,7 +5,13 @@ import '@fontsource/roboto/700.css';
 import {render} from 'react-dom';
 import App from './components/App';
 import {BrowserRouter as Router} from 'react-router-dom'
+import MenuProvider from "react-flexible-sliding-menu";
+import Menu from "./components/Sidebar/Menu";
+import { StyledEngineProvider } from '@mui/material/styles';
 
 
-render(<Router><App/></Router>,document.getElementById("root"));
+render(<Router>
+      <StyledEngineProvider injectFirst>
+<App/>
+     </StyledEngineProvider></Router>,document.getElementById("root"));
 

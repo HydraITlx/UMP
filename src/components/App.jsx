@@ -7,10 +7,10 @@ import UserStore from "./Store/UserStore";
 import Spinner from "./Spinner/Spinner";
 import Login from "./Login/Login.Component";
 import HomePage from "./HomePage/HomePage";
-import HomePage2 from "./HomePage/HomePage2";
 import PrivateRoute from "./Helpers/PrivateRoute";
 import NavBar from "./NavBar/NavBar";
 import { validateToken } from "./Requests/LoginRequests";
+import Group from "./Group/Group";
 //import * as apiService from "./components/Users/Services/ApiService";
 
 function App() {
@@ -80,34 +80,36 @@ function App() {
             </div>
           </section>
         )}
-        {UserStore.isLoggedIn && (
-          <>
+        <div>
+          {UserStore.isLoggedIn && (
+            <>
+              <section>
+                <NavBar />
+              </section>
+            </>
+          )}
+
+          {!UserStore.loading && (
             <section>
-              <NavBar />
+              <Routes>
+                <Route path="/" element={<Login />} />
+
+                <Route path="*" element={<Login />} />
+                <Route
+                  element={
+                    <PrivateRoute
+                      isLogged={UserStore.isLoggedIn}
+                      shouldNavigate={shouldNavigate}
+                    />
+                  }
+                >
+                  <Route path="/home" element={<HomePage />} />
+                  <Route path="/group" element={<Group />} />
+                </Route>
+              </Routes>
             </section>
-          </>
-        )}
-
-        {!UserStore.loading && (
-          <section>
-            <Routes>
-              <Route path="/" element={<Login />} />
-
-              <Route path="*" element={<Login />} />
-              <Route
-                element={
-                  <PrivateRoute
-                    isLogged={UserStore.isLoggedIn}
-                    shouldNavigate={shouldNavigate}
-                  />
-                }
-              >
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/home2" element={<HomePage2 />} />
-              </Route>
-            </Routes>
-          </section>
-        )}
+          )}
+        </div>
       </main>
     </>
   );

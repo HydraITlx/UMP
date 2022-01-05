@@ -38,6 +38,7 @@ export default function TemporaryDrawer(prop) {
 
     setState({ ...state, [anchor]: open });
   };
+  //
 
   const list = (anchor) => (
     <Box
@@ -88,7 +89,7 @@ export default function TemporaryDrawer(prop) {
       <p style={{ color: "white" }}>Administração</p>
 
       <List>
-        <ListItem onClick={() => navigate("home")} button key={"text6"}>
+        <ListItem onClick={() => navigate("group")} button key={"text6"}>
           <ListItemIcon>
             <GroupsIcon sx={{ color: "white" }} />
           </ListItemIcon>
@@ -128,16 +129,21 @@ export default function TemporaryDrawer(prop) {
         <Hamburger
           toggled={isOpen}
           size={20}
-          duration={0.8}
+          duration={1.2}
           toggle={toggleDrawer("left", true)}
+          color="#FFFFFF"
         />
         <Drawer
+          ModalProps={{
+            keepMounted: true,
+          }}
           sx={{
             display: { xs: "none", sm: "block" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: "15%",
               backgroundColor: "#26528d",
+              flexShrink: 0,
             },
           }}
           anchor={"left"}
