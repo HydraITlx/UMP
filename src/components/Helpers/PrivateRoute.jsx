@@ -11,7 +11,7 @@ function PrivateRoute({ isLogged, shouldNavigate }) {
   }
   const location = useLocation();
   return canContinue ? (
-    <Outlet />
+    <Outlet replace state={{ from: location }} />
   ) : (
     <Navigate to="/" replace state={{ from: location }} />
   );

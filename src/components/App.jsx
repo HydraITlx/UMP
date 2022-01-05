@@ -1,20 +1,23 @@
 import "../styles/index.scss";
 import { observer } from "mobx-react";
 import { useEffect, useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { runInAction } from "mobx";
 import UserStore from "./Store/UserStore";
 import Spinner from "./Spinner/Spinner";
 import Login from "./Login/Login.Component";
 import HomePage from "./HomePage/HomePage";
+import HomePage2 from "./HomePage/HomePage2";
 import PrivateRoute from "./Helpers/PrivateRoute";
+import NavBar from "./NavBar/NavBar";
 import { validateToken } from "./Requests/LoginRequests";
 //import * as apiService from "./components/Users/Services/ApiService";
 
 function App() {
   const [shouldNavigate, setshouldNavigate] = useState(false);
-  let navigate = useNavigate();
 
+  let navigate = useNavigate();
+  let location = useLocation();
   useEffect(() => {
     const AuthPromise = validateToken();
     console.log("AQUII MALARDO");
@@ -57,9 +60,7 @@ function App() {
   };
 
   useEffect(() => {
-    console.log("aqui");
-    console.log(shouldNavigate);
-    if (shouldNavigate) {
+    if (UserStore.isLoggedIn) {
       navigate("/home");
     }
   }, [shouldNavigate]);
@@ -79,10 +80,19 @@ function App() {
             </div>
           </section>
         )}
+        {UserStore.isLoggedIn && (
+          <>
+            <section>
+              <NavBar />
+            </section>
+          </>
+        )}
+
         {!UserStore.loading && (
           <section>
             <Routes>
               <Route path="/" element={<Login />} />
+
               <Route path="*" element={<Login />} />
               <Route
                 element={
@@ -93,6 +103,7 @@ function App() {
                 }
               >
                 <Route path="/home" element={<HomePage />} />
+                <Route path="/home2" element={<HomePage2 />} />
               </Route>
             </Routes>
           </section>

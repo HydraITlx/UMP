@@ -163,7 +163,8 @@ module.exports = {
     extensions: [".js", ".jsx"],
     
     alias: {
-      '@mui/styled-engine': '@mui/styled-engine-sc'
+      '@mui/styled-engine': '@mui/styled-engine-sc',
+      '@mui/material': '@mui/material/legacy',
     },
   },
 
