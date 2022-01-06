@@ -1,7 +1,7 @@
 import "../styles/index.scss";
 import { observer } from "mobx-react";
 import { useEffect, useState } from "react";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import { runInAction } from "mobx";
 import UserStore from "./Store/UserStore";
 import Spinner from "./Spinner/Spinner";
@@ -17,15 +17,9 @@ function App() {
   const [shouldNavigate, setshouldNavigate] = useState(false);
 
   let navigate = useNavigate();
-  let location = useLocation();
   useEffect(() => {
     const AuthPromise = validateToken();
-    console.log("AQUII MALARDO");
-    console.log(AuthPromise);
     handleTokenPromise(AuthPromise);
-
-    console.log("teste");
-    // Your code here
   }, []);
 
   const handleTokenPromise = (AuthPromise) => {
@@ -36,15 +30,7 @@ function App() {
     AuthPromise.then((response) => {
       console.log(response);
       if (response !== undefined) {
-        if (response.status === "TokenNok") {
-          console.log(response.username);
-          runInAction(() => {
-            UserStore.loading = false;
-            UserStore.isLoggedIn = false;
-            UserStore.username = "";
-          });
-          setshouldNavigate(false);
-        } else {
+        if (response.status === "Tokenok") {
           runInAction(() => {
             UserStore.loading = false;
             UserStore.isLoggedIn = true;
@@ -52,6 +38,13 @@ function App() {
             UserStore.username = response.username;
           });
           setshouldNavigate(true);
+        } else {
+          runInAction(() => {
+            UserStore.loading = false;
+            UserStore.isLoggedIn = false;
+            UserStore.username = "";
+          });
+          setshouldNavigate(false);
         }
       }
     });

@@ -18,6 +18,9 @@ import GroupsIcon from "@mui/icons-material/Groups";
 import PeopleIcon from "@mui/icons-material/People";
 import SimCardAlertIcon from "@mui/icons-material/SimCardAlert";
 import FormatListNumberedRtlIcon from "@mui/icons-material/FormatListNumberedRtl";
+import { runInAction } from "mobx";
+import Logout from "@mui/icons-material/Logout";
+import UserStore from "../Store/UserStore";
 
 export default function TemporaryDrawer(prop) {
   let navigate = useNavigate();
@@ -39,6 +42,18 @@ export default function TemporaryDrawer(prop) {
     setState({ ...state, [anchor]: open });
   };
   //
+
+  const DoLogout = async () => {
+    runInAction(() => {
+      UserStore.loading = false;
+      UserStore.isLoggedIn = false;
+      UserStore.username = "";
+      UserStore.userToken = "";
+      localStorage.clear();
+      sessionStorage.clear();
+    });
+    navigate("/");
+  };
 
   const list = (anchor) => (
     <Box
@@ -85,41 +100,51 @@ export default function TemporaryDrawer(prop) {
           <ListItemText style={{ color: "white" }} primary={"UCC"} />
         </ListItem>
       </List>
+      {UserStore.isAdmin && <Divider />}
+      {UserStore.isAdmin && <p style={{ color: "white" }}>Administração</p>}
+      {UserStore.isAdmin && (
+        <List>
+          <ListItem onClick={() => navigate("group")} button key={"text6"}>
+            <ListItemIcon>
+              <GroupsIcon sx={{ color: "white" }} />
+            </ListItemIcon>
+            <ListItemText style={{ color: "white" }} primary={"Grupos"} />
+          </ListItem>
+
+          <ListItem onClick={() => navigate("home")} button key={"text7"}>
+            <ListItemIcon>
+              <PeopleIcon sx={{ color: "white" }} />
+            </ListItemIcon>
+            <ListItemText style={{ color: "white" }} primary={"Utilizadores"} />
+          </ListItem>
+
+          <ListItem onClick={() => navigate("home")} button key={"text8"}>
+            <ListItemIcon>
+              <SimCardAlertIcon sx={{ color: "white" }} />
+            </ListItemIcon>
+            <ListItemText
+              style={{ color: "white" }}
+              primary={"Permissões de encomendas"}
+            />
+          </ListItem>
+
+          <ListItem onClick={() => navigate("home")} button key={"text9"}>
+            <ListItemIcon>
+              <FormatListNumberedRtlIcon sx={{ color: "white" }} />
+            </ListItemIcon>
+            <ListItemText style={{ color: "white" }} primary={"Numeração"} />
+          </ListItem>
+        </List>
+      )}
       <Divider />
-      <p style={{ color: "white" }}>Administração</p>
-
-      <List>
-        <ListItem onClick={() => navigate("group")} button key={"text6"}>
+      <div className="showlogoutmobile">
+        <ListItem onClick={DoLogout} button key={"text10"}>
           <ListItemIcon>
-            <GroupsIcon sx={{ color: "white" }} />
+            <Logout sx={{ color: "white" }} />
           </ListItemIcon>
-          <ListItemText style={{ color: "white" }} primary={"Grupos"} />
+          <ListItemText style={{ color: "white" }} primary={"Logout"} />
         </ListItem>
-
-        <ListItem onClick={() => navigate("home")} button key={"text7"}>
-          <ListItemIcon>
-            <PeopleIcon sx={{ color: "white" }} />
-          </ListItemIcon>
-          <ListItemText style={{ color: "white" }} primary={"Utilizadores"} />
-        </ListItem>
-
-        <ListItem onClick={() => navigate("home")} button key={"text8"}>
-          <ListItemIcon>
-            <SimCardAlertIcon sx={{ color: "white" }} />
-          </ListItemIcon>
-          <ListItemText
-            style={{ color: "white" }}
-            primary={"Permissões de encomendas"}
-          />
-        </ListItem>
-
-        <ListItem onClick={() => navigate("home")} button key={"text9"}>
-          <ListItemIcon>
-            <FormatListNumberedRtlIcon sx={{ color: "white" }} />
-          </ListItemIcon>
-          <ListItemText style={{ color: "white" }} primary={"Numeração"} />
-        </ListItem>
-      </List>
+      </div>
     </Box>
   );
 
@@ -127,6 +152,7 @@ export default function TemporaryDrawer(prop) {
     <div>
       <React.Fragment key={"left"}>
         <Hamburger
+          sx={{ mr: 3 }}
           toggled={isOpen}
           size={20}
           duration={1.2}
@@ -138,7 +164,6 @@ export default function TemporaryDrawer(prop) {
             keepMounted: true,
           }}
           sx={{
-            display: { xs: "none", sm: "block" },
             "& .MuiDrawer-paper": {
               boxSizing: "border-box",
               width: "15%",

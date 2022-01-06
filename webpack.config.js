@@ -44,7 +44,7 @@ if (process.env.NODE_ENV === "production") {
     REACT_APP_USER_GROUPS:'https://apifarma.ump.pt/api/usergroups/',
     REACT_APP_UCC_MANAGEMENT:'https://apifarma.ump.pt/api/uccmanagment/',
     REACT_APP_PLACES_MANAGEMENT:'https://apifarma.ump.pt/api/placesmanagment/',
-    REACT_APP_APITOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMjM0NTU0NTYzIiwidXNlcm5hbWUiOiJVbXAxMjM0NTY3ISIsImVtYWlsIjoiVW1wMTIzNDU2N1VtcDEyMzQ1NjdAdW1wLnB0In0sImlhdCI6MTY0MTIyOTYyNX0.yZo0iX_--395KToDYVvOJZNVDXkdu1jz2ZK1A5LrRII",
+    REACT_APP_APITOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDE0MjEzMDl9.gul4t_9A7CD67H5qTTjiea6baOcsAERa6gS_JX8e3d4",
   };
 
   plugins.push(new EnvironmentPlugin(EnvValues))
@@ -57,25 +57,25 @@ if (process.env.SERVE) {
 
   EnvValues = {
     SKIP_PREFLIGHT_CHECK:true,
-    REACT_APP_USER_AUTH:'https://apifarma.ump.pt/api/userAuth/',
-    REACT_APP_ALL_USER:'https://apifarma.ump.pt/api/allusers/',
-    REACT_APP_EDIT_USER:'https://apifarma.ump.pt/api/editusers/',
-    REACT_APP_ADD_USER:'https://apifarma.ump.pt/api/addusers/',
-    REACT_APP_ADD_USERUSERGRUPO:'https://apifarma.ump.pt/api/addusergroups/',
-    REACT_APP_DELETE_USERUSERGRUPO:'https://apifarma.ump.pt/api/deleteusergroups/',
-    REACT_APP_GET_TOKEN:'https://apifarma.ump.pt/api/getusertoken/',
-    REACT_APP_GET_PERMISSIONGROUPS:'https://apifarma.ump.pt/api/getpermissiongroups/',
-    REACT_APP_MANAGE_PERMISSIONS:'https://apifarma.ump.pt/api/managepermissiongroups/',
-    REACT_APP_GET_GROUPPAGES:'https://apifarma.ump.pt/api/getgrouppages/',
-    REACT_APP_GET_MANAGEPAGES:'https://apifarma.ump.pt/api/managepages/',
-    REACT_APP_GET_ALLPAGES:'https://apifarma.ump.pt/api/allpages/',
-    REACT_APP_DELETE_ALLPAGES:'https://apifarma.ump.pt/api/deletepagegroups/',
-    REACT_APP_UPDATE_PAGES:'https://apifarma.ump.pt/api/updatepages/',
-    REACT_APP_DELETE_GROUP:'https://apifarma.ump.pt/api/deleteGroup/',
-    REACT_APP_USER_GROUPS:'https://apifarma.ump.pt/api/usergroups/',
-    REACT_APP_UCC_MANAGEMENT:'https://apifarma.ump.pt/api/uccmanagment/',
-    REACT_APP_PLACES_MANAGEMENT:'https://apifarma.ump.pt/api/placesmanagment/',
-    REACT_APP_APITOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMjM0NTU0NTYzIiwidXNlcm5hbWUiOiJVbXAxMjM0NTY3ISIsImVtYWlsIjoiVW1wMTIzNDU2N1VtcDEyMzQ1NjdAdW1wLnB0In0sImlhdCI6MTY0MTIyOTYyNX0.yZo0iX_--395KToDYVvOJZNVDXkdu1jz2ZK1A5LrRII",
+    REACT_APP_USER_AUTH:'http://192.168.1.2:50000/api/userAuth/',
+    REACT_APP_ALL_USER:'http://192.168.1.2:50000/api/allusers/',
+    REACT_APP_EDIT_USER:'http://192.168.1.2:50000/api/editusers/',
+    REACT_APP_ADD_USER:'http://192.168.1.2:50000/api/addusers/',
+    REACT_APP_ADD_USERUSERGRUPO:'http://192.168.1.2:50000/api/addusergroups/',
+    REACT_APP_DELETE_USERUSERGRUPO:'http://192.168.1.2:50000/api/deleteusergroups/',
+    REACT_APP_GET_TOKEN:'http://192.168.1.2:50000/api/getusertoken/',
+    REACT_APP_GET_PERMISSIONGROUPS:'http://192.168.1.2:50000/api/getpermissiongroups/',
+    REACT_APP_MANAGE_PERMISSIONS:'http://192.168.1.2:50000/api/managepermissiongroups/',
+    REACT_APP_GET_GROUPPAGES:'http://192.168.1.2:50000/api/getgrouppages/',
+    REACT_APP_GET_MANAGEPAGES:'http://192.168.1.2:50000/api/managepages/',
+    REACT_APP_GET_ALLPAGES:'http://192.168.1.2:50000/api/allpages/',
+    REACT_APP_DELETE_ALLPAGES:'http://192.168.1.2:50000/api/deletepagegroups/',
+    REACT_APP_UPDATE_PAGES:'http://192.168.1.2:50000/api/updatepages/',
+    REACT_APP_DELETE_GROUP:'http://192.168.1.2:50000/api/deleteGroup/',
+    REACT_APP_USER_GROUPS:'http://192.168.1.2:50000/api/usergroups/',
+    REACT_APP_UCC_MANAGEMENT:'http://192.168.1.2:50000/api/uccmanagment/',
+    REACT_APP_PLACES_MANAGEMENT:'http://192.168.1.2:50000/api/placesmanagment/',
+    REACT_APP_APITOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDE0MjEzMDl9.gul4t_9A7CD67H5qTTjiea6baOcsAERa6gS_JX8e3d4",
   };
   plugins.push(new EnvironmentPlugin(EnvValues))
 }
@@ -170,6 +170,7 @@ module.exports = {
 
   // required if using webpack-dev-server
   devServer: {
+    host: '192.168.1.14',
     historyApiFallback: true,
     contentBase: "./dist",
     hot: true,

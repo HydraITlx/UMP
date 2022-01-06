@@ -1,79 +1,99 @@
-import * as React from "react";
-import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import TableFooter from "@mui/material/TableFooter";
-import TablePagination from "@mui/material/TablePagination";
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
-  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
-  createData("Eclair", 262, 16.0, 24, 6.0),
-  createData("Cupcake", 305, 3.7, 67, 4.3),
-  createData("Gingerbread", 356, 16.0, 49, 3.9),
-];
+import { useEffect, useState } from "react";
+import MaterialTable, { MaterialTableProps } from "@material-table/core";
+import { Paper } from "@mui/material";
+import { getGroups, onHandleDelete } from "../Requests/GroupRequests";
 
 export default function CustomizedTables() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const GroupPromise = getGroups(isMounted);
+    if (isMounted) handleGroupPromise(GroupPromise, isMounted);
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const handleGroupPromise = (AuthPromise, isMounted) => {
+    if (AuthPromise === undefined) {
+      return;
+    }
+    console.log(isMounted);
+    AuthPromise.then((response) => {
+      console.log(response);
+      if (response !== undefined) {
+        setData(response);
+      }
+    });
+  };
+
+  //Auto Height
+  const tableHeight =
+    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 70;
+  //Auto Height
+
+  const columns = [
+    {
+      title: "ID Grupo",
+      field: "value",
+      width: "auto",
+    },
+    { title: "Descrição Grupo", field: "label", width: "auto" },
+
+    {
+      title: "Editar ",
+      field: "",
+      //  render: (rowData) => (
+      //     <Container triggerText={"Utilizadores"} data={rowData} />
+      //   ),
+      width: "10%",
+    },
+  ];
+
+  const options = {
+    maxBodyHeight: `${tableHeight}vh`,
+    minBodyHeight: `${tableHeight}vh`,
+    pageSize: 10,
+    paging: true,
+    headerStyle: {
+      backgroundColor: "#ad0b90",
+      color: "#FFFFFF",
+      fontWeight: "bold",
+      height: 70,
+    },
+    filtering: false,
+    actionsColumnIndex: -1,
+  };
+
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Dessert (100g serving)</StyledTableCell>
-            <StyledTableCell align="right">Calories</StyledTableCell>
-            <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
-            <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
-            <StyledTableCell align="right">Protein&nbsp;(g)</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
-              <StyledTableCell component="th" scope="row">
-                {row.name}
-              </StyledTableCell>
-              <StyledTableCell align="right">{row.calories}</StyledTableCell>
-              <StyledTableCell align="right">{row.fat}</StyledTableCell>
-              <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-              <StyledTableCell align="right">{row.protein}</StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <StyledTableRow>
-            <TablePagination></TablePagination>
-          </StyledTableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+    <Paper>
+      <MaterialTable
+        options={options}
+        columns={columns}
+        data={data}
+        title="Grupos de permissões"
+        editable={{
+          onRowDelete: (oldData) =>
+            new Promise((resolve, reject) => {
+              setTimeout(() => {
+                console.log(oldData.value);
+                const dataDelete = [...data];
+                const index = oldData.tableData.id;
+                dataDelete.splice(index, 1);
+                setData([...dataDelete]);
+                onHandleDelete(oldData.value);
+                resolve();
+              }, 1000);
+            }),
+        }}
+        localization={{
+          header: { actions: "Ações" },
+          body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
+        }}
+      />
+    </Paper>
   );
 }

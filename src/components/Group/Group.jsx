@@ -3,13 +3,13 @@ import GroupsTable from "./GroupTable";
 
 function Users() {
   return (
-    <div>
+    <section>
       <div className="divMain">
         <div className="divSub">
           <GroupsTable />
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 

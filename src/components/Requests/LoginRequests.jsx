@@ -1,6 +1,8 @@
 import { runInAction } from "mobx";
 import userStore from "../Store/UserStore";
-export function doLogin(username, password, rememberLogin) {
+
+export function doLogin(username, password) {
+  console.log(process.env.REACT_APP_USER_AUTH);
   const body = {
     username: username,
     password: password,
@@ -19,6 +21,7 @@ export function doLogin(username, password, rememberLogin) {
 }
 
 export function validateToken() {
+  console.log(process.env.REACT_APP_USER_AUTH);
   let userToken = sessionStorage.getItem("userToken");
   userToken = JSON.parse(userToken);
 

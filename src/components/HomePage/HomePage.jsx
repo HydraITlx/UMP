@@ -3,11 +3,21 @@ import HomeImage from "../../images/Home.jfif";
 import UserStore from "../Store/UserStore";
 
 function HomePage() {
+  const tableHeight =
+    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 100;
+
+  const options = {
+    maxBodyHeight: `${tableHeight}vh`,
+    minBodyHeight: `${tableHeight}vh`,
+  };
+
   return (
     <div
       className="App"
       style={{
         backgroupcolor: "rgb(173, 11, 144)",
+        height: `${tableHeight}vh`,
+        width: `${tableHeight}vh`,
       }}
     >
       <h1

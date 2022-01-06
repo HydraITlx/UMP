@@ -27,7 +27,7 @@ export default function ButtonAppBar() {
           <Box display="flex" flexGrow={1}>
             <img className="logoImage" src={logo} alt="logo"></img>
           </Box>
-          <LogOut />
+          <LogOut className="showlogout" />
         </Toolbar>
       </AppBar>
     </Box>

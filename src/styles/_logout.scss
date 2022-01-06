@@ -1,0 +1,19 @@
+.showlogout {
+  display: none;
+}
+
+@media only screen and (min-width: 768px) {
+  .showlogout {
+    display: block;
+  }
+}
+
+.showlogoutmobile {
+  display: none;
+}
+
+@media only screen and (max-width: 768px) {
+  .showlogoutmobile {
+    display: block;
+  }
+}

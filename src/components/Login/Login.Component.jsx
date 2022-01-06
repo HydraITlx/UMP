@@ -64,15 +64,7 @@ export function Login() {
     AuthPromise.then((response) => {
       console.log(response);
       if (response !== undefined) {
-        if (response.status === "AuthNok") {
-          setShowError(true);
-          runInAction(() => {
-            userStore.loading = false;
-            userStore.isLoggedIn = false;
-            userStore.username = "";
-          });
-          setshouldNavigate(false);
-        } else {
+        if (response.status === "Authok") {
           runInAction(() => {
             userStore.loading = false;
             userStore.isLoggedIn = true;
@@ -81,6 +73,14 @@ export function Login() {
           });
           setshouldNavigate(true);
           setStorage(username, response.newToken, rememberLogin);
+        } else {
+          setShowError(true);
+          runInAction(() => {
+            userStore.loading = false;
+            userStore.isLoggedIn = false;
+            userStore.username = "";
+          });
+          setshouldNavigate(false);
         }
       }
     });
