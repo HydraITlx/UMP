@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 export function getGroups() {
   const requestOptions = {
     method: "POST",
@@ -14,6 +12,7 @@ export function getGroups() {
     requestOptions
   );
 }
+
 function getGroupPromise(RequestUrl, requestOptions) {
   return fetch(RequestUrl, requestOptions)
     .then((response) => response.json())

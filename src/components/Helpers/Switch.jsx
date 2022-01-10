@@ -25,7 +25,8 @@ export default function SwitchLabels(props) {
             disabled={props.disabled}
             id={props.id}
             onChange={props.onChange}
-            value={props.value ? props.value : " "}
+            value={props.value ? props.value : false}
+            defaultChecked={props.defaultChecked ? props.defaultChecked : false}
           />
         }
         label={

@@ -112,6 +112,17 @@ export default function GruopTable() {
     }, 500);
   };
 
+  const addonConfirm = (values) => {
+    if (isInsert) {
+      onHandleInsert(values);
+    }
+    setUpdate(!update);
+    setTimeout(() => {
+      setisEdit(false);
+      setisInsert(true);
+    }, 500);
+  };
+
   const openInPopup = (rowData) => {
     setRecordForEdit(rowData);
     setOpenPopup(true);
@@ -169,10 +180,9 @@ export default function GruopTable() {
           data={data}
           recordForEdit={recordForEdit}
           addOrEdit={addOrEdit}
+          addonConfirm={addonConfirm}
           isEdit={isEdit}
-        >
-          <PagePermissions recordForEdit={recordForEdit}></PagePermissions>
-        </GroupForm>
+        ></GroupForm>
       </Popup>
     </>
   );
