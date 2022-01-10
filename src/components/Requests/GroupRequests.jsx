@@ -1,6 +1,8 @@
+import { useState } from "react";
+
 export function getGroups() {
   const requestOptions = {
-    method: "GET",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.REACT_APP_APITOKEN}`,
@@ -12,7 +14,6 @@ export function getGroups() {
     requestOptions
   );
 }
-
 function getGroupPromise(RequestUrl, requestOptions) {
   return fetch(RequestUrl, requestOptions)
     .then((response) => response.json())
@@ -27,8 +28,6 @@ export function onHandleDelete(groupip) {
     group_Id: groupip,
   };
 
-  console.log(groupip);
-
   let requestOptions = {
     method: "POST",
     headers: {
@@ -37,6 +36,44 @@ export function onHandleDelete(groupip) {
     },
     body: JSON.stringify(data),
   };
-
   getGroupPromise(process.env.REACT_APP_DELETE_GROUP, requestOptions);
+}
+
+export function onHandleInsert(values) {
+  const body = {
+    createnew: true,
+    group_Id: values.value,
+    group_description: values.label,
+  };
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.REACT_APP_APITOKEN}`,
+    },
+    body: JSON.stringify(body),
+  };
+  return getGroupPromise(
+    process.env.REACT_APP_MANAGE_PERMISSIONS,
+    requestOptions
+  );
+}
+
+export function onHandleUpdate(values) {
+  const body = {
+    createnew: false,
+    group_Id: values.value,
+    group_description: values.label,
+  };
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.REACT_APP_APITOKEN}`,
+    },
+    body: JSON.stringify(body),
+  };
+  getGroupPromise(process.env.REACT_APP_MANAGE_PERMISSIONS, requestOptions);
 }

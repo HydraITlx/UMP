@@ -10,7 +10,8 @@ import HomePage from "./HomePage/HomePage";
 import PrivateRoute from "./Helpers/PrivateRoute";
 import NavBar from "./NavBar/NavBar";
 import { validateToken } from "./Requests/LoginRequests";
-import Group from "./Group/Group";
+import Group from "./Pages/Group/Group";
+import User from "./Pages/Users/User";
 //import * as apiService from "./components/Users/Services/ApiService";
 
 function App() {
@@ -28,7 +29,6 @@ function App() {
     }
 
     AuthPromise.then((response) => {
-      console.log(response);
       if (response !== undefined) {
         if (response.status === "Tokenok") {
           runInAction(() => {
@@ -98,6 +98,7 @@ function App() {
                 >
                   <Route path="/home" element={<HomePage />} />
                   <Route path="/group" element={<Group />} />
+                  <Route path="/user" element={<User />} />
                 </Route>
               </Routes>
             </section>

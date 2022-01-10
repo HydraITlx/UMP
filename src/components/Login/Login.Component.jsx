@@ -62,7 +62,6 @@ export function Login() {
     }
 
     AuthPromise.then((response) => {
-      console.log(response);
       if (response !== undefined) {
         if (response.status === "Authok") {
           runInAction(() => {

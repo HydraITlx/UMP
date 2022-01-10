@@ -1,5 +1,6 @@
 import React from "react";
 import GroupsTable from "./GroupTable";
+import "../../../styles/_pagestyles.scss";
 
 function Users() {
   return (
