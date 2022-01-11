@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import UserStore from "../Store/UserStore";
 import { runInAction } from "mobx";
 import { useNavigate } from "react-router-dom";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 export default function AccountMenu() {
   let navigate = useNavigate();
@@ -47,6 +48,7 @@ export default function AccountMenu() {
               aria-expanded={open ? "true" : undefined}
               onClick={handleClick}
               style={{ color: "#FFFFFF" }}
+              startIcon={<ArrowDropDownIcon />}
             >
               {UserStore.username}
             </Button>
