@@ -12,7 +12,7 @@ import NavBar from "./NavBar/NavBar";
 import { validateToken } from "./Requests/LoginRequests";
 import Group from "./Pages/Group/Group";
 import User from "./Pages/Users/User";
-//import * as apiService from "./components/Users/Services/ApiService";
+import UCC from "./pages/UCC/UCC";
 
 function App() {
   const [shouldNavigate, setshouldNavigate] = useState(false);
@@ -99,6 +99,7 @@ function App() {
                   <Route path="/home" element={<HomePage />} />
                   <Route path="/group" element={<Group />} />
                   <Route path="/user" element={<User />} />
+                  <Route path="/ucc" element={<UCC />} />
                 </Route>
               </Routes>
             </section>

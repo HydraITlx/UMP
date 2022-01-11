@@ -93,7 +93,7 @@ export default function TemporaryDrawer(prop) {
           <ListItemText style={{ color: "white" }} primary={"Encomendas"} />
         </ListItem>
 
-        <ListItem onClick={() => navigate("home")} button key={"text5"}>
+        <ListItem onClick={() => navigate("ucc")} button key={"text5"}>
           <ListItemIcon>
             <CottageIcon sx={{ color: "white" }} />
           </ListItemIcon>
