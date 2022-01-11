@@ -1,5 +1,5 @@
 import React from "react";
-import GroupsTable from "./UserTable";
+import UserTable from "./UserTable";
 import "../../../styles/_pagestyles.scss";
 
 function Users() {
@@ -7,7 +7,7 @@ function Users() {
     <section>
       <div className="divMain">
         <div className="divSub">
-          <GroupsTable />
+          <UserTable />
         </div>
       </div>
     </section>
