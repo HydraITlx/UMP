@@ -14,7 +14,6 @@ function getUserPromise(RequestUrl, requestOptions) {
   return fetch(RequestUrl, requestOptions)
     .then((response) => response.json())
     .then((responseData) => {
-      console.log(responseData);
       return responseData;
     })
     .catch((error) => console.warn(error));
@@ -76,8 +75,6 @@ export function onGetPageOptions(values) {
 }
 
 export function onAddPagePermission(username, RowData) {
-  console.log("ENTOU");
-
   let body = {
     username: username,
     group_Id: RowData.group_Id,
@@ -97,8 +94,6 @@ export function onAddPagePermission(username, RowData) {
 }
 
 export function onDeletePagePermission(username, group_Id) {
-  console.log("ENTOU");
-
   let body = {
     username: username,
     group_Id: group_Id,
