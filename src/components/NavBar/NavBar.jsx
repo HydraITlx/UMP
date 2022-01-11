@@ -9,7 +9,6 @@ import LogOut from "../LogOut/Logout";
 //import IconButton from "@mui/material/IconButton";
 
 export default function ButtonAppBar() {
-  const [dropdown, setDropdown] = useState(true);
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
