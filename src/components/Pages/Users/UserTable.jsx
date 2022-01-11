@@ -1,19 +1,13 @@
 import { useEffect, useState } from "react";
 import MaterialTable, { MTableToolbar } from "@material-table/core";
 import { Paper } from "@mui/material";
-import {
-  getGroups,
-  onHandleDelete,
-  onHandleInsert,
-  onHandleUpdate,
-} from "../../Requests/GroupRequests";
-
+import { getUsers, onHandleInsertModify } from "../../Requests/UserRequests";
+import Switch from "../../Helpers/Switch";
 import Popup from "../../Helpers/Popup";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
-import GroupForm from "./Form/GroupForm";
+import UserForm from "./Form/UserForm";
 import EditIcon from "@mui/icons-material/Edit";
-import PagePermissions from "./Form/PagePermissions";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -26,15 +20,15 @@ export default function GruopTable() {
   useEffect(() => {
     let isMounted = true;
 
-    const GroupPromise = getGroups();
-    if (isMounted) handleGroupPromise(GroupPromise, isMounted);
+    const UserPromise = getUsers();
+    if (isMounted) handleUserPromise(UserPromise, isMounted);
 
     return () => {
       isMounted = false;
     };
   }, [update]);
 
-  const handleGroupPromise = (AuthPromise, isMounted) => {
+  const handleUserPromise = (AuthPromise, isMounted) => {
     {
       if (AuthPromise === undefined) {
         return;
@@ -50,11 +44,49 @@ export default function GruopTable() {
 
   const columns = [
     {
-      title: "ID Grupo",
-      field: "value",
+      title: "Utilizador",
+      field: "username",
       width: "auto",
     },
-    { title: "Descrição Grupo", field: "label", width: "auto" },
+
+    { title: "Nome Completo", field: "full_name", width: "auto" },
+    { title: "Email", field: "email", width: "auto" },
+    {
+      title: "Tent. Autenticação",
+      field: "attempts",
+      width: "auto",
+      align: "center",
+    },
+
+    {
+      title: "Administrador",
+      field: "is_admin",
+      width: "auto",
+      render: (rowData) => (
+        <Switch
+          value={rowData.is_admin}
+          disabled={true}
+          id={"isadmin"}
+          defaultChecked={rowData.is_admin}
+          label={""}
+        ></Switch>
+      ),
+    },
+
+    {
+      title: "Ativo",
+      field: "active",
+      width: "auto",
+      render: (rowData) => (
+        <Switch
+          value={rowData.active}
+          disabled={true}
+          id={"active"}
+          defaultChecked={rowData.active}
+          label={""}
+        ></Switch>
+      ),
+    },
 
     {
       title: "Editar ",
@@ -95,17 +127,24 @@ export default function GruopTable() {
   };
 
   const addOrEdit = (values, resetForm) => {
-    if (isInsert) {
-      onHandleInsert(values);
-    }
-    if (isEdit) {
-      onHandleUpdate(values);
-    }
+    onHandleInsertModify(values);
+
     resetForm();
     setRecordForEdit(null);
     setOpenPopup(false);
     setUpdate(!update);
 
+    setTimeout(() => {
+      setisEdit(false);
+      setisInsert(true);
+    }, 500);
+  };
+
+  const addonConfirm = (values) => {
+    if (isInsert) {
+      onHandleInsertModify(values);
+    }
+    setUpdate(!update);
     setTimeout(() => {
       setisEdit(false);
       setisInsert(true);
@@ -124,17 +163,7 @@ export default function GruopTable() {
           options={options}
           columns={columns}
           data={data}
-          title="Grupos de permissões"
-          editable={{
-            onRowDelete: (oldData) =>
-              new Promise((resolve, reject) => {
-                onHandleDelete(oldData.value);
-                setTimeout(() => {
-                  setUpdate(getGroups());
-                  resolve();
-                }, 1500);
-              }),
-          }}
+          title="Utilizadores"
           components={{
             Toolbar: (props) => (
               <div>
@@ -165,14 +194,13 @@ export default function GruopTable() {
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
-        <GroupForm
+        <UserForm
           data={data}
           recordForEdit={recordForEdit}
           addOrEdit={addOrEdit}
+          addonConfirm={addonConfirm}
           isEdit={isEdit}
-        >
-          <PagePermissions recordForEdit={recordForEdit}></PagePermissions>
-        </GroupForm>
+        ></UserForm>
       </Popup>
     </>
   );

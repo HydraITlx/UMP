@@ -19,6 +19,7 @@ const PurpleSwitch = withStyles({
 export default function SwitchLabels(props) {
   return (
     <PurpleSwitch
+      name={props.name}
       disabled={props.disabled}
       id={props.id}
       onChange={props.onChange}

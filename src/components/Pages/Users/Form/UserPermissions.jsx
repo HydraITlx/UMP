@@ -1,15 +1,13 @@
 import { useState, useEffect } from "react";
 import {
-  getPagePermissions,
-  onHandleOptions,
-  onHandleUpdate,
-  onHandleDelete,
-  onHandleInsert,
-} from "../../../Requests/PagePermissionRequests";
+  onGetPagePermissions,
+  onGetPageOptions,
+  onAddPagePermission,
+  onDeletePagePermission,
+} from "../../../Requests/UserRequests";
 import { Paper } from "@mui/material";
 import MaterialTable, { MTableToolbar } from "@material-table/core";
 import Controls from "../../../Helpers/Controls";
-import Switch from "../../../Helpers/SwitchTable";
 
 export default function PagePermissions(props) {
   const { recordForEdit } = props;
@@ -20,15 +18,16 @@ export default function PagePermissions(props) {
   useEffect(() => {
     let OptionsPromise = "";
 
-    OptionsPromise = onHandleOptions();
+    OptionsPromise = onGetPageOptions();
     handleOptionPromise(OptionsPromise);
+
     if (recordForEdit !== null) {
       getPagePromise();
     }
   }, []);
 
   function getPagePromise() {
-    const PagePromise = getPagePermissions(recordForEdit.value);
+    const PagePromise = onGetPagePermissions(recordForEdit);
     handlePagePromise(PagePromise);
   }
 
@@ -79,7 +78,7 @@ export default function PagePermissions(props) {
       onChange(newValue);
       setError(null);
       if (newValue === " ") {
-        setError("Nome de página não pode estar vazio");
+        setError("Grupo não pode estar vazio");
       } else {
         checkDuplicates(data, rest.rowData.intid, newValue, setError);
       }
@@ -96,18 +95,17 @@ export default function PagePermissions(props) {
         label="Nome"
         error={error}
         value={currentValue}
-        //     error={helperText}
         onChange={change}
         options={lineOptions}
       />
     );
   };
 
-  function checkDuplicates(arr, index, newPermission_id, setError) {
+  function checkDuplicates(arr, index, newGroup_Id, setError) {
     return arr.map((options) => {
       if (options.intid !== index) {
-        if (options.permission_id === newPermission_id) {
-          setError("Nome de página já existe");
+        if (options.group_Id === newGroup_Id) {
+          setError("Grupo já existe");
         }
       }
     });
@@ -115,7 +113,7 @@ export default function PagePermissions(props) {
 
   //Auto Height
   const tableHeight =
-    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 70;
+    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 55;
   //Auto Height
 
   const options = {
@@ -139,30 +137,34 @@ export default function PagePermissions(props) {
 
   const columns = [
     {
-      title: "Nome",
-      field: "permission_id",
-      render: (RowData) => (
-        <Controls.Select
-          disabled={true}
-          name="departmentId"
-          label="Department"
-          value={RowData.permission_id}
-          options={lineOptions}
-        />
-      ),
+      title: "Descrição Grupo",
+
+      field: "group_Id",
+      width: "50%",
+      render: (RowData) => {
+        return (
+          <Controls.Select
+            disabled={false}
+            name="departmentId"
+            label="Department"
+            value={RowData.group_Id}
+            options={lineOptions}
+          />
+        );
+      },
       editComponent,
     },
 
     {
-      title: "ID Página",
+      title: "ID Grupo",
       field: "name",
-      width: "20%",
+
       render: (rowData) => (
         <Controls.Input
           variant="standard"
           label=""
           name="label"
-          value={rowData.permission_id}
+          value={rowData.group_Id}
         />
       ),
       editComponent: (RowData) => {
@@ -172,87 +174,13 @@ export default function PagePermissions(props) {
             label=""
             name="label"
             value={
-              RowData.rowData.permission_id !== undefined
-                ? RowData.rowData.permission_id
+              RowData.rowData.group_Id !== undefined
+                ? RowData.rowData.group_Id
                 : ""
             }
           />
         );
       },
-    },
-
-    {
-      title: "Leitura",
-      field: "allow_read",
-      render: (rowData) => (
-        <Switch
-          defaultChecked={rowData.allow_read}
-          value={rowData.allow_read}
-          disabled={true}
-        ></Switch>
-      ),
-      editComponent: (RowData) => (
-        <Switch
-          value={RowData.value !== undefined ? RowData.value : false}
-          onChange={(e) => RowData.onChange(e.target.checked)}
-          disabled={false}
-        ></Switch>
-      ),
-    },
-
-    {
-      title: "Inserção",
-      field: "allow_insert",
-      render: (rowData) => (
-        <Switch
-          defaultChecked={rowData.allow_insert}
-          value={rowData.allow_insert}
-          disabled={true}
-        ></Switch>
-      ),
-      editComponent: (RowData) => (
-        <Switch
-          value={RowData.value !== undefined ? RowData.value : false}
-          onChange={(e) => RowData.onChange(e.target.checked)}
-          disabled={false}
-        ></Switch>
-      ),
-    },
-    {
-      title: "Modificação",
-      field: "allow_modify",
-      render: (rowData) => (
-        <Switch
-          defaultChecked={rowData.allow_modify}
-          value={rowData.allow_modify}
-          disabled={true}
-        ></Switch>
-      ),
-      editComponent: (RowData) => (
-        <Switch
-          value={RowData.value !== undefined ? RowData.value : false}
-          onChange={(e) => RowData.onChange(e.target.checked)}
-          disabled={false}
-        ></Switch>
-      ),
-    },
-    {
-      title: "Eliminação",
-      field: "allow_delete",
-      render: (rowData) => (
-        <Switch
-          defaultChecked={rowData.allow_delete}
-          value={rowData.allow_delete}
-          disabled={true}
-        ></Switch>
-      ),
-      editComponent: (RowData) => (
-        <Switch
-          value={RowData.value !== undefined ? RowData.value : false}
-          onChange={(e) => RowData.onChange(e.target.checked)}
-          disabled={false}
-        ></Switch>
-      ),
     },
   ];
 
@@ -271,46 +199,24 @@ export default function PagePermissions(props) {
             editable={{
               onRowAdd: (newRow) =>
                 new Promise((resolve, reject) => {
+                  console.log("WHHHHHHHHHHAT");
+                  console.log(newRow.group_Id);
                   let allow_Resolve = true;
                   data.map((options) => {
-                    if (options.permission_id === newRow.permission_id) {
+                    if (options.group_Id === newRow.group_Id) {
                       allow_Resolve = false;
                     }
                   });
 
                   if (
-                    newRow.permission_id === undefined ||
-                    newRow.permission_id === " "
+                    newRow.group_Id === undefined ||
+                    newRow.group_Id === " "
                   ) {
                     allow_Resolve = false;
                   }
 
                   if (allow_Resolve) {
-                    onHandleInsert(recordForEdit.value, newRow);
-                  }
-
-                  setTimeout(() => {
-                    if (allow_Resolve) {
-                      getPagePromise();
-                      resolve();
-                    } else {
-                      reject();
-                    }
-                  }, 2000);
-                }),
-              onRowUpdate: (newData, oldData) =>
-                new Promise((resolve, reject) => {
-                  let allow_Resolve = true;
-                  data.map((options) => {
-                    if (options.intid !== oldData.intid) {
-                      if (options.permission_id === newData.permission_id) {
-                        allow_Resolve = false;
-                      }
-                    }
-                  });
-
-                  if (allow_Resolve) {
-                    onHandleUpdate(recordForEdit.value, newData, oldData);
+                    onAddPagePermission(recordForEdit.username, newRow);
                   }
                   setTimeout(() => {
                     if (allow_Resolve) {
@@ -321,9 +227,13 @@ export default function PagePermissions(props) {
                     }
                   }, 2000);
                 }),
+
               onRowDelete: (oldData) =>
                 new Promise((resolve, reject) => {
-                  onHandleDelete(oldData.group_Id, oldData.permission_id);
+                  onDeletePagePermission(
+                    recordForEdit.username,
+                    oldData.group_Id
+                  );
                   setTimeout(() => {
                     getPagePromise();
                     resolve();

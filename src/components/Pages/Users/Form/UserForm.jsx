@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Controls from "../../../Helpers/Controls";
 import { useForm, Form } from "./useForm";
-import PagePermissions from "./PagePermissions";
+import UserPermissions from "./UserPermissions";
+import Checkbox from "../../../Helpers/Checkbox";
 const initialFValues = {
-  value: "",
-  label: "",
+  username: "",
+  full_name: "",
+  email: "",
+  attempts: 0,
+  active: false,
+  is_admin: false,
 };
 
 export default function GroupForm(props) {
@@ -21,19 +26,28 @@ export default function GroupForm(props) {
 
   const validate = (fieldValues = values) => {
     const errorText = "Preenchimento obrigatório";
-    const errorTextExists = "O grupo já existe";
+    const errorTextExists = "O Utilizador já existe";
 
     let temp = { ...errors };
 
-    if ("value" in fieldValues) temp.value = fieldValues.value ? "" : errorText;
+    if ("username" in fieldValues)
+      temp.username = fieldValues.username ? "" : errorText;
+
+    if ("email" in fieldValues)
+      temp.email = /$^|.+@.+..+/.test(fieldValues.email)
+        ? ""
+        : "Email não é valido";
 
     if (!isEdit) {
-      if (JSON.stringify(data).includes(`"value":"${fieldValues.value}"`)) {
-        temp.value = errorTextExists;
+      if (
+        JSON.stringify(data).includes(`"username":"${fieldValues.username}"`)
+      ) {
+        temp.username = errorTextExists;
       }
     }
 
-    if ("label" in fieldValues) temp.label = fieldValues.label ? "" : errorText;
+    if ("full_name" in fieldValues)
+      temp.full_name = fieldValues.full_name ? "" : errorText;
 
     setErrors({
       ...temp,
@@ -75,46 +89,69 @@ export default function GroupForm(props) {
   return (
     <Form onSubmit={handleSubmit}>
       <Grid container>
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={4}>
           <Controls.Input
-            name="value"
-            label="Id Grupo"
+            name="username"
+            label="Nome Utilizador"
             disabled={isEdit || showTable}
-            value={values.value}
+            value={values.username}
             onChange={handleInputChange}
-            error={errors.value}
+            error={errors.username}
           />
         </Grid>
 
-        <Grid item xs={12} md={3}>
-          <div style={{ minWidth: "100%" }}>
-            <Controls.Input
-              label="Descrição"
-              name="label"
-              value={values.label}
-              onChange={handleInputChange}
-              error={errors.label}
-            />
-          </div>
+        <Grid item xs={12} md={4}>
+          <Controls.Input
+            label="Nome Completo"
+            name="full_name"
+            value={values.full_name}
+            onChange={handleInputChange}
+            error={errors.full_name}
+          />
         </Grid>
 
-        {!isEdit && (
-          <Grid item xs={12} md={3}>
-            <div style={{ minWidth: "100%" }}>
-              <Controls.Button text="Confirmar" onClick={handleConfirm} />
-            </div>
-          </Grid>
-        )}
+        <Grid item xs={12} md={4}>
+          <Controls.Input
+            label="Email"
+            name="email"
+            value={values.email}
+            onChange={handleInputChange}
+            error={errors.email}
+          />
+        </Grid>
+
+        <Grid item xs={12} md={4}>
+          <Checkbox
+            name="is_admin"
+            label="Administrador"
+            value={values.is_admin}
+            onChange={handleInputChange}
+          />
+          <Checkbox
+            name="active"
+            label="Ativo"
+            value={values.active}
+            onChange={handleInputChange}
+          />
+
+          {!isEdit && !showTable && (
+            <Grid item xs={12} md={3}>
+              <div style={{ minWidth: "100%" }}>
+                <Controls.Button text="Confirmar" onClick={handleConfirm} />
+              </div>
+            </Grid>
+          )}
+        </Grid>
 
         {!isEdit && showTable && (
           <Grid item xs={12} md={12} sx={{ m: 4 }}>
-            <PagePermissions recordForEdit={values} />
+            <UserPermissions recordForEdit={values} />
           </Grid>
         )}
 
         {isEdit && (
           <Grid item xs={12} md={12} sx={{ m: 4 }}>
-            <PagePermissions recordForEdit={recordForEdit} />
+            <UserPermissions recordForEdit={recordForEdit} values={values} />
           </Grid>
         )}
         <Grid item xs={12} md={12}>
