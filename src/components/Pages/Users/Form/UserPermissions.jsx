@@ -199,8 +199,6 @@ export default function PagePermissions(props) {
             editable={{
               onRowAdd: (newRow) =>
                 new Promise((resolve, reject) => {
-                  console.log("WHHHHHHHHHHAT");
-                  console.log(newRow.group_Id);
                   let allow_Resolve = true;
                   data.map((options) => {
                     if (options.group_Id === newRow.group_Id) {

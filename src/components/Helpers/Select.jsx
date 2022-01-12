@@ -4,14 +4,27 @@ import {
   Select as MuiSelect,
   MenuItem,
   FormHelperText,
+  InputLabel,
 } from "@material-ui/core";
 
 export default function Select(props) {
-  const { name, value, error = null, onChange, options, disabled } = props;
+  const {
+    name,
+    value,
+    error = null,
+    onChange,
+    options,
+    disabled,
+    variant = "standard",
+    label = "",
+  } = props;
 
   return (
-    <FormControl variant="standard" {...(error && { error: true })}>
+    <FormControl variant={variant} {...(error && { error: true })}>
+      <InputLabel id="label">{label}</InputLabel>
       <MuiSelect
+        id="label"
+        label={label}
         disabled={disabled}
         name={name}
         value={value}

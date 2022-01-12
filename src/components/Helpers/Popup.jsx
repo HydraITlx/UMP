@@ -10,8 +10,10 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     position: "absolute",
     top: theme.spacing(5),
-    maxWidth: "90%",
+    maxWidth: "80%",
     maxHeight: "90%",
+    minWidth: "60%",
+    minHeight: "60%",
   },
   DialogTitle: {
     paddingRight: "0px",

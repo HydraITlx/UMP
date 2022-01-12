@@ -15,6 +15,31 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
     if (validateOnChange) validate({ [name]: value });
   };
 
+  const handleInputChangeSelect = (e, pharmacistOptions) => {
+    const { name, value } = e.target;
+    let Email = "";
+    let Phone = "";
+    let Name = "";
+
+    if (value !== " ") {
+      const RespVariables = pharmacistOptions.filter(
+        (item) => item.value === e.target.value
+      );
+
+      Email = RespVariables[0].Email;
+      Phone = RespVariables[0].Phone;
+      Name = RespVariables[0].label;
+    }
+    setValues({
+      ...values,
+      [name]: value,
+      Responsible_Pharmacist_Email: Email,
+      Responsible_Pharmacist_Phone: Phone,
+      Responsible_Pharmacist_Name: Name,
+    });
+    if (validateOnChange) validate({ [name]: value });
+  };
+
   const resetForm = () => {
     setValues(initialFValues);
     setErrors({});
@@ -26,6 +51,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
     errors,
     setErrors,
     handleInputChange,
+    handleInputChangeSelect,
     resetForm,
   };
 }
