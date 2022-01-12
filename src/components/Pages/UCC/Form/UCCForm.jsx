@@ -322,13 +322,6 @@ export default function GroupForm(props) {
 
       <Grid item xs={12} md={12}>
         <Controls.Button style={btnStyles} type="submit" text="Submeter" />
-        {!isEdit && (
-          <Controls.Button
-            //style={{ minWidth: "23.5%" }}
-            text="Redefinir"
-            onClick={resetForm}
-          />
-        )}
       </Grid>
     </Form>
   );

@@ -91,6 +91,7 @@ export default function GruopTable() {
         <IconButton
           onClick={() => {
             setisEdit(true);
+            setisInsert(false);
             openInPopup(rowData);
           }}
         >
@@ -138,7 +139,7 @@ export default function GruopTable() {
       setUpdate(!update);
       setisEdit(false);
       setisInsert(false);
-    }, 500);
+    }, 4000);
   };
 
   const openInPopup = (rowData) => {
