@@ -8,6 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import UserForm from "./Form/UserForm";
 import EditIcon from "@mui/icons-material/Edit";
+import TableTitle from "../../Helpers/TableTitle";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -163,7 +164,7 @@ export default function GruopTable() {
           options={options}
           columns={columns}
           data={data}
-          title="Utilizadores"
+          title={<TableTitle text="Utilizadores" />}
           components={{
             Toolbar: (props) => (
               <div>

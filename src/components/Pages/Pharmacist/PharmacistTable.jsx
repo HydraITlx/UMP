@@ -2,25 +2,17 @@ import { useEffect, useState } from "react";
 import MaterialTable, { MTableToolbar } from "@material-table/core";
 import { Paper } from "@mui/material";
 import {
-  getUCCs,
-  onHandlePharmacistOptions,
-  onHandleUCCUpdate,
-  onHandleUCCInsert,
-} from "../../Requests/UCCRequests";
+  getGroups,
+  onHandleDelete,
+  onHandleInsert,
+  onHandleUpdate,
+} from "../../Requests/GroupRequests";
 
 import Popup from "../../Helpers/Popup";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
-import UCCForm from "./Form/UCCForm";
-import EditIcon from "@mui/icons-material/Edit";
-import Controls from "../../Helpers/Controls";
-import TableTitle from "../../Helpers/TableTitle";
 
-const EntityTypeOption = [
-  { value: 0, label: " " },
-  { value: 1, label: "IPSS" },
-  { value: 2, label: "Misericórdia" },
-];
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -29,26 +21,19 @@ export default function GruopTable() {
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [isInsert, setisInsert] = useState(false);
   const [isEdit, setisEdit] = useState(false);
-  const [pharmacistOptions, SetpharmacistOptions] = useState([]);
 
   useEffect(() => {
     let isMounted = true;
 
-    if (isMounted) handlePromisses();
+    const GroupPromise = getGroups();
+    if (isMounted) handleGroupPromise(GroupPromise, isMounted);
 
     return () => {
       isMounted = false;
     };
   }, [update]);
 
-  function handlePromisses() {
-    const OptionsPromise = onHandlePharmacistOptions();
-    handleOptionsPromise(OptionsPromise);
-    const UCCPromise = getUCCs();
-    handleUCCPromise(UCCPromise);
-  }
-
-  const handleUCCPromise = (AuthPromise) => {
+  const handleGroupPromise = (AuthPromise) => {
     {
       if (AuthPromise === undefined) {
         return;
@@ -64,26 +49,11 @@ export default function GruopTable() {
 
   const columns = [
     {
-      title: "Nome",
-      field: "Name",
+      title: "ID Grupo",
+      field: "value",
       width: "auto",
     },
-
-    {
-      title: "Tipo de Entidade",
-      field: "Entity_Type",
-      width: "auto",
-      render: (RowData) => (
-        <Controls.Select
-          disabled={true}
-          value={RowData.Entity_Type}
-          options={EntityTypeOption}
-        />
-      ),
-    },
-    { title: "NIPC", field: "NIPC", width: "auto" },
-    { title: "Morada", field: "Address", width: "auto" },
-    { title: "Código Postal", field: "Post_Code", width: "auto" },
+    { title: "Descrição Grupo", field: "label", width: "auto" },
 
     {
       title: "Editar ",
@@ -92,7 +62,6 @@ export default function GruopTable() {
         <IconButton
           onClick={() => {
             setisEdit(true);
-            setisInsert(false);
             openInPopup(rowData);
           }}
         >
@@ -125,42 +94,26 @@ export default function GruopTable() {
   };
 
   const addOrEdit = (values, resetForm) => {
-    if (isEdit) {
-      onHandleUCCUpdate(values);
-    }
-
     if (isInsert) {
-      onHandleUCCInsert(values);
+      onHandleInsert(values);
+    }
+    if (isEdit) {
+      onHandleUpdate(values);
     }
     resetForm();
     setRecordForEdit(null);
-    SetpharmacistOptions([]);
     setOpenPopup(false);
+    setUpdate(!update);
+
     setTimeout(() => {
-      setUpdate(!update);
       setisEdit(false);
-      setisInsert(false);
-    }, 4000);
+      setisInsert(true);
+    }, 500);
   };
 
   const openInPopup = (rowData) => {
     setRecordForEdit(rowData);
     setOpenPopup(true);
-  };
-
-  const handleOptionsPromise = (AuthPromise) => {
-    {
-      if (AuthPromise === undefined) {
-        return;
-      }
-
-      AuthPromise.then((response) => {
-        if (response !== undefined) {
-          SetpharmacistOptions(response);
-        }
-      });
-      return;
-    }
   };
 
   return (
@@ -170,7 +123,17 @@ export default function GruopTable() {
           options={options}
           columns={columns}
           data={data}
-          title={<TableTitle text="Unidades de Cuidados Continuados" />}
+          title="Grupos de permissões"
+          editable={{
+            onRowDelete: (oldData) =>
+              new Promise((resolve, reject) => {
+                onHandleDelete(oldData.value);
+                setTimeout(() => {
+                  setUpdate(getGroups());
+                  resolve();
+                }, 1500);
+              }),
+          }}
           components={{
             Toolbar: (props) => (
               <div>
@@ -197,19 +160,10 @@ export default function GruopTable() {
         />
       </Paper>
       <Popup
-        title="Ficha Unidade de Cuidadados Continuados"
+        title="Ficha de Grupo"
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
-      >
-        <UCCForm
-          recordForEdit={recordForEdit}
-          pharmacistOptions={pharmacistOptions}
-          addOrEdit={addOrEdit}
-          isEdit={isEdit}
-          isInsert={isInsert}
-          data={data}
-        ></UCCForm>
-      </Popup>
+      ></Popup>
     </>
   );
 }

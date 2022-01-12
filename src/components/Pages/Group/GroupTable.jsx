@@ -13,7 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import GroupForm from "./Form/GroupForm";
 import EditIcon from "@mui/icons-material/Edit";
-import PagePermissions from "./Form/PagePermissions";
+import TableTitle from "../../Helpers/TableTitle";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -135,7 +135,7 @@ export default function GruopTable() {
           options={options}
           columns={columns}
           data={data}
-          title="Grupos de permissões"
+          title={<TableTitle text="Grupos de permissões" />}
           editable={{
             onRowDelete: (oldData) =>
               new Promise((resolve, reject) => {
