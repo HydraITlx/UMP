@@ -21,6 +21,7 @@ import FormatListNumberedRtlIcon from "@mui/icons-material/FormatListNumberedRtl
 import { runInAction } from "mobx";
 import Logout from "@mui/icons-material/Logout";
 import UserStore from "../Store/UserStore";
+import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
 
 export default function TemporaryDrawer(prop) {
   let navigate = useNavigate();
@@ -98,6 +99,13 @@ export default function TemporaryDrawer(prop) {
             <CottageIcon sx={{ color: "white" }} />
           </ListItemIcon>
           <ListItemText style={{ color: "white" }} primary={"UCC"} />
+        </ListItem>
+
+        <ListItem onClick={() => navigate("pharmacist")} button key={"text10"}>
+          <ListItemIcon>
+            <LocalPharmacyIcon sx={{ color: "white" }} />
+          </ListItemIcon>
+          <ListItemText style={{ color: "white" }} primary={"Farmacêuticos"} />
         </ListItem>
       </List>
       {UserStore.isAdmin && <Divider />}

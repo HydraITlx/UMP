@@ -30,7 +30,11 @@ export default function Popup(props) {
     >
       <DialogTitle className={classes.DialogTitle}>
         <div style={{ display: "flex" }}>
-          <Typography variant="h6" component="div" style={{ flexGrow: 1 }}>
+          <Typography
+            variant="h6"
+            component="div"
+            style={{ flexGrow: 1, color: "#ad0b90" }}
+          >
             {title}
           </Typography>
           <Controls.ActionButton

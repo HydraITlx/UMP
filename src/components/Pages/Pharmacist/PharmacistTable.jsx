@@ -1,45 +1,54 @@
-import { useEffect, useState } from "react";
-import MaterialTable, { MTableToolbar } from "@material-table/core";
+import React, { useEffect, useState } from "react";
+import MaterialTable, {
+  MTableToolbar,
+  MTableAction,
+} from "@material-table/core";
 import { Paper } from "@mui/material";
 import {
-  getGroups,
-  onHandleDelete,
-  onHandleInsert,
-  onHandleUpdate,
-} from "../../Requests/GroupRequests";
+  getPharmacists,
+  DeletePharmacists,
+  InsertPharmacists,
+  getUserOptions,
+  UpdatePharmacists,
+} from "../../Requests/PharmacistRequest";
 
-import Popup from "../../Helpers/Popup";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
-
-import EditIcon from "@mui/icons-material/Edit";
+import TableTitle from "../../Helpers/TableTitle";
+import Select from "../../Helpers/SelectRender";
+import Switch from "../../Helpers/Switch";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
+  const [users, setUsers] = useState([]);
   const [update, setUpdate] = useState(true);
-  const [openPopup, setOpenPopup] = useState(false);
-  const [recordForEdit, setRecordForEdit] = useState(null);
-  const [isInsert, setisInsert] = useState(false);
-  const [isEdit, setisEdit] = useState(false);
+  const addActionRef = React.useRef();
 
   useEffect(() => {
     let isMounted = true;
 
-    const GroupPromise = getGroups();
-    if (isMounted) handleGroupPromise(GroupPromise, isMounted);
+    if (isMounted) MakeRequests();
 
     return () => {
       isMounted = false;
     };
   }, [update]);
 
-  const handleGroupPromise = (AuthPromise) => {
+  function MakeRequests() {
+    const userRequest = getUserOptions();
+    handleUsersPromise(userRequest);
+    const RequestPromise = getPharmacists();
+    handleRequestPromise(RequestPromise);
+  }
+
+  const handleRequestPromise = (RequestPromise) => {
     {
-      if (AuthPromise === undefined) {
+      if (RequestPromise === undefined) {
         return;
       }
 
-      AuthPromise.then((response) => {
+      RequestPromise.then((response) => {
+        console.log(response);
         if (response !== undefined) {
           setData(response);
         }
@@ -47,28 +56,124 @@ export default function GruopTable() {
     }
   };
 
+  const handleUsersPromise = (RequestPromise) => {
+    {
+      if (RequestPromise === undefined) {
+        return;
+      }
+
+      RequestPromise.then((response) => {
+        console.log(response);
+        if (response !== undefined) {
+          console.log(response);
+          setUsers(response);
+        }
+      });
+    }
+  };
+
+  const editComponent = ({ onChange, value, ...rest }) => {
+    let newRowValue = " ";
+    if (value !== undefined) {
+      newRowValue = value;
+    }
+
+    const [currentValue, setValue] = useState(newRowValue);
+    const [error, setError] = useState(null);
+
+    const change = (e) => {
+      let newValue = " ";
+
+      if (e.target !== undefined) {
+        newValue = e.target.value;
+      }
+
+      setValue(newValue);
+      onChange(newValue);
+      setError(null);
+      console.log("rest.rowData");
+      console.log(newValue);
+      if (newValue === " ") {
+        console.log("erroraqui");
+        setError("Utilizador não pode estar vazio");
+      } else {
+        checkDuplicates(data, rest.rowData.ID, newValue, setError);
+      }
+
+      if (error !== null) {
+        onChange(newValue);
+      }
+    };
+
+    return (
+      <Select
+        {...rest}
+        name="name"
+        label="Nome"
+        error={error}
+        value={currentValue}
+        //     error={helperText}
+        onChange={change}
+        options={users}
+      />
+    );
+  };
+
+  function checkDuplicates(arr, index, new_id, setError) {
+    return arr.map((options) => {
+      if (options.ID !== index) {
+        if (options.username === new_id) {
+          setError("Utilizador já é atribuído a outro farmacêutico");
+        }
+      }
+    });
+  }
+
   const columns = [
     {
-      title: "ID Grupo",
-      field: "value",
+      title: "Nome",
+      field: "Name",
       width: "auto",
     },
-    { title: "Descrição Grupo", field: "label", width: "auto" },
+
+    { title: "Email", field: "Email", width: "auto" },
+
+    { title: "Telefone", field: "Phone", width: "auto" },
 
     {
-      title: "Editar ",
-      field: "",
-      render: (rowData) => (
-        <IconButton
-          onClick={() => {
-            setisEdit(true);
-            openInPopup(rowData);
-          }}
-        >
-          <EditIcon />
-        </IconButton>
+      title: "Utilizador",
+      field: "username",
+      width: "20%",
+      render: (RowData) => (
+        <Select disabled={true} value={RowData.username} options={users} />
       ),
+      editComponent,
+    },
+
+    {
+      title: "Ativo",
+      field: "Active",
+      width: "auto",
       width: "10%",
+      render: (RowData) => (
+        <Switch
+          value={RowData.Active}
+          disabled={true}
+          id={"Active"}
+          defaultChecked={RowData.Active}
+          label={""}
+        ></Switch>
+      ),
+      editComponent: (RowData) => {
+        console.log(RowData.value);
+        return (
+          <Switch
+            value={RowData.value !== undefined ? RowData.value : false}
+            onChange={(e) => RowData.onChange(e.target.checked)}
+            disabled={false}
+          ></Switch>
+        );
+      },
     },
   ];
 
@@ -93,29 +198,6 @@ export default function GruopTable() {
     padding: "dense",
   };
 
-  const addOrEdit = (values, resetForm) => {
-    if (isInsert) {
-      onHandleInsert(values);
-    }
-    if (isEdit) {
-      onHandleUpdate(values);
-    }
-    resetForm();
-    setRecordForEdit(null);
-    setOpenPopup(false);
-    setUpdate(!update);
-
-    setTimeout(() => {
-      setisEdit(false);
-      setisInsert(true);
-    }, 500);
-  };
-
-  const openInPopup = (rowData) => {
-    setRecordForEdit(rowData);
-    setOpenPopup(true);
-  };
-
   return (
     <>
       <Paper>
@@ -123,30 +205,99 @@ export default function GruopTable() {
           options={options}
           columns={columns}
           data={data}
-          title="Grupos de permissões"
+          title={<TableTitle text="Farmacêuticos" />}
           editable={{
+            onRowAdd: (newData) =>
+              new Promise((resolve, reject) => {
+                console.log("newData");
+                console.log(newData);
+                let allow_Resolve = true;
+
+                data.map((options) => {
+                  if (options.username === newData.username) {
+                    allow_Resolve = false;
+                  }
+                });
+
+                if (
+                  newData.username === undefined ||
+                  newData.username === " "
+                ) {
+                  allow_Resolve = false;
+                }
+                if (allow_Resolve) {
+                  InsertPharmacists(newData);
+                }
+
+                setTimeout(() => {
+                  if (allow_Resolve) {
+                    MakeRequests();
+                    resolve();
+                  } else {
+                    reject();
+                  }
+                }, 1000);
+              }),
+
+            onRowUpdate: (newData, oldData) =>
+              new Promise((resolve, reject) => {
+                let allow_Resolve = true;
+
+                data.map((options) => {
+                  if (options.ID !== oldData.ID) {
+                    if (options.username === newData.username) {
+                      allow_Resolve = false;
+                    }
+                  }
+                });
+
+                if (
+                  newData.username === undefined ||
+                  newData.username === " "
+                ) {
+                  allow_Resolve = false;
+                }
+                if (allow_Resolve) {
+                  UpdatePharmacists(newData);
+                }
+
+                setTimeout(() => {
+                  if (allow_Resolve) {
+                    MakeRequests();
+                    resolve();
+                  } else {
+                    reject();
+                  }
+                }, 1000);
+              }),
             onRowDelete: (oldData) =>
               new Promise((resolve, reject) => {
-                onHandleDelete(oldData.value);
+                DeletePharmacists(oldData.ID);
                 setTimeout(() => {
-                  setUpdate(getGroups());
+                  setUpdate(!update);
                   resolve();
                 }, 1500);
               }),
           }}
           components={{
+            Action: (props) => {
+              if (
+                typeof props.action === typeof Function ||
+                props.action.tooltip !== "Add"
+              ) {
+                return <MTableAction {...props} />;
+              } else {
+                return (
+                  <div ref={addActionRef} onClick={props.action.onClick} />
+                );
+              }
+            },
+
             Toolbar: (props) => (
               <div>
                 <MTableToolbar {...props} />
                 <div style={{ padding: "0px 10px", textAlign: "right" }}>
-                  <IconButton
-                    onClick={() => {
-                      setisEdit(false);
-                      setisInsert(true);
-                      setOpenPopup(true);
-                      setRecordForEdit(null);
-                    }}
-                  >
+                  <IconButton onClick={() => addActionRef.current.click()}>
                     <AddIcon />
                   </IconButton>
                 </div>
@@ -159,11 +310,6 @@ export default function GruopTable() {
           }}
         />
       </Paper>
-      <Popup
-        title="Ficha de Grupo"
-        openPopup={openPopup}
-        setOpenPopup={setOpenPopup}
-      ></Popup>
     </>
   );
 }

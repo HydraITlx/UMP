@@ -13,7 +13,7 @@ import { validateToken } from "./Requests/LoginRequests";
 import Group from "./Pages/Group/Group";
 import User from "./Pages/Users/User";
 import UCC from "./pages/UCC/UCC";
-
+import Pharmacist from "./pages/Pharmacist/Pharmacist";
 function App() {
   const [shouldNavigate, setshouldNavigate] = useState(false);
 
@@ -100,6 +100,7 @@ function App() {
                   <Route path="/group" element={<Group />} />
                   <Route path="/user" element={<User />} />
                   <Route path="/ucc" element={<UCC />} />
+                  <Route path="/pharmacist" element={<Pharmacist />} />
                 </Route>
               </Routes>
             </section>

@@ -22,11 +22,11 @@ export default function SwitchLabels(props) {
       <FormControlLabel
         control={
           <StyleSwitch
+            name={props.name}
             disabled={props.disabled}
             id={props.id}
             onChange={props.onChange}
-            value={props.value ? props.value : false}
-            defaultChecked={props.defaultChecked ? props.defaultChecked : false}
+            checked={props.value}
           />
         }
         label={

@@ -15,6 +15,7 @@ import UCCForm from "./Form/UCCForm";
 import EditIcon from "@mui/icons-material/Edit";
 import Controls from "../../Helpers/Controls";
 import TableTitle from "../../Helpers/TableTitle";
+import Spinner from "../../Spinner/Spinner";
 
 const EntityTypeOption = [
   { value: 0, label: " " },
@@ -23,6 +24,7 @@ const EntityTypeOption = [
 ];
 
 export default function GruopTable() {
+  const [isLoading, setisLoading] = useState(true);
   const [data, setData] = useState([]);
   const [update, setUpdate] = useState(true);
   const [openPopup, setOpenPopup] = useState(false);
@@ -51,11 +53,13 @@ export default function GruopTable() {
   const handleUCCPromise = (AuthPromise) => {
     {
       if (AuthPromise === undefined) {
+        setisLoading(false);
         return;
       }
 
       AuthPromise.then((response) => {
         if (response !== undefined) {
+          setisLoading(false);
           setData(response);
         }
       });
@@ -133,6 +137,7 @@ export default function GruopTable() {
       onHandleUCCInsert(values);
     }
     resetForm();
+    setisLoading(true);
     setRecordForEdit(null);
     SetpharmacistOptions([]);
     setOpenPopup(false);
@@ -165,37 +170,41 @@ export default function GruopTable() {
 
   return (
     <>
-      <Paper>
-        <MaterialTable
-          options={options}
-          columns={columns}
-          data={data}
-          title={<TableTitle text="Unidades de Cuidados Continuados" />}
-          components={{
-            Toolbar: (props) => (
-              <div>
-                <MTableToolbar {...props} />
-                <div style={{ padding: "0px 10px", textAlign: "right" }}>
-                  <IconButton
-                    onClick={() => {
-                      setisEdit(false);
-                      setisInsert(true);
-                      setOpenPopup(true);
-                      setRecordForEdit(null);
-                    }}
-                  >
-                    <AddIcon />
-                  </IconButton>
+      {isLoading && <Spinner></Spinner>}
+
+      {!isLoading && (
+        <Paper>
+          <MaterialTable
+            options={options}
+            columns={columns}
+            data={data}
+            title={<TableTitle text="Unidades de Cuidados Continuados" />}
+            components={{
+              Toolbar: (props) => (
+                <div>
+                  <MTableToolbar {...props} />
+                  <div style={{ padding: "0px 10px", textAlign: "right" }}>
+                    <IconButton
+                      onClick={() => {
+                        setisEdit(false);
+                        setisInsert(true);
+                        setOpenPopup(true);
+                        setRecordForEdit(null);
+                      }}
+                    >
+                      <AddIcon />
+                    </IconButton>
+                  </div>
                 </div>
-              </div>
-            ),
-          }}
-          localization={{
-            header: { actions: "Eliminar" },
-            body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
-          }}
-        />
-      </Paper>
+              ),
+            }}
+            localization={{
+              header: { actions: "Eliminar" },
+              body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
+            }}
+          />
+        </Paper>
+      )}
       <Popup
         title="Ficha Unidade de Cuidadados Continuados"
         openPopup={openPopup}
