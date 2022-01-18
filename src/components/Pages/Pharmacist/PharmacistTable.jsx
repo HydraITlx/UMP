@@ -108,8 +108,8 @@ export default function GruopTable() {
     return (
       <Select
         {...rest}
-        name="name"
-        label="Nome"
+        name="username"
+        label=""
         error={error}
         value={currentValue}
         //     error={helperText}

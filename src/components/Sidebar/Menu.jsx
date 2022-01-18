@@ -22,6 +22,7 @@ import { runInAction } from "mobx";
 import Logout from "@mui/icons-material/Logout";
 import UserStore from "../Store/UserStore";
 import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
+import CategoryIcon from "@mui/icons-material/Category";
 
 export default function TemporaryDrawer(prop) {
   let navigate = useNavigate();
@@ -107,7 +108,15 @@ export default function TemporaryDrawer(prop) {
           </ListItemIcon>
           <ListItemText style={{ color: "white" }} primary={"Farmacêuticos"} />
         </ListItem>
+
+        <ListItem onClick={() => navigate("products")} button key={"text11"}>
+          <ListItemIcon>
+            <CategoryIcon sx={{ color: "white" }} />
+          </ListItemIcon>
+          <ListItemText style={{ color: "white" }} primary={"Produtos"} />
+        </ListItem>
       </List>
+
       {UserStore.isAdmin && <Divider />}
       {UserStore.isAdmin && <p style={{ color: "white" }}>Administração</p>}
       {UserStore.isAdmin && (

@@ -1,17 +1,25 @@
 import { useEffect, useState } from "react";
 import MaterialTable, { MTableToolbar } from "@material-table/core";
 import { Paper } from "@mui/material";
-import { getUsers, onHandleInsertModify } from "../../Requests/UserRequests";
-import Switch from "../../Helpers/Switch";
+import {
+  getProducts,
+  InsertProducts,
+  getLabsOptions,
+  DeleteProducts,
+  modifyProducts,
+} from "../../Requests/ProductsRequests";
+
 import Popup from "../../Helpers/Popup";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
-import UserForm from "./Form/UserForm";
+import ProductForm from "./Form/ProductForm";
 import EditIcon from "@mui/icons-material/Edit";
 import TableTitle from "../../Helpers/TableTitle";
+import Switch from "../../Helpers/Switch";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
+  const [LabOptions, setLabOptions] = useState([]);
   const [update, setUpdate] = useState(true);
   const [openPopup, setOpenPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
@@ -21,15 +29,23 @@ export default function GruopTable() {
   useEffect(() => {
     let isMounted = true;
 
-    const UserPromise = getUsers();
-    if (isMounted) handleUserPromise(UserPromise, isMounted);
+    if (isMounted) {
+      const LabOptionsPromise = getLabsOptions();
+      handleLabOptionsPromise(LabOptionsPromise);
 
+      handleProductsRequests();
+    }
     return () => {
       isMounted = false;
     };
   }, [update]);
 
-  const handleUserPromise = (AuthPromise, isMounted) => {
+  function handleProductsRequests() {
+    const ProductsPromise = getProducts();
+    handleProductsPromise(ProductsPromise);
+  }
+
+  const handleProductsPromise = (AuthPromise) => {
     {
       if (AuthPromise === undefined) {
         return;
@@ -37,7 +53,23 @@ export default function GruopTable() {
 
       AuthPromise.then((response) => {
         if (response !== undefined) {
+          console.log(response);
           setData(response);
+        }
+      });
+    }
+  };
+
+  const handleLabOptionsPromise = (AuthPromise) => {
+    {
+      if (AuthPromise === undefined) {
+        return;
+      }
+
+      AuthPromise.then((response) => {
+        if (response !== undefined) {
+          console.log(response);
+          setLabOptions(response);
         }
       });
     }
@@ -45,45 +77,78 @@ export default function GruopTable() {
 
   const columns = [
     {
-      title: "Utilizador",
-      field: "username",
+      title: "Ano",
+      field: "Year",
       width: "auto",
     },
 
-    { title: "Nome Completo", field: "full_name", width: "auto" },
-    { title: "Email", field: "email", width: "auto" },
     {
-      title: "Tent. Autenticação",
-      field: "attempts",
+      title: "Tipo",
+      field: "Type",
       width: "auto",
-      align: "center",
     },
 
     {
-      title: "Administrador",
-      field: "is_admin",
+      title: "CHNM",
+      field: "CHNM",
       width: "auto",
-      render: (rowData) => (
+    },
+
+    {
+      title: "Descrição",
+      field: "Description",
+      width: "auto",
+    },
+
+    {
+      title: "Nome Laboratório",
+      field: "Laboratory_Name",
+      width: "auto",
+    },
+
+    {
+      title: "Preço Caixa",
+      field: "Unit_Price_Box",
+      width: "auto",
+    },
+
+    {
+      title: "Qtd. por Caixa",
+      field: "Total_Quantity",
+      width: "auto",
+    },
+
+    {
+      title: "Preço unit.",
+      field: "Unit_Price_UN",
+      width: "auto",
+    },
+
+    {
+      title: "Esgotado",
+      field: "Sold_Out",
+      width: "auto",
+      render: (RowData) => (
         <Switch
-          value={rowData.is_admin}
+          value={RowData.Sold_Out}
           disabled={true}
-          id={"isadmin"}
-          defaultChecked={rowData.is_admin}
+          id={"Active"}
+          defaultChecked={RowData.Sold_Out}
           label={""}
         ></Switch>
       ),
     },
 
     {
-      title: "Ativo",
-      field: "active",
+      title: "Active",
+      field: "Active",
       width: "auto",
-      render: (rowData) => (
+      render: (RowData) => (
         <Switch
-          value={rowData.active}
+          value={RowData.Active}
           disabled={true}
-          id={"active"}
-          defaultChecked={rowData.active}
+          id={"Active"}
+          defaultChecked={RowData.Active}
           label={""}
         ></Switch>
       ),
@@ -96,6 +161,7 @@ export default function GruopTable() {
         <IconButton
           onClick={() => {
             setisEdit(true);
+            setisInsert(false);
             openInPopup(rowData);
           }}
         >
@@ -128,14 +194,18 @@ export default function GruopTable() {
   };
 
   const addOrEdit = (values, resetForm) => {
-    onHandleInsertModify(values);
-
+    if (isInsert) {
+      InsertProducts(values);
+    }
+    if (isEdit) {
+      modifyProducts(values);
+    }
     resetForm();
     setRecordForEdit(null);
     setOpenPopup(false);
-    setUpdate(!update);
 
     setTimeout(() => {
+      handleProductsRequests();
       setisEdit(false);
       setisInsert(true);
     }, 500);
@@ -143,7 +213,7 @@ export default function GruopTable() {
 
   const addonConfirm = (values) => {
     if (isInsert) {
-      onHandleInsertModify(values);
+      onHandleInsert(values);
     }
     setUpdate(!update);
     setTimeout(() => {
@@ -164,7 +234,17 @@ export default function GruopTable() {
           options={options}
           columns={columns}
           data={data}
-          title={<TableTitle text="Utilizadores" />}
+          title={<TableTitle text="Produtos" />}
+          editable={{
+            onRowDelete: (oldData) =>
+              new Promise((resolve, reject) => {
+                DeleteProducts(oldData);
+                setTimeout(() => {
+                  handleProductsRequests();
+                  resolve();
+                }, 1500);
+              }),
+          }}
           components={{
             Toolbar: (props) => (
               <div>
@@ -191,17 +271,18 @@ export default function GruopTable() {
         />
       </Paper>
       <Popup
-        title="Ficha de Utilizador"
+        title="Ficha de Produto"
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
-        <UserForm
+        <ProductForm
           data={data}
           recordForEdit={recordForEdit}
           addOrEdit={addOrEdit}
           addonConfirm={addonConfirm}
           isEdit={isEdit}
-        ></UserForm>
+          LabOptions={LabOptions}
+        ></ProductForm>
       </Popup>
     </>
   );

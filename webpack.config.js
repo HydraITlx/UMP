@@ -45,6 +45,7 @@ if (process.env.NODE_ENV === "production") {
     REACT_APP_UCC_MANAGEMENT:'https://apifarma.ump.pt/api/uccmanagment/',
     REACT_APP_PLACES_MANAGEMENT:'https://apifarma.ump.pt/api/placesmanagment/',
     REACT_APP_PHARMACIST_MANAGEMENT:'https://apifarma.ump.pt/api/pharmacistmanagment/',
+    REACT_APP_ITEM_MANAGEMENT:'https://apifarma.ump.pt/api/itemsmanagment/',
     REACT_APP_APITOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDE0MjEzMDl9.gul4t_9A7CD67H5qTTjiea6baOcsAERa6gS_JX8e3d4",
   };
 
@@ -77,6 +78,7 @@ if (process.env.SERVE) {
     REACT_APP_UCC_MANAGEMENT:'http://192.168.1.6:50000/api/uccmanagment/',
     REACT_APP_PLACES_MANAGEMENT:'http://192.168.1.6:50000/api/placesmanagment/',
     REACT_APP_PHARMACIST_MANAGEMENT:'http://192.168.1.6:50000/api/pharmacistmanagment/',
+    REACT_APP_ITEM_MANAGEMENT:'http://192.168.1.6:50000/api/itemsmanagment/',
     REACT_APP_APITOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDE0MjEzMDl9.gul4t_9A7CD67H5qTTjiea6baOcsAERa6gS_JX8e3d4",
   };
   plugins.push(new EnvironmentPlugin(EnvValues))
