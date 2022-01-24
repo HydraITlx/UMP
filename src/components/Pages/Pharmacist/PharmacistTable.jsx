@@ -17,6 +17,12 @@ import AddIcon from "@mui/icons-material/Add";
 import TableTitle from "../../Helpers/TableTitle";
 import Select from "../../Helpers/SelectRender";
 import Switch from "../../Helpers/Switch";
+import NoAccess from "../../Helpers/NoAccess";
+import Spinner from "../../Spinner/Spinner";
+import {
+  getPermissions,
+  checkIfAdminPermissions,
+} from "../../Requests/PermissionRequests";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -24,15 +30,65 @@ export default function GruopTable() {
   const [update, setUpdate] = useState(true);
   const addActionRef = React.useRef();
 
+  const [AllowRead, setAllowRead] = useState(false);
+  const [AllowModify, setAllowModify] = useState(false);
+  const [AllowInsert, setAllowInsert] = useState(false);
+  const [AllowDelete, setAllowDelete] = useState(false);
+  const [IsAdmin, setIsAdmin] = useState(false);
+  const [isLoading, setisLoading] = useState(true);
+
   useEffect(() => {
     let isMounted = true;
 
-    if (isMounted) MakeRequests();
+    if (isMounted) {
+      handlePermissionRequests();
+      MakeRequests();
+    }
 
     return () => {
       isMounted = false;
     };
   }, [update]);
+
+  function handlePermissionRequests() {
+    const AdminPromise = checkIfAdminPermissions();
+    handleAdminPromise(AdminPromise);
+
+    const RequestPromise = getPermissions(40);
+    handlePermissionPromise(RequestPromise);
+  }
+
+  const handlePermissionPromise = (AuthPromise) => {
+    {
+      if (AuthPromise === undefined) {
+        return;
+      }
+
+      AuthPromise.then((response) => {
+        if (response[0] !== undefined) {
+          console.log(response[0]);
+          setAllowRead(response[0].r);
+          setAllowModify(response[0].m);
+          setAllowInsert(response[0].i);
+          setAllowDelete(response[0].d);
+        }
+      });
+    }
+  };
+
+  const handleAdminPromise = (AuthPromise) => {
+    {
+      if (AuthPromise === undefined) {
+        return;
+      }
+
+      AuthPromise.then((response) => {
+        if (response !== undefined) {
+          setIsAdmin(response[0].is_admin);
+        }
+      });
+    }
+  };
 
   function MakeRequests() {
     const userRequest = getUserOptions();
@@ -51,6 +107,9 @@ export default function GruopTable() {
         console.log(response);
         if (response !== undefined) {
           setData(response);
+          setTimeout(() => {
+            setisLoading(false);
+          }, 1000);
         }
       });
     }
@@ -197,119 +256,138 @@ export default function GruopTable() {
     actionsColumnIndex: -1,
     padding: "dense",
   };
+  if (isLoading === true) {
+    return <Spinner />;
+  }
 
-  return (
-    <>
-      <Paper>
-        <MaterialTable
-          options={options}
-          columns={columns}
-          data={data}
-          title={<TableTitle text="Farmacêuticos" />}
-          editable={{
-            onRowAdd: (newData) =>
-              new Promise((resolve, reject) => {
-                console.log("newData");
-                console.log(newData);
-                let allow_Resolve = true;
+  if (isLoading === false) {
+    if (IsAdmin || AllowRead === 1) {
+      return (
+        <>
+          <Paper>
+            <MaterialTable
+              options={options}
+              columns={columns}
+              data={data}
+              title={<TableTitle text="Farmacêuticos" />}
+              editable={{
+                isDeletable: (rowData) => AllowDelete === 1 || IsAdmin === true,
+                isEditable: (rowData) => AllowModify === 1 || IsAdmin === true,
 
-                data.map((options) => {
-                  if (options.username === newData.username) {
-                    allow_Resolve = false;
-                  }
-                });
+                onRowAdd: (newData) =>
+                  new Promise((resolve, reject) => {
+                    console.log("newData");
+                    console.log(newData);
+                    let allow_Resolve = true;
 
-                if (
-                  newData.username === undefined ||
-                  newData.username === " "
-                ) {
-                  allow_Resolve = false;
-                }
-                if (allow_Resolve) {
-                  InsertPharmacists(newData);
-                }
+                    data.map((options) => {
+                      if (options.username === newData.username) {
+                        allow_Resolve = false;
+                      }
+                    });
 
-                setTimeout(() => {
-                  if (allow_Resolve) {
-                    MakeRequests();
-                    resolve();
-                  } else {
-                    reject();
-                  }
-                }, 1000);
-              }),
-
-            onRowUpdate: (newData, oldData) =>
-              new Promise((resolve, reject) => {
-                let allow_Resolve = true;
-
-                data.map((options) => {
-                  if (options.ID !== oldData.ID) {
-                    if (options.username === newData.username) {
+                    if (
+                      newData.username === undefined ||
+                      newData.username === " "
+                    ) {
                       allow_Resolve = false;
                     }
-                  }
-                });
+                    if (allow_Resolve) {
+                      InsertPharmacists(newData);
+                    }
 
-                if (
-                  newData.username === undefined ||
-                  newData.username === " "
-                ) {
-                  allow_Resolve = false;
-                }
-                if (allow_Resolve) {
-                  UpdatePharmacists(newData);
-                }
+                    setTimeout(() => {
+                      if (allow_Resolve) {
+                        MakeRequests();
+                        resolve();
+                      } else {
+                        reject();
+                      }
+                    }, 1000);
+                  }),
 
-                setTimeout(() => {
-                  if (allow_Resolve) {
-                    MakeRequests();
-                    resolve();
+                onRowUpdate: (newData, oldData) =>
+                  new Promise((resolve, reject) => {
+                    let allow_Resolve = true;
+
+                    data.map((options) => {
+                      if (options.ID !== oldData.ID) {
+                        if (options.username === newData.username) {
+                          allow_Resolve = false;
+                        }
+                      }
+                    });
+
+                    if (
+                      newData.username === undefined ||
+                      newData.username === " "
+                    ) {
+                      allow_Resolve = false;
+                    }
+                    if (allow_Resolve) {
+                      UpdatePharmacists(newData);
+                    }
+
+                    setTimeout(() => {
+                      if (allow_Resolve) {
+                        MakeRequests();
+                        resolve();
+                      } else {
+                        reject();
+                      }
+                    }, 1000);
+                  }),
+                onRowDelete: (oldData) =>
+                  new Promise((resolve, reject) => {
+                    DeletePharmacists(oldData.ID);
+                    setTimeout(() => {
+                      setUpdate(!update);
+                      resolve();
+                    }, 1500);
+                  }),
+              }}
+              components={{
+                Action: (props) => {
+                  if (
+                    typeof props.action === typeof Function ||
+                    props.action.tooltip !== "Add"
+                  ) {
+                    return <MTableAction {...props} />;
                   } else {
-                    reject();
+                    return (
+                      <div ref={addActionRef} onClick={props.action.onClick} />
+                    );
                   }
-                }, 1000);
-              }),
-            onRowDelete: (oldData) =>
-              new Promise((resolve, reject) => {
-                DeletePharmacists(oldData.ID);
-                setTimeout(() => {
-                  setUpdate(!update);
-                  resolve();
-                }, 1500);
-              }),
-          }}
-          components={{
-            Action: (props) => {
-              if (
-                typeof props.action === typeof Function ||
-                props.action.tooltip !== "Add"
-              ) {
-                return <MTableAction {...props} />;
-              } else {
-                return (
-                  <div ref={addActionRef} onClick={props.action.onClick} />
-                );
-              }
-            },
+                },
 
-            Toolbar: (props) => (
-              <div>
-                <MTableToolbar {...props} />
-                <div style={{ padding: "0px 10px", textAlign: "right" }}>
-                  <IconButton onClick={() => addActionRef.current.click()}>
-                    <AddIcon />
-                  </IconButton>
-                </div>
-              </div>
-            ),
-          }}
-          localization={{
-            header: { actions: "Ações" },
-            body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
-          }}
-        />
-      </Paper>
-    </>
-  );
+                Toolbar: (props) => (
+                  <div>
+                    <MTableToolbar {...props} />
+                    <div style={{ padding: "0px 10px", textAlign: "right" }}>
+                      <IconButton
+                        disabled={!AllowInsert && !IsAdmin}
+                        onClick={() => addActionRef.current.click()}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </div>
+                  </div>
+                ),
+              }}
+              localization={{
+                header: { actions: "Ações" },
+                body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
+              }}
+            />
+          </Paper>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <NoAccess />
+        </>
+      );
+    }
+  }
 }

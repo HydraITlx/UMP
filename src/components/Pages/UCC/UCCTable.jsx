@@ -9,6 +9,10 @@ import {
   DeleteUCC,
 } from "../../Requests/UCCRequests";
 
+import {
+  getPermissions,
+  checkIfAdminPermissions,
+} from "../../Requests/PermissionRequests";
 import Popup from "../../Helpers/Popup";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
@@ -17,6 +21,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import Controls from "../../Helpers/Controls";
 import TableTitle from "../../Helpers/TableTitle";
 import Spinner from "../../Spinner/Spinner";
+import NoAccess from "../../Helpers/NoAccess";
 
 const EntityTypeOption = [
   { value: 0, label: " " },
@@ -34,15 +39,64 @@ export default function GruopTable() {
   const [isEdit, setisEdit] = useState(false);
   const [pharmacistOptions, SetpharmacistOptions] = useState([]);
 
+  const [AllowRead, setAllowRead] = useState(false);
+  const [AllowModify, setAllowModify] = useState(false);
+  const [AllowInsert, setAllowInsert] = useState(false);
+  const [AllowDelete, setAllowDelete] = useState(false);
+  const [IsAdmin, setIsAdmin] = useState(false);
+
   useEffect(() => {
     let isMounted = true;
 
-    if (isMounted) handlePromisses();
+    if (isMounted) {
+      handlePermissionRequests();
+      handlePromisses();
+    }
 
     return () => {
       isMounted = false;
     };
   }, [update]);
+
+  function handlePermissionRequests() {
+    const AdminPromise = checkIfAdminPermissions();
+    handleAdminPromise(AdminPromise);
+
+    const RequestPromise = getPermissions(20);
+    handlePermissionPromise(RequestPromise);
+  }
+
+  const handlePermissionPromise = (AuthPromise) => {
+    {
+      if (AuthPromise === undefined) {
+        return;
+      }
+
+      AuthPromise.then((response) => {
+        if (response[0] !== undefined) {
+          console.log(response[0]);
+          setAllowRead(response[0].r);
+          setAllowModify(response[0].m);
+          setAllowInsert(response[0].i);
+          setAllowDelete(response[0].d);
+        }
+      });
+    }
+  };
+
+  const handleAdminPromise = (AuthPromise) => {
+    {
+      if (AuthPromise === undefined) {
+        return;
+      }
+
+      AuthPromise.then((response) => {
+        if (response !== undefined) {
+          setIsAdmin(response[0].is_admin);
+        }
+      });
+    }
+  };
 
   function handlePromisses() {
     const OptionsPromise = onHandlePharmacistOptions();
@@ -95,6 +149,7 @@ export default function GruopTable() {
       field: "",
       render: (rowData) => (
         <IconButton
+          disabled={!AllowModify && !IsAdmin}
           onClick={() => {
             setisEdit(true);
             setisInsert(false);
@@ -169,70 +224,83 @@ export default function GruopTable() {
     }
   };
 
-  return (
-    <>
-      {isLoading && <Spinner></Spinner>}
+  if (isLoading === true) {
+    return <Spinner />;
+  }
 
-      {!isLoading && (
-        <Paper>
-          <MaterialTable
-            options={options}
-            columns={columns}
-            data={data}
-            title={<TableTitle text="Unidades de Cuidados Continuados" />}
-            editable={{
-              onRowDelete: (oldData) =>
-                new Promise((resolve, reject) => {
-                  setTimeout(() => {
-                    const dataDelete = [...data];
-                    const index = oldData.tableData.id;
-                    dataDelete.splice(index, 1);
-                    setData([...dataDelete]);
-                    DeleteUCC(oldData.ID);
-                    resolve();
-                  }, 1500);
-                }),
-            }}
-            components={{
-              Toolbar: (props) => (
-                <div>
-                  <MTableToolbar {...props} />
-                  <div style={{ padding: "0px 10px", textAlign: "right" }}>
-                    <IconButton
-                      onClick={() => {
-                        setisEdit(false);
-                        setisInsert(true);
-                        setOpenPopup(true);
-                        setRecordForEdit(null);
-                      }}
-                    >
-                      <AddIcon />
-                    </IconButton>
+  if (isLoading === false) {
+    if (IsAdmin || AllowRead === 1) {
+      return (
+        <>
+          <Paper>
+            <MaterialTable
+              options={options}
+              columns={columns}
+              data={data}
+              title={<TableTitle text="Unidades de Cuidados Continuados" />}
+              editable={{
+                isDeletable: (rowData) => AllowDelete === 1 || IsAdmin === true,
+                onRowDelete: (oldData) =>
+                  new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                      const dataDelete = [...data];
+                      const index = oldData.tableData.id;
+                      dataDelete.splice(index, 1);
+                      setData([...dataDelete]);
+                      DeleteUCC(oldData.ID);
+                      resolve();
+                    }, 1500);
+                  }),
+              }}
+              components={{
+                Toolbar: (props) => (
+                  <div>
+                    <MTableToolbar {...props} />
+                    <div style={{ padding: "0px 10px", textAlign: "right" }}>
+                      <IconButton
+                        disabled={!AllowInsert && !IsAdmin}
+                        onClick={() => {
+                          setisEdit(false);
+                          setisInsert(true);
+                          setOpenPopup(true);
+                          setRecordForEdit(null);
+                        }}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                    </div>
                   </div>
-                </div>
-              ),
-            }}
-            localization={{
-              header: { actions: "Ações" },
-              body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
-            }}
-          />
-        </Paper>
-      )}
-      <Popup
-        title="Ficha Unidade de Cuidadados Continuados"
-        openPopup={openPopup}
-        setOpenPopup={setOpenPopup}
-      >
-        <UCCForm
-          recordForEdit={recordForEdit}
-          pharmacistOptions={pharmacistOptions}
-          addOrEdit={addOrEdit}
-          isEdit={isEdit}
-          isInsert={isInsert}
-          data={data}
-        ></UCCForm>
-      </Popup>
-    </>
-  );
+                ),
+              }}
+              localization={{
+                header: { actions: "Ações" },
+                body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
+              }}
+            />
+          </Paper>
+
+          <Popup
+            title="Ficha Unidade de Cuidadados Continuados"
+            openPopup={openPopup}
+            setOpenPopup={setOpenPopup}
+          >
+            <UCCForm
+              recordForEdit={recordForEdit}
+              pharmacistOptions={pharmacistOptions}
+              addOrEdit={addOrEdit}
+              isEdit={isEdit}
+              isInsert={isInsert}
+              data={data}
+            ></UCCForm>
+          </Popup>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <NoAccess />
+        </>
+      );
+    }
+  }
 }

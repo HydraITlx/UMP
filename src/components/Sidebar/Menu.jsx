@@ -78,7 +78,7 @@ export default function TemporaryDrawer(prop) {
           <ListItemIcon>
             <ScienceIcon sx={{ color: "white" }} />
           </ListItemIcon>
-          <ListItemText style={{ color: "white" }} primary={"Laboratorios"} />
+          <ListItemText style={{ color: "white" }} primary={"Laboratórios"} />
         </ListItem>
 
         <ListItem onClick={() => navigate("ucc")} button key={"text3"}>
