@@ -156,6 +156,27 @@ export function InsertDeliveryPlaces(rowdata, UCCID) {
   );
 }
 
+export function DeleteUCC(rowdata) {
+  let body = {
+    process: 4,
+    ID: rowdata,
+  };
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.REACT_APP_APITOKEN}`,
+    },
+    body: JSON.stringify(body),
+  };
+
+  return getRequestPromise(
+    process.env.REACT_APP_UCC_MANAGEMENT,
+    requestOptions
+  );
+}
+
 export function DeleteDeliveryPlaces(rowdata, UCCID) {
   let body = {
     process: 4,

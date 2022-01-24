@@ -46,6 +46,11 @@ if (process.env.NODE_ENV === "production") {
     REACT_APP_PLACES_MANAGEMENT:'https://apifarma.ump.pt/api/placesmanagment/',
     REACT_APP_PHARMACIST_MANAGEMENT:'https://apifarma.ump.pt/api/pharmacistmanagment/',
     REACT_APP_ITEM_MANAGEMENT:'https://apifarma.ump.pt/api/itemsmanagment/',
+    REACT_APP_ORDERACCESS_MANAGEMENT:'https://apifarma.ump.pt/api/orderaccessmanagment/',
+    REACT_APP_LABORATORY_MANAGEMENT:'https://apifarma.ump.pt/api/laboratorymanagment/',
+    REACT_APP_RETURN_MANAGEMENT:'https://apifarma.ump.pt/api/returnconditionsmanagment/',
+    REACT_APP_ATTACHMENT_MANAGEMENT:'https://apifarma.ump.pt/api/attachmentmanagment/',
+    REACT_APP_NUMBERING_MANAGEMENT:'https://apifarma.ump.pt/api/numeringmanagment/',
     REACT_APP_APITOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDE0MjEzMDl9.gul4t_9A7CD67H5qTTjiea6baOcsAERa6gS_JX8e3d4",
   };
 
@@ -79,9 +84,15 @@ if (process.env.SERVE) {
     REACT_APP_PLACES_MANAGEMENT:'http://192.168.1.6:50000/api/placesmanagment/',
     REACT_APP_PHARMACIST_MANAGEMENT:'http://192.168.1.6:50000/api/pharmacistmanagment/',
     REACT_APP_ITEM_MANAGEMENT:'http://192.168.1.6:50000/api/itemsmanagment/',
+    REACT_APP_ORDERACCESS_MANAGEMENT:'http://192.168.1.6:50000/api/orderaccessmanagment/',
+    REACT_APP_LABORATORY_MANAGEMENT:'http://192.168.1.6:50000/api/laboratorymanagment/',
+    REACT_APP_RETURN_MANAGEMENT:'http://192.168.1.6:50000/api/returnconditionsmanagment/',
+    REACT_APP_ATTACHMENT_MANAGEMENT:'http://192.168.1.6:50000/api/attachmentmanagment/',
+    REACT_APP_NUMBERING_MANAGEMENT:'http://192.168.1.6:50000/api/numeringmanagment/',
     REACT_APP_APITOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDE0MjEzMDl9.gul4t_9A7CD67H5qTTjiea6baOcsAERa6gS_JX8e3d4",
   };
   plugins.push(new EnvironmentPlugin(EnvValues))
+
 }
 
 module.exports = {

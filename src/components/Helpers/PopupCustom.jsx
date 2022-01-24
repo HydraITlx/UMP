@@ -9,11 +9,11 @@ const useStyles = makeStyles((theme) => ({
   dialogWrapper: {
     padding: theme.spacing(2),
     position: "absolute",
-    top: theme.spacing(5),
-    maxWidth: "83%",
-    maxHeight: "90%",
-    minWidth: "83%",
-    minHeight: "90%",
+    top: theme.spacing(20),
+    maxWidth: "80%",
+    maxHeight: "80%",
+    minWidth: "50%",
+    minHeight: "50%",
   },
   DialogTitle: {
     paddingRight: "0px",

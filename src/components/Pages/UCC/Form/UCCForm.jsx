@@ -42,7 +42,7 @@ export default function GroupForm(props) {
   if (isEdit) {
     btnStyles = { minWidth: "100%" };
   } else {
-    btnStyles = { minWidth: "75%" };
+    btnStyles = { minWidth: "100%" };
   }
 
   const validate = (fieldValues = values) => {
@@ -93,12 +93,14 @@ export default function GroupForm(props) {
       }
     }
 
-    if (isInsert) {
+    /*if (isInsert) {
+      if ()
       setValues({
         ...values,
         ID: data[0].ID + 1,
       });
     }
+    */
   }, [recordForEdit]);
 
   function OnHandleSelect(e) {
@@ -150,14 +152,16 @@ export default function GroupForm(props) {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Grid item xs={12} md={6} p={2}>
-        <Grid item xs={12} md={4}>
-          <Controls.Button
-            text="Locais de Entrega"
-            onClick={handleShowDelivery}
-          />
+      {isEdit && (
+        <Grid item xs={12} md={8} p={2}>
+          <Grid item xs={12} md={8}>
+            <Controls.Button
+              text="Locais de Entrega"
+              onClick={handleShowDelivery}
+            />
+          </Grid>
         </Grid>
-      </Grid>
+      )}
       {!showDeliveryPlaces && (
         <div style={{ display: "flex" }}>
           <div style={{ minWidth: "70%" }}>

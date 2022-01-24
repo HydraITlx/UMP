@@ -1,17 +1,24 @@
 import { useEffect, useState } from "react";
 import MaterialTable, { MTableToolbar } from "@material-table/core";
 import { Paper } from "@mui/material";
-import { getUsers, onHandleInsertModify } from "../../Requests/UserRequests";
-import Switch from "../../Helpers/Switch";
+import {
+  getLaboratories,
+  updateLaboratories,
+  InsertLaboratories,
+  DeleteLaboratory,
+} from "../../Requests/LaboratoryRequests";
+
 import Popup from "../../Helpers/Popup";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
-import UserForm from "./Form/UserForm";
+import ProductForm from "./Form/LaboratoryForm";
 import EditIcon from "@mui/icons-material/Edit";
 import TableTitle from "../../Helpers/TableTitle";
+import Switch from "../../Helpers/Switch";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
+  const [LabOptions, setLabOptions] = useState([]);
   const [update, setUpdate] = useState(true);
   const [openPopup, setOpenPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
@@ -21,15 +28,20 @@ export default function GruopTable() {
   useEffect(() => {
     let isMounted = true;
 
-    const UserPromise = getUsers();
-    if (isMounted) handleUserPromise(UserPromise, isMounted);
-
+    if (isMounted) {
+      handleLabRequests();
+    }
     return () => {
       isMounted = false;
     };
   }, [update]);
 
-  const handleUserPromise = (AuthPromise, isMounted) => {
+  function handleLabRequests() {
+    const RequestPromise = getLaboratories();
+    handleProductsPromise(RequestPromise);
+  }
+
+  const handleProductsPromise = (AuthPromise) => {
     {
       if (AuthPromise === undefined) {
         return;
@@ -37,6 +49,7 @@ export default function GruopTable() {
 
       AuthPromise.then((response) => {
         if (response !== undefined) {
+          console.log(response);
           setData(response);
         }
       });
@@ -45,45 +58,60 @@ export default function GruopTable() {
 
   const columns = [
     {
-      title: "Utilizador",
-      field: "username",
+      title: "Nome",
+      field: "Name",
       width: "auto",
     },
 
-    { title: "Nome Completo", field: "full_name", width: "auto" },
-    { title: "Email", field: "email", width: "auto" },
     {
-      title: "Tent. Autenticação",
-      field: "attempts",
+      title: "Tipo",
+      field: "Type",
       width: "auto",
-      align: "center",
+      render: (rowData) => {
+        let rowType = " ";
+        if (rowData.Type === 1) {
+          rowType = "Laboratório";
+        }
+
+        if (rowData.Type === 2) {
+          rowType = "Dispositivos Médicos";
+        }
+
+        if (rowData.Type === 3) {
+          rowType = "Nutrição Especial";
+        }
+        return <p style={{ marginTop: "10px" }}>{rowType}</p>;
+      },
     },
 
     {
-      title: "Administrador",
-      field: "is_admin",
+      title: "Morada",
+      field: "Address",
       width: "auto",
-      render: (rowData) => (
-        <Switch
-          value={rowData.is_admin}
-          disabled={true}
-          id={"isadmin"}
-          defaultChecked={rowData.is_admin}
-          label={""}
-        ></Switch>
-      ),
+    },
+
+    {
+      title: "Telefone",
+      field: "Phone",
+      width: "auto",
+    },
+
+    {
+      title: "Num. Contacto",
+      field: "Contact_Phone",
+      width: "auto",
     },
 
     {
       title: "Ativo",
-      field: "active",
+      field: "Active",
       width: "auto",
-      render: (rowData) => (
+      render: (RowData) => (
         <Switch
-          value={rowData.active}
+          value={RowData.Active}
           disabled={true}
-          id={"active"}
-          defaultChecked={rowData.active}
+          id={"Active"}
+          defaultChecked={RowData.Active}
           label={""}
         ></Switch>
       ),
@@ -96,6 +124,7 @@ export default function GruopTable() {
         <IconButton
           onClick={() => {
             setisEdit(true);
+            setisInsert(false);
             openInPopup(rowData);
           }}
         >
@@ -128,22 +157,27 @@ export default function GruopTable() {
   };
 
   const addOrEdit = (values, resetForm) => {
-    onHandleInsertModify(values);
+    if (isInsert) {
+      InsertLaboratories(values);
+    }
 
+    if (isEdit) {
+      updateLaboratories(values);
+    }
     resetForm();
     setRecordForEdit(null);
     setOpenPopup(false);
-    setUpdate(!update);
 
     setTimeout(() => {
+      handleLabRequests();
       setisEdit(false);
-      setisInsert(true);
+      setisInsert(false);
     }, 500);
   };
 
   const addonConfirm = (values) => {
     if (isInsert) {
-      onHandleInsertModify(values);
+      onHandleInsert(values);
     }
     setUpdate(!update);
     setTimeout(() => {
@@ -164,7 +198,17 @@ export default function GruopTable() {
           options={options}
           columns={columns}
           data={data}
-          title={<TableTitle text="Utilizadores" />}
+          title={<TableTitle text="Laboratórios" />}
+          editable={{
+            onRowDelete: (oldData) =>
+              new Promise((resolve, reject) => {
+                DeleteLaboratory(oldData.ID);
+                setTimeout(() => {
+                  handleLabRequests();
+                  resolve();
+                }, 1000);
+              }),
+          }}
           components={{
             Toolbar: (props) => (
               <div>
@@ -191,17 +235,18 @@ export default function GruopTable() {
         />
       </Paper>
       <Popup
-        title="Ficha de Utilizador"
+        title="Ficha de Laboratório"
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
-        <UserForm
+        <ProductForm
           data={data}
           recordForEdit={recordForEdit}
           addOrEdit={addOrEdit}
           addonConfirm={addonConfirm}
           isEdit={isEdit}
-        ></UserForm>
+          LabOptions={LabOptions}
+        ></ProductForm>
       </Popup>
     </>
   );

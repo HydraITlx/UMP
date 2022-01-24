@@ -1,43 +1,39 @@
 import { useState, useEffect } from "react";
 import {
-  onGetPagePermissions,
-  onGetPageOptions,
-  onAddPagePermission,
-  onDeletePagePermission,
-} from "../../../Requests/UserRequests";
+  getReturnConditions,
+  InsertReturnConditions,
+  UpdateReturnConditions,
+  DeleteReturnConditions,
+} from "../../../Requests/ReturnConditionsRequests";
+
+import Controls from "../../../Helpers/Controls";
 import { Paper } from "@mui/material";
 import MaterialTable, { MTableToolbar } from "@material-table/core";
-import Controls from "../../../Helpers/Controls";
 
 export default function PagePermissions(props) {
-  const { recordForEdit } = props;
+  const { recordForEdit, ID } = props;
 
   const [data, setData] = useState([]);
-  const [lineOptions, setlineOptions] = useState([]);
 
   useEffect(() => {
-    let OptionsPromise = "";
-
-    OptionsPromise = onGetPageOptions();
-    handleOptionPromise(OptionsPromise);
-
     if (recordForEdit !== null) {
-      getPagePromise();
+      getReturnConditionsPromise();
     }
   }, []);
 
-  function getPagePromise() {
-    const PagePromise = onGetPagePermissions(recordForEdit);
-    handlePagePromise(PagePromise);
+  function getReturnConditionsPromise() {
+    const ReturnPromise = getReturnConditions(ID);
+    handlePromise(ReturnPromise);
   }
 
-  const handlePagePromise = (PagePromise) => {
+  const handlePromise = (ReturnPromise) => {
     {
-      if (PagePromise === undefined) {
+      if (ReturnPromise === undefined) {
         return;
       }
 
-      PagePromise.then((response) => {
+      ReturnPromise.then((response) => {
+        console.log(response);
         if (response !== undefined) {
           setData(response);
         }
@@ -45,26 +41,12 @@ export default function PagePermissions(props) {
     }
   };
 
-  const handleOptionPromise = (OptionsPromise) => {
-    {
-      if (OptionsPromise === undefined) {
-        return;
-      }
-      OptionsPromise.then((response) => {
-        if (response !== undefined) {
-          setlineOptions(response);
-        }
-      });
-    }
-  };
-
   const editComponent = ({ onChange, value, ...rest }) => {
-    let newRowValue = " ";
+    let newRowValue = 0;
     if (value !== undefined) {
       newRowValue = value;
     }
 
-    const [currentValue, setValue] = useState(newRowValue);
     const [error, setError] = useState(null);
 
     const change = (e) => {
@@ -74,11 +56,10 @@ export default function PagePermissions(props) {
         newValue = e.target.value;
       }
 
-      setValue(newValue);
       onChange(newValue);
       setError(null);
-      if (newValue === " ") {
-        setError("Grupo não pode estar vazio");
+      if (newValue < 1900) {
+        setError("Ano não é valido");
       } else {
         checkDuplicates(data, rest.rowData.intid, newValue, setError);
       }
@@ -89,23 +70,23 @@ export default function PagePermissions(props) {
     };
 
     return (
-      <Controls.Select
-        {...rest}
-        name="name"
-        label="Nome"
+      <Controls.Input
+        name="Year"
+        label=""
+        variant="standard"
         error={error}
-        value={currentValue}
+        value={newRowValue}
         onChange={change}
-        options={lineOptions}
+        type="number"
       />
     );
   };
 
-  function checkDuplicates(arr, index, newGroup_Id, setError) {
+  function checkDuplicates(arr, index, New_year, setError) {
     return arr.map((options) => {
       if (options.intid !== index) {
-        if (options.group_Id === newGroup_Id) {
-          setError("Grupo já existe");
+        if (options.Year === parseInt(New_year)) {
+          setError("Ano já existe");
         }
       }
     });
@@ -113,12 +94,13 @@ export default function PagePermissions(props) {
 
   //Auto Height
   const tableHeight =
-    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 55;
+    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 70;
   //Auto Height
 
   const options = {
     maxBodyHeight: `${tableHeight}vh`,
     minBodyHeight: `${tableHeight}vh`,
+
     //pageSize: 10,
     paging: false,
     headerStyle: {
@@ -137,50 +119,15 @@ export default function PagePermissions(props) {
 
   const columns = [
     {
-      title: "Descrição Grupo",
-
-      field: "group_Id",
-      width: "50%",
-      render: (RowData) => {
-        return (
-          <Controls.Select
-            disabled={false}
-            name="departmentId"
-            label="Department"
-            value={RowData.group_Id}
-            options={lineOptions}
-          />
-        );
-      },
+      title: "Ano",
+      field: "Year",
+      width: "33%",
       editComponent,
     },
-
     {
-      title: "ID Grupo",
-      field: "name",
-
-      render: (rowData) => (
-        <Controls.Input
-          variant="standard"
-          label=""
-          name="label"
-          value={rowData.group_Id}
-        />
-      ),
-      editComponent: (RowData) => {
-        return (
-          <Controls.Input
-            variant="standard"
-            label=""
-            name="label"
-            value={
-              RowData.rowData.group_Id !== undefined
-                ? RowData.rowData.group_Id
-                : ""
-            }
-          />
-        );
-      },
+      title: "Condição de Devolução",
+      field: "Return_Conditions",
+      width: "auto",
     },
   ];
 
@@ -201,24 +148,51 @@ export default function PagePermissions(props) {
                 new Promise((resolve, reject) => {
                   let allow_Resolve = true;
                   data.map((options) => {
-                    if (options.group_Id === newRow.group_Id) {
+                    if (parseInt(options.Year) === parseInt(newRow.Year)) {
                       allow_Resolve = false;
                     }
                   });
 
-                  if (
-                    newRow.group_Id === undefined ||
-                    newRow.group_Id === " "
-                  ) {
+                  if (newRow.Year === "" || newRow.Year < 1900) {
                     allow_Resolve = false;
                   }
 
                   if (allow_Resolve) {
-                    onAddPagePermission(recordForEdit.username, newRow);
+                    InsertReturnConditions(newRow, ID);
                   }
                   setTimeout(() => {
                     if (allow_Resolve) {
-                      getPagePromise();
+                      InsertReturnConditions(newRow, ID);
+                      getReturnConditionsPromise();
+                      resolve();
+                    } else {
+                      reject();
+                    }
+                  }, 2000);
+                }),
+
+              onRowUpdate: (newRow, oldRow) =>
+                new Promise((resolve, reject) => {
+                  let allow_Resolve = true;
+                  data.map((options) => {
+                    if (options.intid !== oldRow.intid) {
+                      if (parseInt(options.Year) === parseInt(newRow.Year)) {
+                        allow_Resolve = false;
+                      }
+                    }
+                  });
+
+                  if (newRow.Year === "" || newRow.Year < 1900) {
+                    allow_Resolve = false;
+                  }
+
+                  if (allow_Resolve) {
+                    UpdateReturnConditions(newRow, oldRow.Year);
+                  }
+
+                  setTimeout(() => {
+                    if (allow_Resolve) {
+                      getReturnConditionsPromise();
                       resolve();
                     } else {
                       reject();
@@ -228,14 +202,11 @@ export default function PagePermissions(props) {
 
               onRowDelete: (oldData) =>
                 new Promise((resolve, reject) => {
-                  onDeletePagePermission(
-                    recordForEdit.username,
-                    oldData.group_Id
-                  );
+                  DeleteReturnConditions(oldData);
                   setTimeout(() => {
-                    getPagePromise();
+                    getReturnConditionsPromise();
                     resolve();
-                  }, 2000);
+                  }, 1000);
                 }),
             }}
             components={{

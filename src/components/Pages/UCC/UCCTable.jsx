@@ -6,6 +6,7 @@ import {
   onHandlePharmacistOptions,
   onHandleUCCUpdate,
   onHandleUCCInsert,
+  DeleteUCC,
 } from "../../Requests/UCCRequests";
 
 import Popup from "../../Helpers/Popup";
@@ -179,6 +180,19 @@ export default function GruopTable() {
             columns={columns}
             data={data}
             title={<TableTitle text="Unidades de Cuidados Continuados" />}
+            editable={{
+              onRowDelete: (oldData) =>
+                new Promise((resolve, reject) => {
+                  setTimeout(() => {
+                    const dataDelete = [...data];
+                    const index = oldData.tableData.id;
+                    dataDelete.splice(index, 1);
+                    setData([...dataDelete]);
+                    DeleteUCC(oldData.ID);
+                    resolve();
+                  }, 1500);
+                }),
+            }}
             components={{
               Toolbar: (props) => (
                 <div>
@@ -199,7 +213,7 @@ export default function GruopTable() {
               ),
             }}
             localization={{
-              header: { actions: "Eliminar" },
+              header: { actions: "Ações" },
               body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
             }}
           />

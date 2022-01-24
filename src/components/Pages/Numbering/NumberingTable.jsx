@@ -1,18 +1,26 @@
 import { useEffect, useState } from "react";
 import MaterialTable, { MTableToolbar } from "@material-table/core";
 import { Paper } from "@mui/material";
-import { getUsers, onHandleInsertModify } from "../../Requests/UserRequests";
-import Switch from "../../Helpers/Switch";
-import Popup from "../../Helpers/Popup";
+
+import {
+  getNumbering,
+  InsertNumbering,
+  UpdateNumbering,
+  DeleteNumbering,
+  getUCCOptions,
+} from "../../Requests/NumberingRequest";
+
+import Popup from "../../Helpers/PopupCustom";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
-import UserForm from "./Form/UserForm";
+import NumeringForm from "./Form/NumeringForm";
 import EditIcon from "@mui/icons-material/Edit";
 import TableTitle from "../../Helpers/TableTitle";
+import Controls from "../../Helpers/Controls";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
-  const [update, setUpdate] = useState(true);
+  const [UCCOptions, SetUCCOptions] = useState([]);
   const [openPopup, setOpenPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [isInsert, setisInsert] = useState(false);
@@ -21,21 +29,29 @@ export default function GruopTable() {
   useEffect(() => {
     let isMounted = true;
 
-    const UserPromise = getUsers();
-    if (isMounted) handleUserPromise(UserPromise, isMounted);
+    if (isMounted) MakeRequests();
 
     return () => {
       isMounted = false;
     };
-  }, [update]);
+  }, []);
 
-  const handleUserPromise = (AuthPromise, isMounted) => {
+  function MakeRequests() {
+    const UCCOptionsPromise = getUCCOptions();
+    handleUCCOptionsPromise(UCCOptionsPromise);
+
+    const RequestPromise = getNumbering();
+    handleRequestPromise(RequestPromise);
+  }
+
+  const handleRequestPromise = (RequestPromise) => {
     {
-      if (AuthPromise === undefined) {
+      if (RequestPromise === undefined) {
         return;
       }
 
-      AuthPromise.then((response) => {
+      RequestPromise.then((response) => {
+        console.log(response);
         if (response !== undefined) {
           setData(response);
         }
@@ -43,52 +59,70 @@ export default function GruopTable() {
     }
   };
 
+  const handleUCCOptionsPromise = (AuthPromise) => {
+    {
+      if (AuthPromise === undefined) {
+        return;
+      }
+      console.log("ENTOU AQUI UCC");
+      AuthPromise.then((response) => {
+        console.log(response);
+        if (response !== undefined) {
+          SetUCCOptions(response);
+        }
+      });
+      return;
+    }
+  };
+
   const columns = [
     {
-      title: "Utilizador",
-      field: "username",
-      width: "auto",
-    },
-
-    { title: "Nome Completo", field: "full_name", width: "auto" },
-    { title: "Email", field: "email", width: "auto" },
-    {
-      title: "Tent. Autenticação",
-      field: "attempts",
-      width: "auto",
-      align: "center",
-    },
-
-    {
-      title: "Administrador",
-      field: "is_admin",
-      width: "auto",
+      title: "Nome",
+      field: "ID",
+      width: "30%",
       render: (rowData) => (
-        <Switch
-          value={rowData.is_admin}
-          disabled={true}
-          id={"isadmin"}
-          defaultChecked={rowData.is_admin}
-          label={""}
-        ></Switch>
+        <Controls.Select
+          variant="standard"
+          name="ID"
+          label=""
+          value={rowData.ID}
+          options={UCCOptions}
+        />
       ),
     },
 
     {
-      title: "Ativo",
-      field: "active",
+      title: "Data Inicio",
+      field: "Starting_Date",
       width: "auto",
       render: (rowData) => (
-        <Switch
-          value={rowData.active}
+        <Controls.DatePicker
+          name="Starting_Date"
           disabled={true}
-          id={"active"}
-          defaultChecked={rowData.active}
-          label={""}
-        ></Switch>
+          label=""
+          value={rowData.Starting_Date}
+        />
       ),
     },
 
+    {
+      title: "Data Fim",
+      field: "End_Date",
+      width: "auto",
+      render: (rowData) => (
+        <Controls.DatePicker
+          name="Starting_Date"
+          disabled={true}
+          label=""
+          value={rowData.End_Date}
+        />
+      ),
+    },
+    {
+      title: "Numeração",
+      field: "Number",
+      width: "auto",
+    },
     {
       title: "Editar ",
       field: "",
@@ -96,6 +130,7 @@ export default function GruopTable() {
         <IconButton
           onClick={() => {
             setisEdit(true);
+            setisInsert(false);
             openInPopup(rowData);
           }}
         >
@@ -127,23 +162,29 @@ export default function GruopTable() {
     padding: "dense",
   };
 
-  const addOrEdit = (values, resetForm) => {
-    onHandleInsertModify(values);
-
+  const addOrEdit = (values, oldValues, resetForm) => {
+    if (isInsert) {
+      console.log("entou no insert");
+      InsertNumbering(values);
+    }
+    if (isEdit) {
+      console.log("entou no edit");
+      UpdateNumbering(values, oldValues);
+    }
     resetForm();
     setRecordForEdit(null);
     setOpenPopup(false);
-    setUpdate(!update);
 
     setTimeout(() => {
+      MakeRequests();
       setisEdit(false);
-      setisInsert(true);
+      setisInsert(false);
     }, 500);
   };
 
   const addonConfirm = (values) => {
     if (isInsert) {
-      onHandleInsertModify(values);
+      onHandleInsert(values);
     }
     setUpdate(!update);
     setTimeout(() => {
@@ -164,7 +205,17 @@ export default function GruopTable() {
           options={options}
           columns={columns}
           data={data}
-          title={<TableTitle text="Utilizadores" />}
+          title={<TableTitle text="Numeração" />}
+          editable={{
+            onRowDelete: (oldData) =>
+              new Promise((resolve, reject) => {
+                DeleteNumbering(oldData);
+                setTimeout(() => {
+                  MakeRequests();
+                  resolve();
+                }, 1500);
+              }),
+          }}
           components={{
             Toolbar: (props) => (
               <div>
@@ -191,17 +242,18 @@ export default function GruopTable() {
         />
       </Paper>
       <Popup
-        title="Ficha de Utilizador"
+        title="Ficha de Numeração"
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
-        <UserForm
+        <NumeringForm
           data={data}
           recordForEdit={recordForEdit}
           addOrEdit={addOrEdit}
           addonConfirm={addonConfirm}
           isEdit={isEdit}
-        ></UserForm>
+          UCCOptions={UCCOptions}
+        ></NumeringForm>
       </Popup>
     </>
   );

@@ -86,6 +86,38 @@ export default function GruopTable() {
       title: "Tipo",
       field: "Type",
       width: "auto",
+      render: (rowData) => {
+        let rowType = " ";
+        if (rowData.Type === 1) {
+          rowType = "Geral";
+        }
+
+        if (rowData.Type === 2) {
+          rowType = "Subst";
+        }
+
+        if (rowData.Type === 3) {
+          rowType = "Controladas";
+        }
+
+        if (rowData.Type === 4) {
+          rowType = "Dispositivos";
+        }
+        if (rowData.Type === 5) {
+          rowType = "Médicos";
+        }
+        if (rowData.Type === 6) {
+          rowType = "Outros";
+        }
+        if (rowData.Type === 7) {
+          rowType = "Nutrição";
+        }
+        if (rowData.Type === 8) {
+          rowType = "Soros";
+        }
+
+        return <p style={{ marginTop: "10px" }}>{rowType}</p>;
+      },
     },
 
     {
@@ -140,7 +172,7 @@ export default function GruopTable() {
     },
 
     {
-      title: "Active",
+      title: "Ativo",
       field: "Active",
       width: "auto",
       render: (RowData) => (
@@ -265,7 +297,7 @@ export default function GruopTable() {
             ),
           }}
           localization={{
-            header: { actions: "Eliminar" },
+            header: { actions: "Ações" },
             body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
           }}
         />

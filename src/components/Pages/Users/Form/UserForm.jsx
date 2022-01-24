@@ -21,7 +21,7 @@ export default function GroupForm(props) {
   if (isEdit) {
     btnStyles = { minWidth: "100%" };
   } else {
-    btnStyles = { minWidth: "75%" };
+    btnStyles = { minWidth: "100%" };
   }
 
   const validate = (fieldValues = values) => {
@@ -156,13 +156,6 @@ export default function GroupForm(props) {
         )}
         <Grid item xs={12} md={12}>
           <Controls.Button style={btnStyles} type="submit" text="Submeter" />
-          {!isEdit && !showTable && (
-            <Controls.Button
-              //style={{ minWidth: "23.5%" }}
-              text="Redefinir"
-              onClick={resetForm}
-            />
-          )}
         </Grid>
       </Grid>
     </Form>

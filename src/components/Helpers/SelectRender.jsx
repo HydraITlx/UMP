@@ -20,7 +20,11 @@ export default function Select(props) {
   } = props;
 
   return (
-    <FormControl variant={variant} {...(error && { error: true })}>
+    <FormControl
+      style={{ width: "80%" }}
+      variant={variant}
+      {...(error && { error: true })}
+    >
       <InputLabel id="label">{label}</InputLabel>
       <MuiSelect
         id="label"

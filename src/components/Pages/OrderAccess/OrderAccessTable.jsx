@@ -5,24 +5,25 @@ import MaterialTable, {
 } from "@material-table/core";
 import { Paper } from "@mui/material";
 import {
-  getPharmacists,
-  DeletePharmacists,
-  InsertPharmacists,
-  getUserOptions,
-  UpdatePharmacists,
-} from "../../Requests/PharmacistRequest";
+  getOrderAccess,
+  getUCCOptions,
+  InsertOrderAccess,
+  UpdateOrderAccess,
+  DeleteOrderAccess,
+} from "../../Requests/AccessOrderRequest";
 
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import TableTitle from "../../Helpers/TableTitle";
 import Select from "../../Helpers/SelectRender";
-import Switch from "../../Helpers/Switch";
+import { onHandlePharmacistOptions } from "../../Requests/UCCRequests";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
-  const [users, setUsers] = useState([]);
   const [update, setUpdate] = useState(true);
   const addActionRef = React.useRef();
+  const [pharmacistOptions, SetpharmacistOptions] = useState([]);
+  const [UCCOptions, SetUCCOptions] = useState([]);
 
   useEffect(() => {
     let isMounted = true;
@@ -35,11 +36,47 @@ export default function GruopTable() {
   }, [update]);
 
   function MakeRequests() {
-    const userRequest = getUserOptions();
-    handleUsersPromise(userRequest);
-    const RequestPromise = getPharmacists();
+    const OptionsPromise = onHandlePharmacistOptions();
+    handleOptionsPromise(OptionsPromise);
+
+    const UCCOptionsPromise = getUCCOptions();
+    handleUCCOptionsPromise(UCCOptionsPromise);
+
+    const RequestPromise = getOrderAccess();
     handleRequestPromise(RequestPromise);
   }
+
+  const handleOptionsPromise = (AuthPromise) => {
+    {
+      if (AuthPromise === undefined) {
+        return;
+      }
+
+      AuthPromise.then((response) => {
+        console.log(response);
+        if (response !== undefined) {
+          SetpharmacistOptions(response);
+        }
+      });
+      return;
+    }
+  };
+
+  const handleUCCOptionsPromise = (AuthPromise) => {
+    {
+      if (AuthPromise === undefined) {
+        return;
+      }
+
+      AuthPromise.then((response) => {
+        console.log(response);
+        if (response !== undefined) {
+          SetUCCOptions(response);
+        }
+      });
+      return;
+    }
+  };
 
   const handleRequestPromise = (RequestPromise) => {
     {
@@ -51,22 +88,6 @@ export default function GruopTable() {
         console.log(response);
         if (response !== undefined) {
           setData(response);
-        }
-      });
-    }
-  };
-
-  const handleUsersPromise = (RequestPromise) => {
-    {
-      if (RequestPromise === undefined) {
-        return;
-      }
-
-      RequestPromise.then((response) => {
-        console.log(response);
-        if (response !== undefined) {
-          console.log(response);
-          setUsers(response);
         }
       });
     }
@@ -87,15 +108,11 @@ export default function GruopTable() {
       if (e.target !== undefined) {
         newValue = e.target.value;
       }
-
       setValue(newValue);
       onChange(newValue);
       setError(null);
-      console.log("rest.rowData");
-      console.log(newValue);
       if (newValue === " ") {
-        console.log("erroraqui");
-        setError("Utilizador não pode estar vazio");
+        setError("O Nome Farmacêutico não pode estar vazio");
       } else {
         checkDuplicates(data, rest.rowData.ID, newValue, setError);
       }
@@ -108,22 +125,25 @@ export default function GruopTable() {
     return (
       <Select
         {...rest}
-        name="username"
+        name="Pharmacist_ID"
         label=""
         error={error}
         value={currentValue}
         //     error={helperText}
         onChange={change}
-        options={users}
+        options={pharmacistOptions}
       />
     );
   };
 
   function checkDuplicates(arr, index, new_id, setError) {
+    console.log(index);
     return arr.map((options) => {
       if (options.ID !== index) {
-        if (options.username === new_id) {
-          setError("Utilizador já é atribuído a outro farmacêutico");
+        console.log("HELO");
+        console.log(`${options.Pharmacist_ID} new_id ${new_id}`);
+        if (options.Pharmacist_ID === new_id) {
+          setError("O Farmacêutico já existe");
         }
       }
     });
@@ -131,47 +151,48 @@ export default function GruopTable() {
 
   const columns = [
     {
-      title: "Nome",
-      field: "Name",
-      width: "auto",
-    },
-
-    { title: "Email", field: "Email", width: "auto" },
-
-    { title: "Telefone", field: "Phone", width: "auto" },
-
-    {
-      title: "Utilizador",
-      field: "username",
-      width: "20%",
-      render: (RowData) => (
-        <Select disabled={true} value={RowData.username} options={users} />
+      title: "Nome Farmacêutico",
+      field: "Pharmacist_ID",
+      width: "50%",
+      render: (rowData) => (
+        <Select
+          label=""
+          value={rowData.Pharmacist_ID}
+          //     error={helperText}
+          options={pharmacistOptions}
+        />
       ),
       editComponent,
     },
 
     {
-      title: "Ativo",
-      field: "Active",
-      width: "auto",
-      width: "10%",
-      render: (RowData) => (
-        <Switch
-          value={RowData.Active}
-          disabled={true}
-          id={"Active"}
-          defaultChecked={RowData.Active}
-          label={""}
-        ></Switch>
+      title: "Nome UCC",
+      field: "UCC_ID",
+      width: "50%",
+      render: (rowData) => (
+        <Select
+          label=""
+          value={rowData.UCC_ID}
+          //     error={helperText}
+          options={UCCOptions}
+        />
       ),
-      editComponent: (RowData) => {
-        console.log(RowData.value);
+      editComponent: (tableData) => {
+        console.log(tableData);
+        console.log("tableData");
         return (
-          <Switch
-            value={RowData.value !== undefined ? RowData.value : false}
-            onChange={(e) => RowData.onChange(e.target.checked)}
-            disabled={false}
-          ></Switch>
+          <Select
+            name="UCC_ID"
+            label=""
+            value={
+              tableData.rowData.UCC_ID !== undefined
+                ? tableData.rowData.UCC_ID
+                : " "
+            }
+            //     error={helperText}
+            onChange={(e) => tableData.onChange(e.target.value)}
+            options={UCCOptions}
+          />
         );
       },
     },
@@ -205,7 +226,7 @@ export default function GruopTable() {
           options={options}
           columns={columns}
           data={data}
-          title={<TableTitle text="Farmacêuticos" />}
+          title={<TableTitle text="Lista de acesso a encomendas" />}
           editable={{
             onRowAdd: (newData) =>
               new Promise((resolve, reject) => {
@@ -214,19 +235,19 @@ export default function GruopTable() {
                 let allow_Resolve = true;
 
                 data.map((options) => {
-                  if (options.username === newData.username) {
+                  if (options.Pharmacist_ID === newData.Pharmacist_ID) {
                     allow_Resolve = false;
                   }
                 });
 
                 if (
-                  newData.username === undefined ||
-                  newData.username === " "
+                  newData.Pharmacist_ID === undefined ||
+                  newData.Pharmacist_ID === " "
                 ) {
                   allow_Resolve = false;
                 }
                 if (allow_Resolve) {
-                  InsertPharmacists(newData);
+                  InsertOrderAccess(newData);
                 }
 
                 setTimeout(() => {
@@ -244,21 +265,23 @@ export default function GruopTable() {
                 let allow_Resolve = true;
 
                 data.map((options) => {
+                  console.log("newData");
+                  console.log(newData);
                   if (options.ID !== oldData.ID) {
-                    if (options.username === newData.username) {
+                    if (options.Pharmacist_ID === newData.Pharmacist_ID) {
                       allow_Resolve = false;
                     }
                   }
                 });
 
                 if (
-                  newData.username === undefined ||
-                  newData.username === " "
+                  newData.Pharmacist_ID === undefined ||
+                  newData.Pharmacist_ID === " "
                 ) {
                   allow_Resolve = false;
                 }
                 if (allow_Resolve) {
-                  UpdatePharmacists(newData);
+                  UpdateOrderAccess(newData);
                 }
 
                 setTimeout(() => {
@@ -272,9 +295,9 @@ export default function GruopTable() {
               }),
             onRowDelete: (oldData) =>
               new Promise((resolve, reject) => {
-                DeletePharmacists(oldData.ID);
+                DeleteOrderAccess(oldData);
                 setTimeout(() => {
-                  setUpdate(!update);
+                  MakeRequests();
                   resolve();
                 }, 1500);
               }),

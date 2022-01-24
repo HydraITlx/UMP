@@ -265,7 +265,7 @@ export default function PagePermissions(props) {
             columns={columns}
             data={data}
             localization={{
-              header: { actions: "Eliminar" },
+              header: { actions: "Ações" },
               body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
             }}
             editable={{

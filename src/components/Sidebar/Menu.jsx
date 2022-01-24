@@ -74,14 +74,14 @@ export default function TemporaryDrawer(prop) {
           <ListItemText style={{ color: "white" }} primary={"Início"} />
         </ListItem>
 
-        <ListItem onClick={() => navigate("home")} button key={"text2"}>
+        <ListItem onClick={() => navigate("laboratories")} button key={"text2"}>
           <ListItemIcon>
             <ScienceIcon sx={{ color: "white" }} />
           </ListItemIcon>
           <ListItemText style={{ color: "white" }} primary={"Laboratorios"} />
         </ListItem>
 
-        <ListItem onClick={() => navigate("home")} button key={"text3"}>
+        <ListItem onClick={() => navigate("ucc")} button key={"text3"}>
           <ListItemIcon>
             <AccessibilityIcon sx={{ color: "white" }} />
           </ListItemIcon>
@@ -93,13 +93,6 @@ export default function TemporaryDrawer(prop) {
             <CardTravelIcon sx={{ color: "white" }} />
           </ListItemIcon>
           <ListItemText style={{ color: "white" }} primary={"Encomendas"} />
-        </ListItem>
-
-        <ListItem onClick={() => navigate("ucc")} button key={"text5"}>
-          <ListItemIcon>
-            <CottageIcon sx={{ color: "white" }} />
-          </ListItemIcon>
-          <ListItemText style={{ color: "white" }} primary={"UCC"} />
         </ListItem>
 
         <ListItem onClick={() => navigate("pharmacist")} button key={"text10"}>
@@ -135,7 +128,11 @@ export default function TemporaryDrawer(prop) {
             <ListItemText style={{ color: "white" }} primary={"Utilizadores"} />
           </ListItem>
 
-          <ListItem onClick={() => navigate("home")} button key={"text8"}>
+          <ListItem
+            onClick={() => navigate("orderaccess")}
+            button
+            key={"text8"}
+          >
             <ListItemIcon>
               <SimCardAlertIcon sx={{ color: "white" }} />
             </ListItemIcon>
@@ -145,7 +142,7 @@ export default function TemporaryDrawer(prop) {
             />
           </ListItem>
 
-          <ListItem onClick={() => navigate("home")} button key={"text9"}>
+          <ListItem onClick={() => navigate("numbering")} button key={"text9"}>
             <ListItemIcon>
               <FormatListNumberedRtlIcon sx={{ color: "white" }} />
             </ListItemIcon>

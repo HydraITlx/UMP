@@ -15,6 +15,10 @@ import User from "./Pages/Users/User";
 import UCC from "./pages/UCC/UCC";
 import Pharmacist from "./pages/Pharmacist/Pharmacist";
 import Products from "./Pages/Products/Producsts";
+import Laboratories from "./Pages/Laboratories/Laboratories";
+import OrderAccess from "./Pages/OrderAccess/OrderAccess";
+import Numbering from "./Pages/Numbering/Numbering";
+
 function App() {
   const [shouldNavigate, setshouldNavigate] = useState(false);
 
@@ -103,6 +107,9 @@ function App() {
                   <Route path="/ucc" element={<UCC />} />
                   <Route path="/pharmacist" element={<Pharmacist />} />
                   <Route path="/products" element={<Products />} />
+                  <Route path="/laboratories" element={<Laboratories />} />
+                  <Route path="/orderaccess" element={<OrderAccess />} />
+                  <Route path="/numbering" element={<Numbering />} />
                 </Route>
               </Routes>
             </section>

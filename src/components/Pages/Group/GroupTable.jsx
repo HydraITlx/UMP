@@ -166,7 +166,7 @@ export default function GruopTable() {
             ),
           }}
           localization={{
-            header: { actions: "Eliminar" },
+            header: { actions: "Ações" },
             body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
           }}
         />

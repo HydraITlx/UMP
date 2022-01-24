@@ -40,7 +40,7 @@ export default function GroupForm(props) {
   if (isEdit) {
     btnStyles = { minWidth: "100%" };
   } else {
-    btnStyles = { minWidth: "75%" };
+    btnStyles = { minWidth: "100%" };
   }
 
   const validate = (fieldValues = values) => {
@@ -93,7 +93,7 @@ export default function GroupForm(props) {
         <Grid item xs={12} md={5}>
           <Controls.Input
             name="Year"
-            label="Ano"
+            label="Ano*"
             disabled={isEdit}
             value={values.Year}
             onChange={handleInputChange}
@@ -105,7 +105,7 @@ export default function GroupForm(props) {
           <Controls.Select
             variant="outlined"
             name="Type"
-            label="Tipo"
+            label="Tipo*"
             disabled={isEdit}
             value={values.Type}
             onChange={handleInputChange}
@@ -117,7 +117,7 @@ export default function GroupForm(props) {
         <Grid item xs={12} md={5}>
           <Controls.Input
             name="CHNM"
-            label="CHNM"
+            label="CHNM*"
             disabled={isEdit}
             value={values.CHNM}
             onChange={handleInputChange}
@@ -130,7 +130,7 @@ export default function GroupForm(props) {
             variant="outlined"
             name="Laboratory_ID"
             disabled={isEdit}
-            label="Nome Laboratôrio"
+            label="Nome Laboratôrio*"
             value={values.Laboratory_ID}
             onChange={handleInputChange}
             options={LabOptions}
@@ -138,8 +138,18 @@ export default function GroupForm(props) {
           />
         </Grid>
 
+        <Grid item xs={12} md={12} pb={5}>
+          <Controls.Input
+            name="Description"
+            label="Descrição"
+            value={values.Description}
+            onChange={handleInputChange}
+          />
+        </Grid>
+
         <Grid item xs={12} md={3}>
           <Controls.Input
+            type="number"
             name="Total_Quantity"
             label="Qtd. por caixa"
             value={values.Total_Quantity}
@@ -150,6 +160,7 @@ export default function GroupForm(props) {
 
         <Grid item xs={12} md={3} pb={5}>
           <Controls.Input
+            type="number"
             name="Unit_Price_Box"
             label="Preço Caixa"
             value={values.Unit_Price_Box}
@@ -158,8 +169,9 @@ export default function GroupForm(props) {
           />
         </Grid>
 
-        <Grid item xs={12} md={5}>
+        <Grid item xs={12} md={4}>
           <Controls.Input
+            type="number"
             name="Unit_Price_UN"
             label="Preço Unitário"
             value={values.Unit_Price_UN}
