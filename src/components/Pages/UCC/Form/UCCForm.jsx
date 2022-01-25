@@ -21,16 +21,13 @@ const initialFValues = {
 };
 
 export default function GroupForm(props) {
-  const {
-    addOrEdit,
-    recordForEdit,
-    isEdit,
-    pharmacistOptions,
-    isInsert,
-    data,
-  } = props;
+  const { addOrEdit, recordForEdit, isEdit, pharmacistOptions } = props;
 
   const [showDeliveryPlaces, setshowDeliveryPlaces] = useState(false);
+  console.log("isEdit");
+  console.log(isEdit);
+  console.log("recordForEdit");
+  console.log(recordForEdit);
 
   const EntityTypeOption = [
     { value: 0, label: " " },
@@ -81,26 +78,12 @@ export default function GroupForm(props) {
 
   useEffect(() => {
     if (recordForEdit != null) {
+      console.log("ELE ENTROU AQUI CRL");
+      console.log(recordForEdit);
       setValues({
         ...recordForEdit,
       });
-
-      if (recordForEdit.Logo === "") {
-        setValues({
-          ...values,
-          Logo: initialFValues.Logo,
-        });
-      }
     }
-
-    /*if (isInsert) {
-      if ()
-      setValues({
-        ...values,
-        ID: data[0].ID + 1,
-      });
-    }
-    */
   }, [recordForEdit]);
 
   function OnHandleSelect(e) {

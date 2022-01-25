@@ -52,6 +52,7 @@ if (process.env.NODE_ENV === "production") {
     REACT_APP_ATTACHMENT_MANAGEMENT:'https://apifarma.ump.pt/api/attachmentmanagment/',
     REACT_APP_NUMBERING_MANAGEMENT:'https://apifarma.ump.pt/api/numeringmanagment/',
     REACT_APP_PERMISSION_MANAGEMENT:'https://apifarma.ump.pt/api/permissionmanagment/',
+    REACT_APP_APIIMPORT_MANAGEMENT:'https://apifarma.ump.pt/api/importapimanagement/',
     REACT_APP_APITOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDE0MjEzMDl9.gul4t_9A7CD67H5qTTjiea6baOcsAERa6gS_JX8e3d4",
   };
 
@@ -91,6 +92,7 @@ if (process.env.SERVE) {
     REACT_APP_ATTACHMENT_MANAGEMENT:'http://192.168.1.6:50000/api/attachmentmanagment/',
     REACT_APP_NUMBERING_MANAGEMENT:'http://192.168.1.6:50000/api/numeringmanagment/',
     REACT_APP_PERMISSION_MANAGEMENT:'http://192.168.1.6:50000/api/permissionmanagment/',
+    REACT_APP_APIIMPORT_MANAGEMENT:'http://192.168.1.6:50000/api/importapimanagement/',
     REACT_APP_APITOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDE0MjEzMDl9.gul4t_9A7CD67H5qTTjiea6baOcsAERa6gS_JX8e3d4",
   };
   plugins.push(new EnvironmentPlugin(EnvValues))

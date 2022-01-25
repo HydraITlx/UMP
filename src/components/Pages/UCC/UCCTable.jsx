@@ -22,6 +22,7 @@ import Controls from "../../Helpers/Controls";
 import TableTitle from "../../Helpers/TableTitle";
 import Spinner from "../../Spinner/Spinner";
 import NoAccess from "../../Helpers/NoAccess";
+import ImportApi from "./ImportApi";
 
 const EntityTypeOption = [
   { value: 0, label: " " },
@@ -115,6 +116,7 @@ export default function GruopTable() {
       AuthPromise.then((response) => {
         if (response !== undefined) {
           setisLoading(false);
+          console.log(response);
           setData(response);
         }
       });
@@ -205,6 +207,8 @@ export default function GruopTable() {
   };
 
   const openInPopup = (rowData) => {
+    console.log("rowData");
+    console.log(rowData);
     setRecordForEdit(rowData);
     setOpenPopup(true);
   };
@@ -256,18 +260,29 @@ export default function GruopTable() {
                 Toolbar: (props) => (
                   <div>
                     <MTableToolbar {...props} />
-                    <div style={{ padding: "0px 10px", textAlign: "right" }}>
-                      <IconButton
-                        disabled={!AllowInsert && !IsAdmin}
-                        onClick={() => {
-                          setisEdit(false);
-                          setisInsert(true);
-                          setOpenPopup(true);
-                          setRecordForEdit(null);
+
+                    <div style={{ display: "flex" }}>
+                      {IsAdmin && <ImportApi />}
+
+                      <div
+                        style={{
+                          padding: "0px 10px",
+                          textAlign: "right",
+                          flex: 1,
                         }}
                       >
-                        <AddIcon />
-                      </IconButton>
+                        <IconButton
+                          disabled={!AllowInsert && !IsAdmin}
+                          onClick={() => {
+                            setisEdit(false);
+                            setisInsert(true);
+                            setOpenPopup(true);
+                            setRecordForEdit(null);
+                          }}
+                        >
+                          <AddIcon />
+                        </IconButton>
+                      </div>
                     </div>
                   </div>
                 ),
