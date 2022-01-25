@@ -22,9 +22,7 @@ export default function ForbPage() {
           whiteSpace: "nowrap",
         }}
       >
-        {
-          "Não tem permissões para aceder a esta página, por favor consultar com um administrador"
-        }
+        {"Oops... não tem permissões, consulte o administrador de sistema"}
       </h1>
       <img
         style={{

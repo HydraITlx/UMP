@@ -19,12 +19,13 @@ function getUserPromise(RequestUrl, requestOptions) {
     .catch((error) => console.warn(error));
 }
 
-export function onHandleInsertModify(values) {
+export function onHandleInsertModify(values, sendEmail) {
   const body = {
+    sendEmail: sendEmail,
     username: values.username,
     full_name: values.full_name,
     email: values.email,
-    password: "$2a$10$j.FO2aD5oNFpkyCqNyh1DeTRwPH0BFNIlj9wkK0uczkErubIMMBRy",
+    password: Math.random().toString(36).slice(-8),
     is_admin: values.is_admin,
     active: values.active,
     attempts: 0,

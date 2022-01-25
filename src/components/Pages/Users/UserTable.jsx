@@ -96,6 +96,7 @@ export default function GruopTable() {
         <IconButton
           onClick={() => {
             setisEdit(true);
+            setisInsert(false);
             openInPopup(rowData);
           }}
         >
@@ -128,7 +129,7 @@ export default function GruopTable() {
   };
 
   const addOrEdit = (values, resetForm) => {
-    onHandleInsertModify(values);
+    onHandleInsertModify(values, isInsert);
 
     resetForm();
     setRecordForEdit(null);
@@ -137,13 +138,13 @@ export default function GruopTable() {
 
     setTimeout(() => {
       setisEdit(false);
-      setisInsert(true);
+      setisInsert(false);
     }, 500);
   };
 
   const addonConfirm = (values) => {
     if (isInsert) {
-      onHandleInsertModify(values);
+      onHandleInsertModify(values, isInsert);
     }
     setUpdate(!update);
     setTimeout(() => {
