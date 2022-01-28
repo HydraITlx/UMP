@@ -22,13 +22,11 @@ const initialFValues = {
 
 const TypeOption = [
   { value: 1, label: "Geral" },
-  { value: 2, label: "Subst" },
-  { value: 3, label: "Controladas" },
-  { value: 4, label: "Dispositivos" },
-  { value: 5, label: "Médicos" },
-  { value: 6, label: "Outros" },
-  { value: 7, label: "Nutrição" },
-  { value: 8, label: "Soros" },
+  { value: 2, label: "Subst Controladas" },
+  { value: 3, label: "Dispositivos Médicos" },
+  { value: 4, label: "Outros" },
+  { value: 5, label: "Nutrição" },
+  { value: 6, label: "Soros" },
 ];
 
 export default function GroupForm(props) {
@@ -69,8 +67,15 @@ export default function GroupForm(props) {
     if (fieldValues == values) return Object.values(temp).every((x) => x == "");
   };
 
-  const { values, setValues, errors, setErrors, handleInputChange, resetForm } =
-    useForm(initialFValues, true, validate);
+  const {
+    values,
+    setValues,
+    errors,
+    setErrors,
+    handleInputChange,
+    handleInputQTDChange,
+    resetForm,
+  } = useForm(initialFValues, true, validate);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -153,7 +158,7 @@ export default function GroupForm(props) {
             name="Total_Quantity"
             label="Qtd. por caixa"
             value={values.Total_Quantity}
-            onChange={handleInputChange}
+            onChange={(e) => handleInputQTDChange(e, values.Unit_Price_Box)}
             error={errors.Total_Quantity}
           />
         </Grid>
@@ -164,7 +169,7 @@ export default function GroupForm(props) {
             name="Unit_Price_Box"
             label="Preço Caixa"
             value={values.Unit_Price_Box}
-            onChange={handleInputChange}
+            onChange={(e) => handleInputQTDChange(e, values.Total_Quantity)}
             error={errors.Unit_Price_Box}
           />
         </Grid>
@@ -175,7 +180,7 @@ export default function GroupForm(props) {
             name="Unit_Price_UN"
             label="Preço Unitário"
             value={values.Unit_Price_UN}
-            onChange={handleInputChange}
+            onChange={(e) => handleInputQTDChange(e, values.Total_Quantity)}
             error={errors.Unit_Price_UN}
           />
         </Grid>

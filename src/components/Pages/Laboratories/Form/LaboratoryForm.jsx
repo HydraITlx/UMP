@@ -315,7 +315,7 @@ export default function GroupForm(props) {
               backgroundColorHover={btn4hv}
               style={btnStyles}
               type="button"
-              text="Condições Devolução"
+              text="C. Devolução"
               onClick={handleBtn4}
             />
           </Grid>

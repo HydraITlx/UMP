@@ -22,9 +22,14 @@ import {
   getPermissions,
   checkIfAdminPermissions,
 } from "../../Requests/PermissionRequests";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DatePicker from "@mui/lab/DatePicker";
+import TextField from "@mui/material/TextField";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
+  const [filerData, setfilterData] = useState([]);
   const [LabOptions, setLabOptions] = useState([]);
   const [update, setUpdate] = useState(true);
   const [openPopup, setOpenPopup] = useState(false);
@@ -38,6 +43,7 @@ export default function GruopTable() {
   const [AllowDelete, setAllowDelete] = useState(false);
   const [IsAdmin, setIsAdmin] = useState(false);
   const [isLoading, setisLoading] = useState(true);
+  const [YearFilter, setYearFilter] = useState(new Date());
 
   useEffect(() => {
     let isMounted = true;
@@ -108,6 +114,13 @@ export default function GruopTable() {
         if (response !== undefined) {
           console.log(response);
           setData(response);
+          setfilterData(
+            response.filter((data) =>
+              JSON.stringify(data).includes(
+                `"Year":${new Date().getFullYear()}`
+              )
+            )
+          );
           setTimeout(() => {
             setisLoading(false);
           }, 1000);
@@ -149,26 +162,20 @@ export default function GruopTable() {
         }
 
         if (rowData.Type === 2) {
-          rowType = "Subst";
+          rowType = "Subst Controladas";
         }
 
         if (rowData.Type === 3) {
-          rowType = "Controladas";
+          rowType = "Dispositivos Médicos";
         }
 
         if (rowData.Type === 4) {
-          rowType = "Dispositivos";
-        }
-        if (rowData.Type === 5) {
-          rowType = "Médicos";
-        }
-        if (rowData.Type === 6) {
           rowType = "Outros";
         }
-        if (rowData.Type === 7) {
+        if (rowData.Type === 5) {
           rowType = "Nutrição";
         }
-        if (rowData.Type === 8) {
+        if (rowData.Type === 6) {
           rowType = "Soros";
         }
 
@@ -179,18 +186,21 @@ export default function GruopTable() {
     {
       title: "CHNM",
       field: "CHNM",
+
       width: "auto",
     },
 
     {
       title: "Descrição",
       field: "Description",
+
       width: "auto",
     },
 
     {
       title: "Nome Laboratório",
       field: "Laboratory_Name",
+
       width: "auto",
     },
 
@@ -203,18 +213,21 @@ export default function GruopTable() {
     {
       title: "Qtd. por Caixa",
       field: "Total_Quantity",
+
       width: "auto",
     },
 
     {
       title: "Preço unit.",
       field: "Unit_Price_UN",
+
       width: "auto",
     },
 
     {
       title: "Esgotado",
       field: "Sold_Out",
+
       width: "auto",
       render: (RowData) => (
         <Switch
@@ -230,6 +243,7 @@ export default function GruopTable() {
     {
       title: "Ativo",
       field: "Active",
+
       width: "auto",
       render: (RowData) => (
         <Switch
@@ -317,6 +331,17 @@ export default function GruopTable() {
     setOpenPopup(true);
   };
 
+  const handleFilterChange = (newValue) => {
+    setYearFilter(JSON.stringify(newValue).slice(1, 5));
+    setfilterData(
+      data.filter((data) =>
+        JSON.stringify(data).includes(
+          `"Year":${JSON.stringify(newValue).slice(1, 5)}`
+        )
+      )
+    );
+  };
+
   if (isLoading === true) {
     return <Spinner />;
   }
@@ -329,10 +354,10 @@ export default function GruopTable() {
             <MaterialTable
               options={options}
               columns={columns}
-              data={data}
+              data={filerData}
               title={<TableTitle text="Produtos" />}
               editable={{
-                isDeletable: (rowData) => AllowDelete === 1 || IsAdmin === true,
+                isDeletable: () => AllowDelete === 1 || IsAdmin === true,
                 onRowDelete: (oldData) =>
                   new Promise((resolve, reject) => {
                     DeleteProducts(oldData);
@@ -346,18 +371,40 @@ export default function GruopTable() {
                 Toolbar: (props) => (
                   <div>
                     <MTableToolbar {...props} />
-                    <div style={{ padding: "0px 10px", textAlign: "right" }}>
-                      <IconButton
-                        disabled={!AllowInsert && !IsAdmin}
-                        onClick={() => {
-                          setisEdit(false);
-                          setisInsert(true);
-                          setOpenPopup(true);
-                          setRecordForEdit(null);
+                    <div style={{ display: "flex" }}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                          views={["year"]}
+                          label="Filtro Ano"
+                          minDate={new Date("2015-01-01")}
+                          value={YearFilter}
+                          onChange={(newValue) => {
+                            handleFilterChange(newValue);
+                          }}
+                          renderInput={(params) => (
+                            <TextField {...params} helperText={null} />
+                          )}
+                        />
+                      </LocalizationProvider>
+                      <div
+                        style={{
+                          padding: "0px 10px",
+                          textAlign: "right",
+                          flex: 1,
                         }}
                       >
-                        <AddIcon />
-                      </IconButton>
+                        <IconButton
+                          disabled={!AllowInsert && !IsAdmin}
+                          onClick={() => {
+                            setisEdit(false);
+                            setisInsert(true);
+                            setOpenPopup(true);
+                            setRecordForEdit(null);
+                          }}
+                        >
+                          <AddIcon />
+                        </IconButton>
+                      </div>
                     </div>
                   </div>
                 ),

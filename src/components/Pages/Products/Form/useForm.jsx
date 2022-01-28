@@ -7,11 +7,82 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if (name === "Unit_Price_Box" || name || "Unit_Price_UN") {
+      setValues({
+        ...values,
+        [name]: value.toFixed(5),
+      });
+    } else {
+      setValues({
+        ...values,
+        [name]: value,
+      });
+    }
 
-    setValues({
+    if (validateOnChange) validate({ [name]: value });
+  };
+
+  const handleInputQTDChange = (e, QTDValue) => {
+    const { name, value } = e.target;
+    if (name === "Total_Quantity") {
+      if (value === "0" || value === "") {
+        setValues({
+          ...values,
+          [name]: value,
+          Unit_Price_UN: 0,
+        });
+      } else {
+        setValues({
+          ...values,
+          [name]: value,
+          Unit_Price_UN: (QTDValue / value).toFixed(5),
+        });
+      }
+    }
+
+    if (name === "Unit_Price_Box") {
+      if (value === "0" || value === "") {
+        setValues({
+          ...values,
+          [name]: 0,
+        });
+      } else {
+        if (QTDValue === "0" || QTDValue === "") {
+          setValues({
+            ...values,
+            [name]: value,
+            Unit_Price_UN: 0,
+          });
+        } else {
+          setValues({
+            ...values,
+            [name]: value,
+            Unit_Price_UN: (value / QTDValue).toFixed(5),
+          });
+        }
+      }
+    }
+
+    if (name === "Unit_Price_UN") {
+      if (value === "0" || value === "") {
+        setValues({
+          ...values,
+          [name]: value,
+          Unit_Price_Box: 0,
+        });
+      } else {
+        setValues({
+          ...values,
+          [name]: value,
+          Unit_Price_Box: (value * QTDValue).toFixed(5),
+        });
+      }
+    }
+
+    /*    setValues({
       ...values,
       [name]: value,
-    });
+    });*/
     if (validateOnChange) validate({ [name]: value });
   };
 
@@ -26,6 +97,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
     errors,
     setErrors,
     handleInputChange,
+    handleInputQTDChange,
     resetForm,
   };
 }
