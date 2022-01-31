@@ -37,6 +37,7 @@
     "@mui/material": "^5.2.7",
     "@mui/styled-engine-sc": "^5.1.0",
     "@mui/styles": "^5.2.3",
+    "autosuggest-highlight": "^3.2.0",
     "axios": "^0.24.0",
     "hamburger-react": "^2.4.1",
     "mobx": "^6.3.10",

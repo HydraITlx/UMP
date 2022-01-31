@@ -376,7 +376,8 @@ export default function GruopTable() {
                         <DatePicker
                           views={["year"]}
                           label="Filtro Ano"
-                          minDate={new Date("2015-01-01")}
+                          minDate={new Date("2021-01-01")}
+                          maxDate={new Date()}
                           value={YearFilter}
                           onChange={(newValue) => {
                             handleFilterChange(newValue);

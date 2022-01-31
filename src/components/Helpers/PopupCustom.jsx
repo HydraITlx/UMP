@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
     position: "absolute",
     top: theme.spacing(20),
-    maxWidth: "80%",
+    maxWidth: "50%",
     maxHeight: "80%",
     minWidth: "50%",
     minHeight: "50%",

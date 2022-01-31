@@ -62,7 +62,7 @@ export default function AlertDialogSlide(props) {
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogTitle>
-          {"Deseja import as misericórsias da plataforma CRM?"}
+          {"Deseja importar as misericórdias da plataforma CRM?"}
         </DialogTitle>
         <DialogContent>
           <Typography gutterBottom>

@@ -94,8 +94,8 @@ export default function GroupForm(props) {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <Grid container>
-        <Grid item xs={12} md={5}>
+      <Grid container pl={25}>
+        <Grid item xs={12} md={5.34} pt={2}>
           <Controls.Input
             name="Year"
             label="Ano*"
@@ -104,9 +104,16 @@ export default function GroupForm(props) {
             onChange={handleInputChange}
             error={errors.Year}
           />
+          <Controls.Input
+            name="CHNM"
+            label="CHNM*"
+            disabled={isEdit}
+            value={values.CHNM}
+            onChange={handleInputChange}
+            error={errors.CHNM}
+          />
         </Grid>
-
-        <Grid item xs={12} md={5}>
+        <Grid item xs={12} md={5.34} pt={2}>
           <Controls.Select
             variant="outlined"
             name="Type"
@@ -117,20 +124,7 @@ export default function GroupForm(props) {
             options={TypeOption}
             error={errors.Type}
           />
-        </Grid>
 
-        <Grid item xs={12} md={5}>
-          <Controls.Input
-            name="CHNM"
-            label="CHNM*"
-            disabled={isEdit}
-            value={values.CHNM}
-            onChange={handleInputChange}
-            error={errors.CHNM}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={5} pb={5}>
           <Controls.Select
             variant="outlined"
             name="Laboratory_ID"
@@ -143,7 +137,7 @@ export default function GroupForm(props) {
           />
         </Grid>
 
-        <Grid item xs={12} md={12} pb={5}>
+        <Grid item xs={12} md={12} pt={2}>
           <Controls.Input
             name="Description"
             label="Descrição"
@@ -152,7 +146,7 @@ export default function GroupForm(props) {
           />
         </Grid>
 
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={3.43} pt={2}>
           <Controls.Input
             type="number"
             name="Total_Quantity"
@@ -162,8 +156,7 @@ export default function GroupForm(props) {
             error={errors.Total_Quantity}
           />
         </Grid>
-
-        <Grid item xs={12} md={3} pb={5}>
+        <Grid item xs={12} md={3.43} pt={2}>
           <Controls.Input
             type="number"
             name="Unit_Price_Box"
@@ -173,8 +166,7 @@ export default function GroupForm(props) {
             error={errors.Unit_Price_Box}
           />
         </Grid>
-
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={3.43} pt={2}>
           <Controls.Input
             type="number"
             name="Unit_Price_UN"
@@ -185,7 +177,7 @@ export default function GroupForm(props) {
           />
         </Grid>
 
-        <Grid item xs={12} md={5}>
+        <Grid item xs={12} md={5.34} pt={2}>
           <Controls.Input
             name="DUP"
             label="DUP"
@@ -195,7 +187,7 @@ export default function GroupForm(props) {
           />
         </Grid>
 
-        <Grid item xs={12} md={5} pb={5}>
+        <Grid item xs={12} md={5.34} pt={2}>
           <Controls.Input
             name="Commercial_Name"
             label="Nome Comercial"
@@ -204,8 +196,7 @@ export default function GroupForm(props) {
             error={errors.Commercial_Name}
           />
         </Grid>
-
-        <Grid item xs={12} md={11} pb={5}>
+        <Grid item xs={12} md={12} pt={2}>
           <Controls.Input
             name="Observations"
             label="Observações"
@@ -215,7 +206,7 @@ export default function GroupForm(props) {
           />
         </Grid>
 
-        <Grid item xs={12} md={11} pb={5}>
+        <Grid item xs={12} md={5.34} pt={2}>
           <Checkbox
             name="Sold_Out"
             label="Esgotado"
@@ -230,10 +221,9 @@ export default function GroupForm(props) {
             onChange={handleInputChange}
           />
         </Grid>
-
-        <Grid item xs={12} md={12}>
-          <Controls.Button style={btnStyles} type="submit" text="Submeter" />
-        </Grid>
+      </Grid>
+      <Grid item xs={12} md={12} pt={2}>
+        <Controls.Button style={btnStyles} type="submit" text="Submeter" />
       </Grid>
     </Form>
   );

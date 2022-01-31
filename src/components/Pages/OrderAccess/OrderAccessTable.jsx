@@ -12,11 +12,14 @@ import {
   DeleteOrderAccess,
 } from "../../Requests/AccessOrderRequest";
 
+import Popup from "../../Helpers/PopupCustom";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import TableTitle from "../../Helpers/TableTitle";
 import Select from "../../Helpers/SelectRender";
 import { onHandlePharmacistOptions } from "../../Requests/UCCRequests";
+import OrderAccessForm from "./Form/OrderAccessForm";
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -24,6 +27,10 @@ export default function GruopTable() {
   const addActionRef = React.useRef();
   const [pharmacistOptions, SetpharmacistOptions] = useState([]);
   const [UCCOptions, SetUCCOptions] = useState([]);
+  const [recordForEdit, setRecordForEdit] = useState(null);
+  const [isInsert, setisInsert] = useState(false);
+  const [isEdit, setisEdit] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -93,108 +100,63 @@ export default function GruopTable() {
     }
   };
 
-  const editComponent = ({ onChange, value, ...rest }) => {
-    let newRowValue = " ";
-    if (value !== undefined) {
-      newRowValue = value;
+  const addOrEdit = (values, resetForm) => {
+    if (isInsert) {
+      InsertOrderAccess(values);
     }
+    if (isEdit) {
+      console.log("entou no edit");
+      UpdateOrderAccess(values);
+    }
+    resetForm();
+    setRecordForEdit(null);
+    setOpenPopup(false);
 
-    const [currentValue, setValue] = useState(newRowValue);
-    const [error, setError] = useState(null);
-
-    const change = (e) => {
-      let newValue = " ";
-
-      if (e.target !== undefined) {
-        newValue = e.target.value;
-      }
-      setValue(newValue);
-      onChange(newValue);
-      setError(null);
-      if (newValue === " ") {
-        setError("O Nome Farmacêutico não pode estar vazio");
-      } else {
-        checkDuplicates(data, rest.rowData.ID, newValue, setError);
-      }
-
-      if (error !== null) {
-        onChange(newValue);
-      }
-    };
-
-    return (
-      <Select
-        {...rest}
-        name="Pharmacist_ID"
-        label=""
-        error={error}
-        value={currentValue}
-        //     error={helperText}
-        onChange={change}
-        options={pharmacistOptions}
-      />
-    );
+    setTimeout(() => {
+      MakeRequests();
+      setisEdit(false);
+      setisInsert(false);
+    }, 500);
   };
 
-  function checkDuplicates(arr, index, new_id, setError) {
-    console.log(index);
-    return arr.map((options) => {
-      if (options.ID !== index) {
-        console.log("HELO");
-        console.log(`${options.Pharmacist_ID} new_id ${new_id}`);
-        if (options.Pharmacist_ID === new_id) {
-          setError("O Farmacêutico já existe");
-        }
-      }
-    });
-  }
+  const openInPopup = (rowData) => {
+    setRecordForEdit(rowData);
+    setOpenPopup(true);
+  };
 
   const columns = [
     {
       title: "Nome Farmacêutico",
       field: "Pharmacist_ID",
       width: "50%",
-      render: (rowData) => (
-        <Select
-          label=""
-          value={rowData.Pharmacist_ID}
-          //     error={helperText}
-          options={pharmacistOptions}
-        />
-      ),
-      editComponent,
+      render: (rowData) => {
+        return <a>{rowData.Pharmacist_Name}</a>;
+      },
     },
 
     {
       title: "Nome UCC",
       field: "UCC_ID",
       width: "50%",
-      render: (rowData) => (
-        <Select
-          label=""
-          value={rowData.UCC_ID}
-          //     error={helperText}
-          options={UCCOptions}
-        />
-      ),
-      editComponent: (tableData) => {
-        console.log(tableData);
-        console.log("tableData");
-        return (
-          <Select
-            name="UCC_ID"
-            label=""
-            value={
-              tableData.rowData.UCC_ID !== undefined
-                ? tableData.rowData.UCC_ID
-                : " "
-            }
-            //     error={helperText}
-            onChange={(e) => tableData.onChange(e.target.value)}
-            options={UCCOptions}
-          />
-        );
+      render: (rowData) => {
+        return <a>{rowData.UCC_Name}</a>;
       },
+    },
+    {
+      title: "Editar ",
+      field: "",
+      render: (rowData) => (
+        <IconButton
+          onClick={() => {
+            setisEdit(true);
+            setisInsert(false);
+            openInPopup(rowData);
+          }}
+        >
+          <EditIcon />
+        </IconButton>
+      ),
+      width: "10%",
     },
   ];
 
@@ -228,71 +190,6 @@ export default function GruopTable() {
           data={data}
           title={<TableTitle text="Lista de acesso a encomendas" />}
           editable={{
-            onRowAdd: (newData) =>
-              new Promise((resolve, reject) => {
-                console.log("newData");
-                console.log(newData);
-                let allow_Resolve = true;
-
-                data.map((options) => {
-                  if (options.Pharmacist_ID === newData.Pharmacist_ID) {
-                    allow_Resolve = false;
-                  }
-                });
-
-                if (
-                  newData.Pharmacist_ID === undefined ||
-                  newData.Pharmacist_ID === " "
-                ) {
-                  allow_Resolve = false;
-                }
-                if (allow_Resolve) {
-                  InsertOrderAccess(newData);
-                }
-
-                setTimeout(() => {
-                  if (allow_Resolve) {
-                    MakeRequests();
-                    resolve();
-                  } else {
-                    reject();
-                  }
-                }, 1000);
-              }),
-
-            onRowUpdate: (newData, oldData) =>
-              new Promise((resolve, reject) => {
-                let allow_Resolve = true;
-
-                data.map((options) => {
-                  console.log("newData");
-                  console.log(newData);
-                  if (options.ID !== oldData.ID) {
-                    if (options.Pharmacist_ID === newData.Pharmacist_ID) {
-                      allow_Resolve = false;
-                    }
-                  }
-                });
-
-                if (
-                  newData.Pharmacist_ID === undefined ||
-                  newData.Pharmacist_ID === " "
-                ) {
-                  allow_Resolve = false;
-                }
-                if (allow_Resolve) {
-                  UpdateOrderAccess(newData);
-                }
-
-                setTimeout(() => {
-                  if (allow_Resolve) {
-                    MakeRequests();
-                    resolve();
-                  } else {
-                    reject();
-                  }
-                }, 1000);
-              }),
             onRowDelete: (oldData) =>
               new Promise((resolve, reject) => {
                 DeleteOrderAccess(oldData);
@@ -320,7 +217,14 @@ export default function GruopTable() {
               <div>
                 <MTableToolbar {...props} />
                 <div style={{ padding: "0px 10px", textAlign: "right" }}>
-                  <IconButton onClick={() => addActionRef.current.click()}>
+                  <IconButton
+                    onClick={() => {
+                      setisEdit(false);
+                      setisInsert(true);
+                      setOpenPopup(true);
+                      setRecordForEdit(null);
+                    }}
+                  >
                     <AddIcon />
                   </IconButton>
                 </div>
@@ -333,6 +237,20 @@ export default function GruopTable() {
           }}
         />
       </Paper>
+      <Popup
+        title="Ficha de Permissões"
+        openPopup={openPopup}
+        setOpenPopup={setOpenPopup}
+      >
+        <OrderAccessForm
+          data={data}
+          recordForEdit={recordForEdit}
+          addOrEdit={addOrEdit}
+          isEdit={isEdit}
+          pharmacistOptions={pharmacistOptions}
+          UCCOptions={UCCOptions}
+        ></OrderAccessForm>
+      </Popup>
     </>
   );
 }

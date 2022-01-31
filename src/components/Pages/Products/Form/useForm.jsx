@@ -7,10 +7,10 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    if (name === "Unit_Price_Box" || name || "Unit_Price_UN") {
+    if (name === "Unit_Price_Box" || name === "Unit_Price_UN") {
       setValues({
         ...values,
-        [name]: value.toFixed(5),
+        [name]: value.toFixed(6),
       });
     } else {
       setValues({
@@ -35,7 +35,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
         setValues({
           ...values,
           [name]: value,
-          Unit_Price_UN: (QTDValue / value).toFixed(5),
+          Unit_Price_UN: (QTDValue / value).toFixed(6),
         });
       }
     }
@@ -57,7 +57,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
           setValues({
             ...values,
             [name]: value,
-            Unit_Price_UN: (value / QTDValue).toFixed(5),
+            Unit_Price_UN: (value / QTDValue).toFixed(6),
           });
         }
       }
@@ -74,7 +74,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
         setValues({
           ...values,
           [name]: value,
-          Unit_Price_Box: (value * QTDValue).toFixed(5),
+          Unit_Price_Box: (value * QTDValue).toFixed(6),
         });
       }
     }

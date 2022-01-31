@@ -246,8 +246,8 @@ export default function GroupForm(props) {
                   name="Logo"
                   label="Logo"
                   style={{
-                    height: 500,
-                    width: 500,
+                    height: "38vh",
+                    width: "48vh",
                     backgroundSize: "cover",
                     boxShadow: "4px 4px 4px rgba(0, 0, 0, 0.25)",
                     borderRadius: "15px",
@@ -255,6 +255,8 @@ export default function GroupForm(props) {
                   src={values.Logo}
                   alt=""
                 />
+              </Grid>
+              <Grid item xs={12} md={12}>
                 <label
                   htmlFor="filePicker"
                   style={{

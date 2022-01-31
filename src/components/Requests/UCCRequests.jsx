@@ -159,7 +159,8 @@ export function InsertDeliveryPlaces(rowdata, UCCID) {
 export function DeleteUCC(rowdata) {
   let body = {
     process: 4,
-    ID: rowdata,
+    ID: rowdata.ID,
+    Responsible_Pharmacist_ID: rowdata.Responsible_Pharmacist_ID,
   };
 
   const requestOptions = {

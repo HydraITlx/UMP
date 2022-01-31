@@ -251,7 +251,7 @@ export default function GruopTable() {
                       const index = oldData.tableData.id;
                       dataDelete.splice(index, 1);
                       setData([...dataDelete]);
-                      DeleteUCC(oldData.ID);
+                      DeleteUCC(oldData);
                       resolve();
                     }, 1500);
                   }),

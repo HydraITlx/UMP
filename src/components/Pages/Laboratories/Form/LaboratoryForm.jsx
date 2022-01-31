@@ -308,37 +308,35 @@ export default function GroupForm(props) {
           />
         </Grid>
 
-        {isEdit && (
-          <Grid item xs={12} md={2} pb={3} pr={2}>
-            <Controls.ButtonLabs
-              backgroundColor={btn4bg}
-              backgroundColorHover={btn4hv}
-              style={btnStyles}
-              type="button"
-              text="C. Devolução"
-              onClick={handleBtn4}
-            />
-          </Grid>
-        )}
+        <Grid item xs={12} md={2} pb={3} pr={2}>
+          <Controls.ButtonLabs
+            disabled={!isEdit}
+            backgroundColor={btn4bg}
+            backgroundColorHover={btn4hv}
+            style={btnStyles}
+            type="button"
+            text="C. Devolução"
+            onClick={handleBtn4}
+          />
+        </Grid>
 
-        {isEdit && (
-          <Grid item xs={12} md={2} pb={3} pr={2}>
-            <Controls.ButtonLabs
-              backgroundColor={btn5bg}
-              backgroundColorHover={btn5hv}
-              style={btnStyles}
-              type="button"
-              text="Anexo VII"
-              onClick={handleBtn5}
-            />
-          </Grid>
-        )}
+        <Grid item xs={12} md={2} pb={3} pr={2}>
+          <Controls.ButtonLabs
+            disabled={!isEdit}
+            backgroundColor={btn5bg}
+            backgroundColorHover={btn5hv}
+            style={btnStyles}
+            type="button"
+            text="Anexo VII"
+            onClick={handleBtn5}
+          />
+        </Grid>
       </Grid>
 
       {btn1ac && (
         <>
           <Grid container pl={35}>
-            <Grid item xs={12} md={4} pb={3}>
+            <Grid item xs={12} md={5.34} pt={2}>
               <Controls.Input
                 name="Name"
                 label="Nome"
@@ -346,7 +344,8 @@ export default function GroupForm(props) {
                 onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12} md={4} pb={3}>
+
+            <Grid item xs={12} md={5.34} pt={2}>
               <Controls.Select
                 variant="outlined"
                 name="Type"
@@ -358,7 +357,7 @@ export default function GroupForm(props) {
               />
             </Grid>
 
-            <Grid item xs={12} md={11} pb={3}>
+            <Grid item xs={12} md={12} pt={2}>
               <Controls.Input
                 name="Address"
                 label="Morada"
@@ -366,7 +365,8 @@ export default function GroupForm(props) {
                 onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12} md={3} pb={3}>
+
+            <Grid item xs={12} md={3.43} pt={2}>
               <Controls.Input
                 name="NIF"
                 label="NIF"
@@ -374,7 +374,8 @@ export default function GroupForm(props) {
                 onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12} md={3} pb={3}>
+
+            <Grid item xs={12} md={3.43} pt={2}>
               <Controls.Input
                 name="Phone"
                 label="Telefone"
@@ -383,16 +384,7 @@ export default function GroupForm(props) {
               />
             </Grid>
 
-            <Grid item xs={12} md={3} pb={3}>
-              <Controls.Input
-                name="Email"
-                label="Email"
-                value={values.Email}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={3} pb={3}>
+            <Grid item xs={12} md={3.43} pt={2}>
               <Controls.Input
                 name="Fax"
                 label="Fax"
@@ -400,7 +392,16 @@ export default function GroupForm(props) {
                 onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12} md={11} pb={3}>
+
+            <Grid item xs={12} md={12} pt={2}>
+              <Controls.Input
+                name="Email"
+                label="Email"
+                value={values.Email}
+                onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} md={12} pt={2}>
               <Controls.Input
                 name="Comments"
                 label="Comentários"
@@ -408,7 +409,8 @@ export default function GroupForm(props) {
                 onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12} md={3} pb={3}>
+
+            <Grid item xs={12} md={3.43} pt={2}>
               <Controls.Input
                 name="Delivery_Terms"
                 label="Prazo de Entrega"
@@ -416,7 +418,8 @@ export default function GroupForm(props) {
                 onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12} md={3} pb={3}>
+
+            <Grid item xs={12} md={3.43} pt={2}>
               <Controls.Input
                 name="Payment_Terms"
                 label="Prazo de Pagamento"
@@ -424,7 +427,8 @@ export default function GroupForm(props) {
                 onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12} md={3} pb={3}>
+
+            <Grid item xs={12} md={3.43} pt={2}>
               <Controls.Input
                 name="Order_Minimum_Amount"
                 label="Valor min. Encomenda"
@@ -432,7 +436,8 @@ export default function GroupForm(props) {
                 onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12} md={4} pb={3}>
+
+            <Grid item xs={12} md={5.34} pt={2}>
               <Controls.Input
                 name="Contact_Phone"
                 label="Num. Contacto"
@@ -440,7 +445,7 @@ export default function GroupForm(props) {
                 onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12} md={4} pb={3}>
+            <Grid item xs={12} md={5.34} pt={2}>
               <Controls.Input
                 name="Contact_Order"
                 label="Encomenda Contacto"
@@ -448,7 +453,8 @@ export default function GroupForm(props) {
                 onChange={handleInputChange}
               />
             </Grid>
-            <Grid item xs={12} md={11} pb={5}>
+
+            <Grid item xs={12} md={5.34} pt={2}>
               <Checkbox
                 name="Active"
                 label="Ativo"
@@ -462,7 +468,7 @@ export default function GroupForm(props) {
 
       {btn2ac && (
         <Grid container pl={35}>
-          <Grid item xs={12} md={4} pb={3}>
+          <Grid item xs={12} md={5.34} pt={2}>
             <Controls.Input
               name="Customer_Contact_Name"
               label="Nome Contacto"
@@ -471,16 +477,7 @@ export default function GroupForm(props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={4} pb={3}>
-            <Controls.Input
-              name="Customer_Email"
-              label="E-Mail"
-              value={values.Customer_Email}
-              onChange={handleInputChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={4} pb={3}>
+          <Grid item xs={12} md={5.34} pt={2}>
             <Controls.Input
               name="Customer_Phone"
               label="Telefone"
@@ -489,7 +486,16 @@ export default function GroupForm(props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={12} pb={3}>
+          <Grid item xs={12} md={12} pt={2}>
+            <Controls.Input
+              name="Customer_Email"
+              label="E-Mail"
+              value={values.Customer_Email}
+              onChange={handleInputChange}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={12} pt={2}>
             <Controls.Input
               name="Documents"
               label="Documentos"
@@ -498,7 +504,7 @@ export default function GroupForm(props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={4} pb={3}>
+          <Grid item xs={12} md={5.34} pt={2}>
             <Controls.Input
               name="Payment_Method"
               label="Forma de Pagamento"
@@ -506,8 +512,9 @@ export default function GroupForm(props) {
               onChange={handleInputChange}
             />
           </Grid>
+          <Grid item xs={12} md={5.34} pt={2}></Grid>
 
-          <Grid item xs={12} md={4} pb={3}>
+          <Grid item xs={12} md={3.43} pt={2}>
             <Controls.Input
               name="NIB"
               label="NIB"
@@ -516,7 +523,7 @@ export default function GroupForm(props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={4} pb={3}>
+          <Grid item xs={12} md={3.43} pt={2}>
             <Controls.Input
               name="IBAN"
               label="IBAN"
@@ -525,7 +532,7 @@ export default function GroupForm(props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={4} pb={3}>
+          <Grid item xs={12} md={3.43} pt={2}>
             <Controls.Input
               name="SWIFT"
               label="SWIFT"
@@ -538,7 +545,7 @@ export default function GroupForm(props) {
 
       {btn3ac && (
         <Grid container pl={35}>
-          <Grid item xs={12} md={5} pb={3}>
+          <Grid item xs={12} md={5.34} pt={2}>
             <Controls.Input
               name="Tecnical_Contact_Name"
               label="Nome Contacto"
@@ -547,7 +554,7 @@ export default function GroupForm(props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={5} pb={3}>
+          <Grid item xs={12} md={5.34} pt={2}>
             <Controls.Input
               name="Tecnical_Email"
               label="E-Mail"
@@ -556,7 +563,7 @@ export default function GroupForm(props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={5} pb={3}>
+          <Grid item xs={12} md={5.34} pt={2}>
             <Controls.Input
               name="Tecnical_Phone"
               label="Telefone"
@@ -565,7 +572,7 @@ export default function GroupForm(props) {
             />
           </Grid>
 
-          <Grid item xs={12} md={5} pb={3}>
+          <Grid item xs={12} md={5.34} pt={2}>
             <Controls.Input
               name="Tecnical_Fax"
               label="Fax"
