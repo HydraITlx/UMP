@@ -24,6 +24,8 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
 
   const handleInputQTDChange = (e, QTDValue) => {
     const { name, value } = e.target;
+    const re = /^[+-]?\d*(?:[..]\d*)?$/;
+
     if (name === "Total_Quantity") {
       if (value === "0" || value === "") {
         setValues({
@@ -32,11 +34,13 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
           Unit_Price_UN: 0,
         });
       } else {
-        setValues({
-          ...values,
-          [name]: value,
-          Unit_Price_UN: (QTDValue / value).toFixed(6),
-        });
+        if (re.test(value)) {
+          setValues({
+            ...values,
+            [name]: value,
+            Unit_Price_UN: (QTDValue / value).toFixed(6),
+          });
+        }
       }
     }
 
@@ -45,6 +49,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
         setValues({
           ...values,
           [name]: 0,
+          Unit_Price_UN: 0,
         });
       } else {
         if (QTDValue === "0" || QTDValue === "") {
@@ -54,23 +59,19 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
             Unit_Price_UN: 0,
           });
         } else {
-          setValues({
-            ...values,
-            [name]: value,
-            Unit_Price_UN: (value / QTDValue).toFixed(6),
-          });
+          if (re.test(value)) {
+            setValues({
+              ...values,
+              [name]: value,
+              Unit_Price_UN: (value / QTDValue).toFixed(6),
+            });
+          }
         }
       }
     }
 
     if (name === "Unit_Price_UN") {
-      if (value === "0" || value === "") {
-        setValues({
-          ...values,
-          [name]: value,
-          Unit_Price_Box: 0,
-        });
-      } else {
+      if (value === "" || re.test(value)) {
         setValues({
           ...values,
           [name]: value,

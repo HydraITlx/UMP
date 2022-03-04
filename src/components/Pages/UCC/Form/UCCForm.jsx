@@ -21,7 +21,8 @@ const initialFValues = {
 };
 
 export default function GroupForm(props) {
-  const { addOrEdit, recordForEdit, isEdit, pharmacistOptions } = props;
+  const { addOrEdit, recordForEdit, isEdit, pharmacistOptions, OnlyPreview } =
+    props;
 
   const [showDeliveryPlaces, setshowDeliveryPlaces] = useState(false);
   console.log("isEdit");
@@ -152,6 +153,7 @@ export default function GroupForm(props) {
               <Grid item xs={12} md={6}>
                 <Controls.Input
                   name="Name"
+                  disabled={OnlyPreview}
                   label="Nome"
                   value={values.Name}
                   onChange={handleInputChange}
@@ -163,6 +165,7 @@ export default function GroupForm(props) {
                 <Controls.Select
                   variant="outlined"
                   name="Entity_Type"
+                  disabled={OnlyPreview}
                   label="Tipo de entidade"
                   value={values.Entity_Type}
                   onChange={handleInputChange}
@@ -173,6 +176,7 @@ export default function GroupForm(props) {
               <Grid item xs={12} md={6}>
                 <Controls.Input
                   name="Address"
+                  disabled={OnlyPreview}
                   label="Morada"
                   value={values.Address}
                   onChange={handleInputChange}
@@ -182,6 +186,7 @@ export default function GroupForm(props) {
               <Grid item xs={12} md={6}>
                 <Controls.Input
                   name="Post_Code"
+                  disabled={OnlyPreview}
                   label="Código Postal"
                   value={values.Post_Code}
                   onChange={handleInputChange}
@@ -192,6 +197,7 @@ export default function GroupForm(props) {
                 <Controls.Select
                   variant="outlined"
                   name="Responsible_Pharmacist_ID"
+                  disabled={OnlyPreview}
                   label="Nome Responsável"
                   value={values.Responsible_Pharmacist_ID}
                   //     error={helperText}
@@ -224,6 +230,7 @@ export default function GroupForm(props) {
               <Grid item xs={12} md={6}>
                 <Controls.Input
                   name="NIPC"
+                  disabled={OnlyPreview}
                   label="NIPC"
                   value={values.NIPC}
                   onChange={handleInputChange}
@@ -232,6 +239,7 @@ export default function GroupForm(props) {
               <Grid item xs={12} md={6}>
                 <Checkbox
                   name="Active"
+                  disabled={OnlyPreview}
                   label="Ativo"
                   value={values.Active}
                   onChange={handleInputChange}
@@ -286,12 +294,14 @@ export default function GroupForm(props) {
                   Remover
                 </label>
                 <input
+                  disabled={OnlyPreview}
                   id="fileRemover"
                   style={{ visibility: "hidden" }}
                   type={"button"}
                   onClick={handleLogoRemove}
                 />
                 <input
+                  disabled={OnlyPreview}
                   id="filePicker"
                   style={{ visibility: "hidden" }}
                   type={"file"}

@@ -24,6 +24,10 @@ import Spinner from "../../Spinner/Spinner";
 import NoAccess from "../../Helpers/NoAccess";
 import ImportApi from "./ImportApi";
 
+import PreviewIcon from "@mui/icons-material/RemoveRedEye";
+import DeletePopUp from "../../Helpers/DeletePopUp";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 const EntityTypeOption = [
   { value: 0, label: " " },
   { value: 1, label: "IPSS" },
@@ -45,6 +49,10 @@ export default function GruopTable() {
   const [AllowInsert, setAllowInsert] = useState(false);
   const [AllowDelete, setAllowDelete] = useState(false);
   const [IsAdmin, setIsAdmin] = useState(false);
+
+  const [OnlyPreview, setOnlyPreview] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [recordForDelete, setRecordForDelete] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -145,24 +153,6 @@ export default function GruopTable() {
     { title: "NIPC", field: "NIPC", width: "auto" },
     { title: "Morada", field: "Address", width: "auto" },
     { title: "Código Postal", field: "Post_Code", width: "auto" },
-
-    {
-      title: "Editar ",
-      field: "",
-      render: (rowData) => (
-        <IconButton
-          disabled={!AllowModify && !IsAdmin}
-          onClick={() => {
-            setisEdit(true);
-            setisInsert(false);
-            openInPopup(rowData);
-          }}
-        >
-          <EditIcon />
-        </IconButton>
-      ),
-      width: "10%",
-    },
   ];
 
   //Auto Height
@@ -176,10 +166,12 @@ export default function GruopTable() {
     pageSize: 10,
     paging: true,
     headerStyle: {
+      position: "sticky",
+      top: 0,
       backgroundColor: "#ad0b90",
       color: "#FFFFFF",
       fontWeight: "bold",
-      height: 70,
+      height: 10,
     },
     filtering: false,
     actionsColumnIndex: -1,
@@ -203,6 +195,7 @@ export default function GruopTable() {
       setUpdate(!update);
       setisEdit(false);
       setisInsert(false);
+      setOnlyPreview(false);
     }, 4000);
   };
 
@@ -228,6 +221,27 @@ export default function GruopTable() {
     }
   };
 
+  const handleDeleteOnClick = (rowData) => {
+    console.log(rowData);
+    setRecordForDelete(rowData.data);
+    setOpen(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setOpen(false);
+  };
+
+  const handleDeleteConfirm = (rowData) => {
+    setOpen(false);
+    setTimeout(() => {
+      const dataDelete = [...data];
+      const index = rowData.id;
+      dataDelete.splice(index, 1);
+      setData([...dataDelete]);
+      DeleteUCC(rowData);
+    }, 1000);
+  };
+
   if (isLoading === true) {
     return <Spinner />;
   }
@@ -244,19 +258,50 @@ export default function GruopTable() {
               title={<TableTitle text="Unidades de Cuidados Continuados" />}
               editable={{
                 isDeletable: (rowData) => AllowDelete === 1 || IsAdmin === true,
-                onRowDelete: (oldData) =>
-                  new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                      const dataDelete = [...data];
-                      const index = oldData.tableData.id;
-                      dataDelete.splice(index, 1);
-                      setData([...dataDelete]);
-                      DeleteUCC(oldData);
-                      resolve();
-                    }, 1500);
-                  }),
+                onRowDelete: (oldData) => new Promise((resolve, reject) => {}),
               }}
               components={{
+                Action: (props) => (
+                  <div style={{ display: "flex" }}>
+                    {(AllowModify === 1 || IsAdmin === true) && (
+                      <IconButton
+                        disabled={!AllowModify && !IsAdmin}
+                        onClick={() => {
+                          setisEdit(true);
+                          setisInsert(false);
+                          setOnlyPreview(false);
+                          openInPopup(props.data);
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    )}
+
+                    {!AllowModify && !IsAdmin && (
+                      <IconButton
+                        disabled={false}
+                        onClick={() => {
+                          setisEdit(true);
+                          setisInsert(false);
+                          setOnlyPreview(true);
+                          openInPopup(props.data);
+                        }}
+                      >
+                        <PreviewIcon />
+                      </IconButton>
+                    )}
+
+                    <IconButton
+                      disabled={!AllowDelete && !IsAdmin}
+                      onClick={() => {
+                        handleDeleteOnClick(props);
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
+                ),
+
                 Toolbar: (props) => (
                   <div>
                     <MTableToolbar {...props} />
@@ -278,6 +323,7 @@ export default function GruopTable() {
                             setisInsert(true);
                             setOpenPopup(true);
                             setRecordForEdit(null);
+                            setOnlyPreview(false);
                           }}
                         >
                           <AddIcon />
@@ -293,6 +339,12 @@ export default function GruopTable() {
               }}
             />
           </Paper>
+          <DeletePopUp
+            open={open}
+            recordForDelete={recordForDelete}
+            handleCancel={handleDeleteCancel}
+            handleConfirm={handleDeleteConfirm}
+          ></DeletePopUp>
 
           <Popup
             title="Ficha Unidade de Cuidadados Continuados"
@@ -304,6 +356,7 @@ export default function GruopTable() {
               pharmacistOptions={pharmacistOptions}
               addOrEdit={addOrEdit}
               isEdit={isEdit}
+              OnlyPreview={OnlyPreview}
               isInsert={isInsert}
               data={data}
             ></UCCForm>

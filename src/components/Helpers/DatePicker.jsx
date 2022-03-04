@@ -17,11 +17,12 @@ export default function DatePicker(props) {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <MobileDatePicker
         disableToolbar
+        views={["year", "month", "day"]}
         disabled={disabled}
         variant="inline"
         inputVariant="outlined"
         label={label}
-        format="dd/MM/yyyy"
+        inputFormat="dd/MM/yyyy"
         name={name}
         value={value}
         onChange={(date) => onChange(convertToDefEventPara(name, date))}

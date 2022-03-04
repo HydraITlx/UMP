@@ -12,6 +12,7 @@ import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import ProductForm from "./Form/LaboratoryForm";
 import EditIcon from "@mui/icons-material/Edit";
+import PreviewIcon from "@mui/icons-material/RemoveRedEye";
 import TableTitle from "../../Helpers/TableTitle";
 import Switch from "../../Helpers/Switch";
 import NoAccess from "../../Helpers/NoAccess";
@@ -21,6 +22,9 @@ import {
   checkIfAdminPermissions,
 } from "../../Requests/PermissionRequests";
 
+import DeletePopUp from "../../Helpers/DeletePopUp";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 export default function GruopTable() {
   const [data, setData] = useState([]);
   const [LabOptions, setLabOptions] = useState([]);
@@ -29,6 +33,8 @@ export default function GruopTable() {
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [isInsert, setisInsert] = useState(false);
   const [isEdit, setisEdit] = useState(false);
+  const [OnlyPreview, setOnlyPreview] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const [AllowRead, setAllowRead] = useState(false);
   const [AllowModify, setAllowModify] = useState(false);
@@ -36,6 +42,7 @@ export default function GruopTable() {
   const [AllowDelete, setAllowDelete] = useState(false);
   const [IsAdmin, setIsAdmin] = useState(false);
   const [isLoading, setisLoading] = useState(true);
+  const [recordForDelete, setRecordForDelete] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -174,24 +181,6 @@ export default function GruopTable() {
         ></Switch>
       ),
     },
-
-    {
-      title: "Editar ",
-      field: "",
-      render: (rowData) => (
-        <IconButton
-          disabled={!AllowModify && !IsAdmin}
-          onClick={() => {
-            setisEdit(true);
-            setisInsert(false);
-            openInPopup(rowData);
-          }}
-        >
-          <EditIcon />
-        </IconButton>
-      ),
-      width: "10%",
-    },
   ];
 
   //Auto Height
@@ -205,10 +194,12 @@ export default function GruopTable() {
     pageSize: 10,
     paging: true,
     headerStyle: {
+      position: "sticky",
+      top: 0,
       backgroundColor: "#ad0b90",
       color: "#FFFFFF",
       fontWeight: "bold",
-      height: 70,
+      height: 10,
     },
     filtering: false,
     actionsColumnIndex: -1,
@@ -232,6 +223,7 @@ export default function GruopTable() {
       handleLabRequests();
       setisEdit(false);
       setisInsert(false);
+      setOnlyPreview(false);
     }, 500);
   };
 
@@ -251,6 +243,24 @@ export default function GruopTable() {
     setOpenPopup(true);
   };
 
+  const handleDeleteOnClick = (rowData) => {
+    console.log(rowData);
+    setRecordForDelete(rowData.data);
+    setOpen(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setOpen(false);
+  };
+
+  const handleDeleteConfirm = (rowData) => {
+    setOpen(false);
+    DeleteLaboratory(rowData.ID);
+    setTimeout(() => {
+      handleLabRequests();
+    }, 1000);
+  };
+
   if (isLoading === true) {
     return <Spinner />;
   }
@@ -266,17 +276,51 @@ export default function GruopTable() {
               data={data}
               title={<TableTitle text="Laboratórios" />}
               editable={{
-                isDeletable: (rowData) => AllowDelete === 1 || IsAdmin === true,
-                onRowDelete: (oldData) =>
-                  new Promise((resolve, reject) => {
-                    DeleteLaboratory(oldData.ID);
-                    setTimeout(() => {
-                      handleLabRequests();
-                      resolve();
-                    }, 1000);
-                  }),
+                onRowDelete: (oldData) => new Promise((resolve, reject) => {}),
               }}
+              //aqui new
               components={{
+                Action: (props) => (
+                  <div style={{ display: "flex" }}>
+                    {(AllowModify === 1 || IsAdmin === true) && (
+                      <IconButton
+                        disabled={!AllowModify && !IsAdmin}
+                        onClick={() => {
+                          setisEdit(true);
+                          setisInsert(false);
+                          setOnlyPreview(false);
+                          openInPopup(props.data);
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    )}
+
+                    {!AllowModify && !IsAdmin && (
+                      <IconButton
+                        disabled={false}
+                        onClick={() => {
+                          setisEdit(true);
+                          setisInsert(false);
+                          setOnlyPreview(true);
+                          openInPopup(props.data);
+                        }}
+                      >
+                        <PreviewIcon />
+                      </IconButton>
+                    )}
+
+                    <IconButton
+                      disabled={!AllowDelete && !IsAdmin}
+                      onClick={() => {
+                        handleDeleteOnClick(props);
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </div>
+                ),
+
                 Toolbar: (props) => (
                   <div>
                     <MTableToolbar {...props} />
@@ -288,6 +332,7 @@ export default function GruopTable() {
                           setisInsert(true);
                           setOpenPopup(true);
                           setRecordForEdit(null);
+                          setOnlyPreview(false);
                         }}
                       >
                         <AddIcon />
@@ -302,6 +347,12 @@ export default function GruopTable() {
               }}
             />
           </Paper>
+          <DeletePopUp
+            open={open}
+            recordForDelete={recordForDelete}
+            handleCancel={handleDeleteCancel}
+            handleConfirm={handleDeleteConfirm}
+          ></DeletePopUp>
           <Popup
             title="Ficha de Laboratório"
             openPopup={openPopup}
@@ -314,6 +365,7 @@ export default function GruopTable() {
               addonConfirm={addonConfirm}
               isEdit={isEdit}
               LabOptions={LabOptions}
+              OnlyPreview={OnlyPreview}
             ></ProductForm>
           </Popup>
         </>

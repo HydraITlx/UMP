@@ -14,6 +14,7 @@ import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import ProductForm from "./Form/ProductForm";
 import EditIcon from "@mui/icons-material/Edit";
+import PreviewIcon from "@mui/icons-material/RemoveRedEye";
 import TableTitle from "../../Helpers/TableTitle";
 import Switch from "../../Helpers/Switch";
 import NoAccess from "../../Helpers/NoAccess";
@@ -36,6 +37,7 @@ export default function GruopTable() {
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [isInsert, setisInsert] = useState(false);
   const [isEdit, setisEdit] = useState(false);
+  const [OnlyPreview, SetOnlyPreview] = useState(false);
 
   const [AllowRead, setAllowRead] = useState(false);
   const [AllowModify, setAllowModify] = useState(false);
@@ -74,10 +76,14 @@ export default function GruopTable() {
       }
 
       AuthPromise.then((response) => {
+        console.log("AAQUI VICKTOR");
+        console.log(response);
         if (response[0] !== undefined) {
           console.log(response[0]);
           setAllowRead(response[0].r);
           setAllowModify(response[0].m);
+          console.log("MODIFY AQUI");
+          console.log(response[0].m);
           setAllowInsert(response[0].i);
           setAllowDelete(response[0].d);
         }
@@ -86,6 +92,9 @@ export default function GruopTable() {
   };
 
   const handleAdminPromise = (AuthPromise) => {
+    if (IsAdmin) {
+      return;
+    }
     {
       if (AuthPromise === undefined) {
         return;
@@ -93,7 +102,9 @@ export default function GruopTable() {
 
       AuthPromise.then((response) => {
         if (response !== undefined) {
+          console.log("ENTOU NO AUTH");
           setIsAdmin(response[0].is_admin);
+          console.log(response[0].is_admin);
         }
       });
     }
@@ -193,8 +204,10 @@ export default function GruopTable() {
     {
       title: "Descrição",
       field: "Description",
-
       width: "auto",
+      render: (rowdata) => (
+        <a style={{ whiteSpace: "nowrap" }}>{rowdata.Description}</a>
+      ),
     },
 
     {
@@ -211,9 +224,8 @@ export default function GruopTable() {
     },
 
     {
-      title: "Qtd. por Caixa",
+      title: "Qtd. Caixa",
       field: "Total_Quantity",
-
       width: "auto",
     },
 
@@ -255,24 +267,6 @@ export default function GruopTable() {
         ></Switch>
       ),
     },
-
-    {
-      title: "Editar ",
-      field: "",
-      render: (rowData) => (
-        <IconButton
-          disabled={!AllowModify && !IsAdmin}
-          onClick={() => {
-            setisEdit(true);
-            setisInsert(false);
-            openInPopup(rowData);
-          }}
-        >
-          <EditIcon />
-        </IconButton>
-      ),
-      width: "10%",
-    },
   ];
 
   //Auto Height
@@ -286,10 +280,12 @@ export default function GruopTable() {
     pageSize: 10,
     paging: true,
     headerStyle: {
+      position: "sticky",
+      top: 0,
       backgroundColor: "#ad0b90",
       color: "#FFFFFF",
       fontWeight: "bold",
-      height: 70,
+      height: 10,
     },
     filtering: false,
     actionsColumnIndex: -1,
@@ -312,6 +308,7 @@ export default function GruopTable() {
       handleProductsRequests();
       setisEdit(false);
       setisInsert(true);
+      SetOnlyPreview(false);
     }, 500);
   };
 
@@ -368,12 +365,45 @@ export default function GruopTable() {
                   }),
               }}
               components={{
+                Action: (props) => (
+                  <div>
+                    {(AllowModify === 1 || IsAdmin === true) && (
+                      <IconButton
+                        disabled={!AllowModify && !IsAdmin}
+                        onClick={() => {
+                          setisEdit(true);
+                          setisInsert(false);
+                          SetOnlyPreview(false);
+                          openInPopup(props.data);
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    )}
+
+                    {!AllowModify && !IsAdmin && (
+                      <IconButton
+                        disabled={false}
+                        onClick={() => {
+                          setisEdit(true);
+                          setisInsert(false);
+                          SetOnlyPreview(true);
+                          openInPopup(props.data);
+                        }}
+                      >
+                        <PreviewIcon />
+                      </IconButton>
+                    )}
+                  </div>
+                ),
+
                 Toolbar: (props) => (
                   <div>
                     <MTableToolbar {...props} />
                     <div style={{ display: "flex" }}>
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
+                          readonly="readonly"
                           views={["year"]}
                           label="Filtro Ano"
                           minDate={new Date("2021-01-01")}
@@ -401,6 +431,7 @@ export default function GruopTable() {
                             setisInsert(true);
                             setOpenPopup(true);
                             setRecordForEdit(null);
+                            setOnlyPreview(false);
                           }}
                         >
                           <AddIcon />
@@ -428,6 +459,7 @@ export default function GruopTable() {
               addonConfirm={addonConfirm}
               isEdit={isEdit}
               LabOptions={LabOptions}
+              OnlyPreview={OnlyPreview}
             ></ProductForm>
           </Popup>
         </>

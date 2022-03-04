@@ -45,7 +45,7 @@ const TypeOption = [
 ];
 
 export default function GroupForm(props) {
-  const { addOrEdit, recordForEdit, isEdit, data, LabOptions } = props;
+  const { addOrEdit, recordForEdit, isEdit, OnlyPreview } = props;
 
   const [btn1bg, setbtn1bg] = useState("#ad0b90");
   const [btn1hv, setbtn1hv] = useState("#6d085a");
@@ -340,6 +340,7 @@ export default function GroupForm(props) {
               <Controls.Input
                 name="Name"
                 label="Nome"
+                disabled={OnlyPreview}
                 value={values.Name}
                 onChange={handleInputChange}
               />
@@ -349,6 +350,7 @@ export default function GroupForm(props) {
               <Controls.Select
                 variant="outlined"
                 name="Type"
+                disabled={OnlyPreview}
                 label="Tipo*"
                 value={values.Type}
                 onChange={handleInputChange}
@@ -360,6 +362,7 @@ export default function GroupForm(props) {
             <Grid item xs={12} md={12} pt={2}>
               <Controls.Input
                 name="Address"
+                disabled={OnlyPreview}
                 label="Morada"
                 value={values.Address}
                 onChange={handleInputChange}
@@ -369,6 +372,7 @@ export default function GroupForm(props) {
             <Grid item xs={12} md={3.43} pt={2}>
               <Controls.Input
                 name="NIF"
+                disabled={OnlyPreview}
                 label="NIF"
                 value={values.NIF}
                 onChange={handleInputChange}
@@ -378,6 +382,7 @@ export default function GroupForm(props) {
             <Grid item xs={12} md={3.43} pt={2}>
               <Controls.Input
                 name="Phone"
+                disabled={OnlyPreview}
                 label="Telefone"
                 value={values.Phone}
                 onChange={handleInputChange}
@@ -387,6 +392,7 @@ export default function GroupForm(props) {
             <Grid item xs={12} md={3.43} pt={2}>
               <Controls.Input
                 name="Fax"
+                disabled={OnlyPreview}
                 label="Fax"
                 value={values.Fax}
                 onChange={handleInputChange}
@@ -396,6 +402,7 @@ export default function GroupForm(props) {
             <Grid item xs={12} md={12} pt={2}>
               <Controls.Input
                 name="Email"
+                disabled={OnlyPreview}
                 label="Email"
                 value={values.Email}
                 onChange={handleInputChange}
@@ -404,6 +411,7 @@ export default function GroupForm(props) {
             <Grid item xs={12} md={12} pt={2}>
               <Controls.Input
                 name="Comments"
+                disabled={OnlyPreview}
                 label="Comentários"
                 value={values.Comments}
                 onChange={handleInputChange}
@@ -413,6 +421,7 @@ export default function GroupForm(props) {
             <Grid item xs={12} md={3.43} pt={2}>
               <Controls.Input
                 name="Delivery_Terms"
+                disabled={OnlyPreview}
                 label="Prazo de Entrega"
                 value={values.Delivery_Terms}
                 onChange={handleInputChange}
@@ -422,6 +431,7 @@ export default function GroupForm(props) {
             <Grid item xs={12} md={3.43} pt={2}>
               <Controls.Input
                 name="Payment_Terms"
+                disabled={OnlyPreview}
                 label="Prazo de Pagamento"
                 value={values.Payment_Terms}
                 onChange={handleInputChange}
@@ -431,6 +441,7 @@ export default function GroupForm(props) {
             <Grid item xs={12} md={3.43} pt={2}>
               <Controls.Input
                 name="Order_Minimum_Amount"
+                disabled={OnlyPreview}
                 label="Valor min. Encomenda"
                 value={values.Order_Minimum_Amount}
                 onChange={handleInputChange}
@@ -440,6 +451,7 @@ export default function GroupForm(props) {
             <Grid item xs={12} md={5.34} pt={2}>
               <Controls.Input
                 name="Contact_Phone"
+                disabled={OnlyPreview}
                 label="Num. Contacto"
                 value={values.Contact_Phone}
                 onChange={handleInputChange}
@@ -448,6 +460,7 @@ export default function GroupForm(props) {
             <Grid item xs={12} md={5.34} pt={2}>
               <Controls.Input
                 name="Contact_Order"
+                disabled={OnlyPreview}
                 label="Encomenda Contacto"
                 value={values.Contact_Order}
                 onChange={handleInputChange}
@@ -457,6 +470,7 @@ export default function GroupForm(props) {
             <Grid item xs={12} md={5.34} pt={2}>
               <Checkbox
                 name="Active"
+                disabled={OnlyPreview}
                 label="Ativo"
                 value={values.Active}
                 onChange={handleInputChange}
@@ -471,6 +485,7 @@ export default function GroupForm(props) {
           <Grid item xs={12} md={5.34} pt={2}>
             <Controls.Input
               name="Customer_Contact_Name"
+              disabled={OnlyPreview}
               label="Nome Contacto"
               value={values.Customer_Contact_Name}
               onChange={handleInputChange}
@@ -480,6 +495,7 @@ export default function GroupForm(props) {
           <Grid item xs={12} md={5.34} pt={2}>
             <Controls.Input
               name="Customer_Phone"
+              disabled={OnlyPreview}
               label="Telefone"
               value={values.Customer_Phone}
               onChange={handleInputChange}
@@ -489,6 +505,7 @@ export default function GroupForm(props) {
           <Grid item xs={12} md={12} pt={2}>
             <Controls.Input
               name="Customer_Email"
+              disabled={OnlyPreview}
               label="E-Mail"
               value={values.Customer_Email}
               onChange={handleInputChange}
@@ -498,6 +515,7 @@ export default function GroupForm(props) {
           <Grid item xs={12} md={12} pt={2}>
             <Controls.Input
               name="Documents"
+              disabled={OnlyPreview}
               label="Documentos"
               value={values.Documents}
               onChange={handleInputChange}
@@ -507,6 +525,7 @@ export default function GroupForm(props) {
           <Grid item xs={12} md={5.34} pt={2}>
             <Controls.Input
               name="Payment_Method"
+              disabled={OnlyPreview}
               label="Forma de Pagamento"
               value={values.Payment_Method}
               onChange={handleInputChange}
@@ -517,6 +536,7 @@ export default function GroupForm(props) {
           <Grid item xs={12} md={3.43} pt={2}>
             <Controls.Input
               name="NIB"
+              disabled={OnlyPreview}
               label="NIB"
               value={values.NIB}
               onChange={handleInputChange}
@@ -526,6 +546,7 @@ export default function GroupForm(props) {
           <Grid item xs={12} md={3.43} pt={2}>
             <Controls.Input
               name="IBAN"
+              disabled={OnlyPreview}
               label="IBAN"
               value={values.IBAN}
               onChange={handleInputChange}
@@ -535,6 +556,7 @@ export default function GroupForm(props) {
           <Grid item xs={12} md={3.43} pt={2}>
             <Controls.Input
               name="SWIFT"
+              disabled={OnlyPreview}
               label="SWIFT"
               value={values.SWIFT}
               onChange={handleInputChange}
@@ -548,6 +570,7 @@ export default function GroupForm(props) {
           <Grid item xs={12} md={5.34} pt={2}>
             <Controls.Input
               name="Tecnical_Contact_Name"
+              disabled={OnlyPreview}
               label="Nome Contacto"
               value={values.Tecnical_Contact_Name}
               onChange={handleInputChange}
@@ -557,6 +580,7 @@ export default function GroupForm(props) {
           <Grid item xs={12} md={5.34} pt={2}>
             <Controls.Input
               name="Tecnical_Email"
+              disabled={OnlyPreview}
               label="E-Mail"
               value={values.Tecnical_Email}
               onChange={handleInputChange}
@@ -566,6 +590,7 @@ export default function GroupForm(props) {
           <Grid item xs={12} md={5.34} pt={2}>
             <Controls.Input
               name="Tecnical_Phone"
+              disabled={OnlyPreview}
               label="Telefone"
               value={values.Tecnical_Phone}
               onChange={handleInputChange}
@@ -575,6 +600,7 @@ export default function GroupForm(props) {
           <Grid item xs={12} md={5.34} pt={2}>
             <Controls.Input
               name="Tecnical_Fax"
+              disabled={OnlyPreview}
               label="Fax"
               value={values.Tecnical_Fax}
               onChange={handleInputChange}

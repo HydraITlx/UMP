@@ -152,10 +152,12 @@ export default function GruopTable() {
     pageSize: 10,
     paging: true,
     headerStyle: {
+      position: "sticky",
+      top: 0,
       backgroundColor: "#ad0b90",
       color: "#FFFFFF",
       fontWeight: "bold",
-      height: 70,
+      height: 10,
     },
     filtering: false,
     actionsColumnIndex: -1,

@@ -9,7 +9,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { purple } from "@material-ui/core/colors";
 
 export default function Checkbox(props) {
-  const { name, label, value, onChange } = props;
+  const { name, label, value, onChange, disabled } = props;
 
   const convertToDefEventPara = (name, value) => ({
     target: {
@@ -39,6 +39,7 @@ export default function Checkbox(props) {
           <PurpleSwitch
             name={name}
             color="primary"
+            disabled={disabled}
             checked={value}
             onChange={(e) =>
               onChange(convertToDefEventPara(name, e.target.checked))

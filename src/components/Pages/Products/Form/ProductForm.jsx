@@ -30,7 +30,7 @@ const TypeOption = [
 ];
 
 export default function GroupForm(props) {
-  const { addOrEdit, recordForEdit, isEdit, data, LabOptions } = props;
+  const { addOrEdit, recordForEdit, isEdit, LabOptions, OnlyPreview } = props;
 
   console.log(recordForEdit);
 
@@ -141,6 +141,7 @@ export default function GroupForm(props) {
           <Controls.Input
             name="Description"
             label="Descrição"
+            disabled={OnlyPreview}
             value={values.Description}
             onChange={handleInputChange}
           />
@@ -148,9 +149,10 @@ export default function GroupForm(props) {
 
         <Grid item xs={12} md={3.43} pt={2}>
           <Controls.Input
-            type="number"
+            type="input"
             name="Total_Quantity"
             label="Qtd. por caixa"
+            disabled={OnlyPreview}
             value={values.Total_Quantity}
             onChange={(e) => handleInputQTDChange(e, values.Unit_Price_Box)}
             error={errors.Total_Quantity}
@@ -158,9 +160,10 @@ export default function GroupForm(props) {
         </Grid>
         <Grid item xs={12} md={3.43} pt={2}>
           <Controls.Input
-            type="number"
+            type="input"
             name="Unit_Price_Box"
             label="Preço Caixa"
+            disabled={OnlyPreview}
             value={values.Unit_Price_Box}
             onChange={(e) => handleInputQTDChange(e, values.Total_Quantity)}
             error={errors.Unit_Price_Box}
@@ -168,9 +171,10 @@ export default function GroupForm(props) {
         </Grid>
         <Grid item xs={12} md={3.43} pt={2}>
           <Controls.Input
-            type="number"
+            type="input"
             name="Unit_Price_UN"
             label="Preço Unitário"
+            disabled={OnlyPreview}
             value={values.Unit_Price_UN}
             onChange={(e) => handleInputQTDChange(e, values.Total_Quantity)}
             error={errors.Unit_Price_UN}
@@ -181,6 +185,7 @@ export default function GroupForm(props) {
           <Controls.Input
             name="DUP"
             label="DUP"
+            disabled={OnlyPreview}
             value={values.DUP}
             onChange={handleInputChange}
             error={errors.DUP}
@@ -191,6 +196,7 @@ export default function GroupForm(props) {
           <Controls.Input
             name="Commercial_Name"
             label="Nome Comercial"
+            disabled={OnlyPreview}
             value={values.Commercial_Name}
             onChange={handleInputChange}
             error={errors.Commercial_Name}
@@ -200,6 +206,7 @@ export default function GroupForm(props) {
           <Controls.Input
             name="Observations"
             label="Observações"
+            disabled={OnlyPreview}
             value={values.Observations}
             onChange={handleInputChange}
             error={errors.Observations}
@@ -210,6 +217,7 @@ export default function GroupForm(props) {
           <Checkbox
             name="Sold_Out"
             label="Esgotado"
+            disabled={OnlyPreview}
             value={values.Sold_Out}
             onChange={handleInputChange}
           />
@@ -217,6 +225,7 @@ export default function GroupForm(props) {
           <Checkbox
             name="Active"
             label="Ativo"
+            disabled={OnlyPreview}
             value={values.Active}
             onChange={handleInputChange}
           />
