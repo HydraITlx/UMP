@@ -18,6 +18,7 @@ import Products from "./Pages/Products/Producsts";
 import Laboratories from "./Pages/Laboratories/Laboratories";
 import OrderAccess from "./Pages/OrderAccess/OrderAccess";
 import Numbering from "./Pages/Numbering/Numbering";
+import UCCAccess from "./Pages/UCCAccess/UCCAccess";
 
 function App() {
   const [shouldNavigate, setshouldNavigate] = useState(false);
@@ -110,6 +111,7 @@ function App() {
                   <Route path="/laboratories" element={<Laboratories />} />
                   <Route path="/orderaccess" element={<OrderAccess />} />
                   <Route path="/numbering" element={<Numbering />} />
+                  <Route path="/uccaccess" element={<UCCAccess />} />
                 </Route>
               </Routes>
             </section>

@@ -23,6 +23,7 @@ import Logout from "@mui/icons-material/Logout";
 import UserStore from "../Store/UserStore";
 import LocalPharmacyIcon from "@mui/icons-material/LocalPharmacy";
 import CategoryIcon from "@mui/icons-material/Category";
+import AlignHorizontalRightIcon from "@mui/icons-material/AlignHorizontalRight";
 
 export default function TemporaryDrawer(prop) {
   let navigate = useNavigate();
@@ -147,6 +148,16 @@ export default function TemporaryDrawer(prop) {
               <FormatListNumberedRtlIcon sx={{ color: "white" }} />
             </ListItemIcon>
             <ListItemText style={{ color: "white" }} primary={"Numeração"} />
+          </ListItem>
+
+          <ListItem onClick={() => navigate("uccaccess")} button key={"text10"}>
+            <ListItemIcon>
+              <AlignHorizontalRightIcon sx={{ color: "white" }} />
+            </ListItemIcon>
+            <ListItemText
+              style={{ color: "white" }}
+              primary={"Permissões de UCC"}
+            />
           </ListItem>
         </List>
       )}

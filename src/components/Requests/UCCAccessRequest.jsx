@@ -1,4 +1,33 @@
-export function getNumbering() {
+export function getUCCAccess() {
+  let body = {
+    process: 2,
+  };
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.REACT_APP_APITOKEN}`,
+    },
+    body: JSON.stringify(body),
+  };
+
+  return getRequestPromise(
+    process.env.REACT_APP_LABUCCACCESS_MANAGEMENT,
+    requestOptions
+  );
+}
+
+function getRequestPromise(RequestUrl, requestOptions) {
+  return fetch(RequestUrl, requestOptions)
+    .then((response) => response.json())
+    .then((responseData) => {
+      return responseData;
+    })
+    .catch((error) => console.warn(error));
+}
+
+export function getLabOptions() {
   let body = {
     process: 1,
   };
@@ -13,60 +42,15 @@ export function getNumbering() {
   };
 
   return getRequestPromise(
-    process.env.REACT_APP_NUMBERING_MANAGEMENT,
+    process.env.REACT_APP_LABUCCACCESS_MANAGEMENT,
     requestOptions
   );
 }
 
-function getRequestPromise(RequestUrl, requestOptions) {
-  return fetch(RequestUrl, requestOptions)
-    .then((response) => response.json())
-    .then((responseData) => {
-      return responseData;
-    })
-    .catch((error) => console.warn(error));
-}
-
-export function InsertNumbering(values) {
-  let body = {
-    process: 2,
-    ID: values.ID,
-    Starting_Date: values.Starting_Date,
-    End_Date: values.End_Date,
-    End_Date: values.End_Date,
-    Number: values.Number,
-    Prefix: values.Prefix,
-  };
-
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.REACT_APP_APITOKEN}`,
-    },
-    body: JSON.stringify(body),
-  };
-
-  return getRequestPromise(
-    process.env.REACT_APP_NUMBERING_MANAGEMENT,
-    requestOptions
-  );
-}
-
-export function UpdateNumbering(values, oldValues) {
+export function getUCCOptions() {
   let body = {
     process: 3,
-    ID: values.ID,
-    OldID: oldValues.ID,
-    Starting_Date: values.Starting_Date,
-    OldStarting_Date: oldValues.Starting_Date,
-    End_Date: values.End_Date,
-    End_Date: values.End_Date,
-    Number: values.Number,
-    Prefix: values.Prefix,
   };
-  console.log("body");
-  console.log(body);
 
   const requestOptions = {
     method: "POST",
@@ -78,16 +62,18 @@ export function UpdateNumbering(values, oldValues) {
   };
 
   return getRequestPromise(
-    process.env.REACT_APP_NUMBERING_MANAGEMENT,
+    process.env.REACT_APP_LABUCCACCESS_MANAGEMENT,
     requestOptions
   );
 }
 
-export function DeleteNumbering(values) {
+export function updateUCCOptions(data) {
+  console.log(data);
   let body = {
     process: 4,
-    ID: values.ID,
-    Starting_Date: values.Starting_Date,
+    ID: data.ID,
+    Laboratory_ID: data.Laboratory_ID,
+    UCC_ID: data.UCC_ID,
   };
 
   const requestOptions = {
@@ -100,27 +86,7 @@ export function DeleteNumbering(values) {
   };
 
   return getRequestPromise(
-    process.env.REACT_APP_NUMBERING_MANAGEMENT,
-    requestOptions
-  );
-}
-
-export function getUCCOptions(values) {
-  let body = {
-    process: 3,
-  };
-
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.REACT_APP_APITOKEN}`,
-    },
-    body: JSON.stringify(body),
-  };
-
-  return getRequestPromise(
-    process.env.REACT_APP_ORDERACCESS_MANAGEMENT,
+    process.env.REACT_APP_LABUCCACCESS_MANAGEMENT,
     requestOptions
   );
 }

@@ -8,6 +8,7 @@ const initialFValues = {
   Name: "",
   Number: 0,
   Starting_Date: new Date(),
+  Prefix: "",
 };
 
 export default function GroupForm(props) {
@@ -68,46 +69,54 @@ export default function GroupForm(props) {
   return (
     <Form onSubmit={handleSubmit}>
       <Grid container>
-        <Grid container pl={15}>
-          <Grid item xs={12} md={12} pb={5}>
-            <Controls.Select
-              variant="outlined"
-              name="ID"
-              label="Nome*"
-              value={values.ID}
-              onChange={handleInputChange}
-              options={UCCOptions}
-              error={errors.ID}
-            />
-          </Grid>
-          <Grid item xs={12} md={5} pb={5}>
-            <Controls.DatePicker
-              name="Starting_Date"
-              label="Data Inicio"
-              value={values.Starting_Date}
-              onChange={handleInputChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={5} pb={5}>
-            <Controls.DatePicker
-              name="End_Date"
-              label="Data Fim"
-              value={values.End_Date}
-              onChange={handleInputChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={12} pb={5}>
-            <Controls.Input
-              type="number"
-              name="Number"
-              label="Numeração"
-              value={values.Number}
-              onChange={handleInputChange}
-            />
-          </Grid>
+        <Grid item xs={12} md={12}>
+          <Controls.Select
+            variant="outlined"
+            name="ID"
+            label="Nome*"
+            value={values.ID}
+            onChange={handleInputChange}
+            options={UCCOptions}
+            error={errors.ID}
+          />
         </Grid>
+        <Grid item xs={12} md={5} pb={5}>
+          <Controls.DatePicker
+            name="Starting_Date"
+            label="Data Inicio"
+            value={values.Starting_Date}
+            onChange={handleInputChange}
+          />
+        </Grid>
+
+        <Grid item xs={12} md={5} pb={5}>
+          <Controls.DatePicker
+            name="End_Date"
+            label="Data Fim"
+            value={values.End_Date}
+            onChange={handleInputChange}
+          />
+        </Grid>
+
+        <Grid item xs={12} md={5} pb={5}>
+          <Controls.Input
+            name="Prefix"
+            label="Prefixo"
+            value={values.Prefix}
+            onChange={handleInputChange}
+          />
+        </Grid>
+
+        <Grid item xs={12} md={5}>
+          <Controls.Input
+            type="text"
+            name="Number"
+            label="Numeração"
+            value={values.Number}
+            onChange={handleInputChange}
+          />
+        </Grid>
+
         <Grid item xs={12} md={12}>
           <Controls.Button style={btnStyles} type="submit" text="Submeter" />
         </Grid>

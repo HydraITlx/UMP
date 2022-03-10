@@ -6,30 +6,14 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (e) => {
+    console.log("e.target");
+    console.log(e.target.id);
     const { name, value } = e.target;
-    if (name === "Prefix" || name === "Number") {
-      if (name === "Prefix") {
-        setValues({
-          ...values,
-          [name]: value.slice(0, 4).toUpperCase(),
-        });
-        console.log(value);
-        console.log("ENTTROU NO PREFIX");
-      } else {
-        const re = /^[0-9\b]+$/;
-        if (value === "" || re.test(value)) {
-          setValues({
-            ...values,
-            [name]: value.slice(0, 9),
-          });
-        }
-      }
-    } else {
-      setValues({
-        ...values,
-        [name]: value,
-      });
-    }
+
+    setValues({
+      ...values,
+      [name]: value,
+    });
     if (validateOnChange) validate({ [name]: value });
   };
 

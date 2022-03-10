@@ -1,30 +1,33 @@
-import { useEffect, useState } from "react";
-import MaterialTable, { MTableToolbar } from "@material-table/core";
+import React, { useEffect, useState } from "react";
+import MaterialTable, {
+  MTableToolbar,
+  MTableAction,
+} from "@material-table/core";
 import { Paper } from "@mui/material";
-
 import {
-  getNumbering,
-  InsertNumbering,
-  UpdateNumbering,
-  DeleteNumbering,
+  getUCCAccess,
+  getLabOptions,
   getUCCOptions,
-} from "../../Requests/NumberingRequest";
+  updateUCCOptions,
+} from "../../Requests/UCCAccessRequest";
 
 import Popup from "../../Helpers/PopupCustom";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
-import NumeringForm from "./Form/NumeringForm";
-import EditIcon from "@mui/icons-material/Edit";
 import TableTitle from "../../Helpers/TableTitle";
-import Controls from "../../Helpers/Controls";
+import OrderAccessForm from "./Form/UCCAccessForm";
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
+  const [update, setUpdate] = useState(true);
+  const addActionRef = React.useRef();
+  const [labOptions, SetlabOptions] = useState([]);
   const [UCCOptions, SetUCCOptions] = useState([]);
-  const [openPopup, setOpenPopup] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [isInsert, setisInsert] = useState(false);
   const [isEdit, setisEdit] = useState(false);
+  const [openPopup, setOpenPopup] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -34,15 +37,50 @@ export default function GruopTable() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [update]);
 
   function MakeRequests() {
+    const OptionsPromise = getLabOptions();
+    handleOptionsPromise(OptionsPromise);
+
     const UCCOptionsPromise = getUCCOptions();
     handleUCCOptionsPromise(UCCOptionsPromise);
 
-    const RequestPromise = getNumbering();
+    const RequestPromise = getUCCAccess();
     handleRequestPromise(RequestPromise);
   }
+
+  const handleOptionsPromise = (AuthPromise) => {
+    {
+      if (AuthPromise === undefined) {
+        return;
+      }
+
+      AuthPromise.then((response) => {
+        console.log(response);
+        if (response !== undefined) {
+          SetlabOptions(response);
+        }
+      });
+      return;
+    }
+  };
+
+  const handleUCCOptionsPromise = (AuthPromise) => {
+    {
+      if (AuthPromise === undefined) {
+        return;
+      }
+
+      AuthPromise.then((response) => {
+        console.log(response);
+        if (response !== undefined) {
+          SetUCCOptions(response);
+        }
+      });
+      return;
+    }
+  };
 
   const handleRequestPromise = (RequestPromise) => {
     {
@@ -52,6 +90,7 @@ export default function GruopTable() {
 
       RequestPromise.then((response) => {
         console.log(response);
+        console.log("RESPOSTA AQUI");
         if (response !== undefined) {
           setData(response);
         }
@@ -59,75 +98,41 @@ export default function GruopTable() {
     }
   };
 
-  const handleUCCOptionsPromise = (AuthPromise) => {
-    {
-      if (AuthPromise === undefined) {
-        return;
-      }
-      console.log("ENTOU AQUI UCC");
-      AuthPromise.then((response) => {
-        console.log(response);
-        if (response !== undefined) {
-          console.log(response);
-          SetUCCOptions(response);
-        }
-      });
-      return;
+  const addOrEdit = (values, resetForm) => {
+    if (isInsert) {
+      InsertOrderAccess(values);
     }
+    if (isEdit) {
+      console.log("entou no edit");
+      updateUCCOptions(values);
+    }
+    resetForm();
+    setRecordForEdit(null);
+    setOpenPopup(false);
+
+    setTimeout(() => {
+      MakeRequests();
+      setisEdit(false);
+      setisInsert(false);
+    }, 500);
+  };
+
+  const openInPopup = (rowData) => {
+    setRecordForEdit(rowData);
+    setOpenPopup(true);
   };
 
   const columns = [
     {
-      title: "Nome",
-      field: "ID",
-      width: "30%",
-      render: (rowData) => (
-        <Controls.Select
-          variant="standard"
-          name="ID"
-          label=""
-          value={rowData.ID}
-          options={UCCOptions}
-        />
-      ),
+      title: "Nome UCC",
+      field: "UCC_Name",
+      width: "50%",
     },
 
     {
-      title: "Data Inicio",
-      field: "Starting_Date",
-      width: "auto",
-      render: (rowData) => (
-        <Controls.DatePicker
-          name="Starting_Date"
-          disabled={true}
-          label=""
-          value={rowData.Starting_Date}
-        />
-      ),
-    },
-
-    {
-      title: "Data Fim",
-      field: "End_Date",
-      width: "auto",
-      render: (rowData) => (
-        <Controls.DatePicker
-          name="Starting_Date"
-          disabled={true}
-          label=""
-          value={rowData.End_Date}
-        />
-      ),
-    },
-    {
-      title: "Prefixo",
-      field: "Prefix",
-      width: "auto",
-    },
-    {
-      title: "Numeração",
-      field: "Number",
-      width: "auto",
+      title: "Nome Laboratório",
+      field: "Laboratory_Name",
+      width: "50%",
     },
     {
       title: "Editar ",
@@ -170,42 +175,6 @@ export default function GruopTable() {
     padding: "dense",
   };
 
-  const addOrEdit = (values, oldValues, resetForm) => {
-    if (isInsert) {
-      console.log("entou no insert");
-      InsertNumbering(values);
-    }
-    if (isEdit) {
-      console.log("entou no edit");
-      UpdateNumbering(values, oldValues);
-    }
-    resetForm();
-    setRecordForEdit(null);
-    setOpenPopup(false);
-
-    setTimeout(() => {
-      MakeRequests();
-      setisEdit(false);
-      setisInsert(false);
-    }, 500);
-  };
-
-  const addonConfirm = (values) => {
-    if (isInsert) {
-      onHandleInsert(values);
-    }
-    setUpdate(!update);
-    setTimeout(() => {
-      setisEdit(false);
-      setisInsert(true);
-    }, 500);
-  };
-
-  const openInPopup = (rowData) => {
-    setRecordForEdit(rowData);
-    setOpenPopup(true);
-  };
-
   return (
     <>
       <Paper>
@@ -213,11 +182,11 @@ export default function GruopTable() {
           options={options}
           columns={columns}
           data={data}
-          title={<TableTitle text="Numeração" />}
+          title={<TableTitle text="Permissões de UCC" />}
           editable={{
             onRowDelete: (oldData) =>
               new Promise((resolve, reject) => {
-                DeleteNumbering(oldData);
+                DeleteOrderAccess(oldData);
                 setTimeout(() => {
                   MakeRequests();
                   resolve();
@@ -225,6 +194,19 @@ export default function GruopTable() {
               }),
           }}
           components={{
+            Action: (props) => {
+              if (
+                typeof props.action === typeof Function ||
+                props.action.tooltip !== "Add"
+              ) {
+                return <MTableAction {...props} />;
+              } else {
+                return (
+                  <div ref={addActionRef} onClick={props.action.onClick} />
+                );
+              }
+            },
+
             Toolbar: (props) => (
               <div>
                 <MTableToolbar {...props} />
@@ -250,18 +232,18 @@ export default function GruopTable() {
         />
       </Paper>
       <Popup
-        title="Ficha de Numeração"
+        title="Ficha de Permissões"
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
-        <NumeringForm
+        <OrderAccessForm
           data={data}
           recordForEdit={recordForEdit}
           addOrEdit={addOrEdit}
-          addonConfirm={addonConfirm}
           isEdit={isEdit}
+          labOptions={labOptions}
           UCCOptions={UCCOptions}
-        ></NumeringForm>
+        ></OrderAccessForm>
       </Popup>
     </>
   );
