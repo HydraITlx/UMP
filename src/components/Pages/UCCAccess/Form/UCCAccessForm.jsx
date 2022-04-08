@@ -35,24 +35,21 @@ export default function GroupForm(props) {
     if ("Laboratory_ID" in fieldValues) {
       temp.Laboratory_ID = fieldValues.Laboratory_ID !== " " ? "" : errorText;
       temp.UCC_ID = "";
-      data.map((options) => {
-        if (options.ID !== values.ID) {
-          console.log(
-            `options.Laboratory_ID ${options.Laboratory_ID} fieldValues.Laboratory_ID ${fieldValues.Laboratory_ID}`
-          );
-          console.log(
-            `options.UCC_ID ${options.UCC_ID}  values.UCC_ID ${values.UCC_ID}`
-          );
-          if (
-            parseInt(options.Laboratory_ID) ===
-              parseInt(fieldValues.Laboratory_ID) &&
-            parseInt(options.UCC_ID) === parseInt(values.UCC_ID)
-          ) {
-            temp.Laboratory_ID = errorTextExists;
-            temp.UCC_ID = errorTextExists;
+
+      if (fieldValues.Laboratory_ID !== " ") {
+        data.map((options) => {
+          if (options.ID !== values.ID) {
+            if (
+              parseInt(options.Laboratory_ID) ===
+                parseInt(fieldValues.Laboratory_ID) &&
+              parseInt(options.UCC_ID) === parseInt(values.UCC_ID)
+            ) {
+              temp.Laboratory_ID = errorTextExists;
+              temp.UCC_ID = errorTextExists;
+            }
           }
-        }
-      });
+        });
+      }
     }
     if ("UCC_ID" in fieldValues) {
       temp.UCC_ID = fieldValues.UCC_ID !== " " ? "" : errorText;
@@ -71,8 +68,6 @@ export default function GroupForm(props) {
         }
       });
     }
-    console.log("temp");
-    console.log(temp);
     setErrors({
       ...temp,
     });
@@ -130,7 +125,7 @@ export default function GroupForm(props) {
             <Controls.Select
               variant="outlined"
               name="Laboratory_ID"
-              label="Nome Farmacêutico*"
+              label="Nome Laboratório*"
               value={values.Laboratory_ID}
               onChange={handleInputChange}
               options={labOptions}

@@ -28,6 +28,8 @@ function getRequestPromise(RequestUrl, requestOptions) {
 }
 
 export function updateLaboratories(values) {
+  console.log("VICTOR QUE ->>>");
+  console.log(values);
   let body = {
     process: 3,
     ID: values.ID,
@@ -45,6 +47,7 @@ export function updateLaboratories(values) {
     Contact_Order: values.Contact_Order,
     Active: values.Active,
     Email: values.Email,
+    Stockist: values.Stockist,
     Customer_Name: values.Customer_Name,
     Customer_Contact_Name: values.Customer_Contact_Name,
     Customer_Phone: values.Customer_Phone,
@@ -93,6 +96,7 @@ export function InsertLaboratories(values) {
     Contact_Order: values.Contact_Order,
     Active: values.Active,
     Email: values.Email,
+    Stockist: values.Stockist,
     Customer_Name: values.Customer_Name,
     Customer_Contact_Name: values.Customer_Contact_Name,
     Customer_Phone: values.Customer_Phone,

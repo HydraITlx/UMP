@@ -9,6 +9,8 @@ import {
   getLabOptions,
   getUCCOptions,
   updateUCCOptions,
+  InsertUCCOptions,
+  DeleteUCCOptions,
 } from "../../Requests/UCCAccessRequest";
 
 import Popup from "../../Helpers/PopupCustom";
@@ -100,7 +102,7 @@ export default function GruopTable() {
 
   const addOrEdit = (values, resetForm) => {
     if (isInsert) {
-      InsertOrderAccess(values);
+      InsertUCCOptions(values);
     }
     if (isEdit) {
       console.log("entou no edit");
@@ -182,11 +184,11 @@ export default function GruopTable() {
           options={options}
           columns={columns}
           data={data}
-          title={<TableTitle text="Permissões de UCC" />}
+          title={<TableTitle text="Permissões UCC/Laboratório" />}
           editable={{
             onRowDelete: (oldData) =>
               new Promise((resolve, reject) => {
-                DeleteOrderAccess(oldData);
+                DeleteUCCOptions(oldData);
                 setTimeout(() => {
                   MakeRequests();
                   resolve();

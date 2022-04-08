@@ -2,40 +2,31 @@ import { useEffect, useState } from "react";
 import MaterialTable, { MTableToolbar } from "@material-table/core";
 import { Paper } from "@mui/material";
 import {
-  getLaboratories,
-  updateLaboratories,
-  InsertLaboratories,
-  DeleteLaboratory,
-} from "../../Requests/LaboratoryRequests";
+  GetCreatedOrders,
+  DeleteCreatedOrders,
+} from "../../Requests/OrdersRequests";
+
+import OrderForm from "./Form/OrderForm";
 import Popup from "../../Helpers/Popup";
 import IconButton from "@mui/material/IconButton";
-import AddIcon from "@mui/icons-material/Add";
-import ProductForm from "./Form/LaboratoryForm";
 import EditIcon from "@mui/icons-material/Edit";
 import PreviewIcon from "@mui/icons-material/RemoveRedEye";
 import TableTitle from "../../Helpers/TableTitle";
-import Switch from "../../Helpers/Switch";
 import NoAccess from "../../Helpers/NoAccess";
 import Spinner from "../../Spinner/Spinner";
 import {
   getPermissions,
   checkIfAdminPermissions,
 } from "../../Requests/PermissionRequests";
-
-import DeletePopUp from "../../Helpers/DeletePopUp";
 import DeleteIcon from "@mui/icons-material/Delete";
+import DeletePopUp from "../../Helpers/DeletePopUp";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
-  const [LabOptions, setLabOptions] = useState([]);
   const [update, setUpdate] = useState(true);
-  const [openPopup, setOpenPopup] = useState(false);
-  const [recordForEdit, setRecordForEdit] = useState(null);
-  const [isInsert, setisInsert] = useState(false);
   const [isEdit, setisEdit] = useState(false);
   const [OnlyPreview, setOnlyPreview] = useState(false);
-  const [open, setOpen] = useState(false);
-
+  const [openPopup, setOpenPopup] = useState(false);
   const [AllowRead, setAllowRead] = useState(false);
   const [AllowModify, setAllowModify] = useState(false);
   const [AllowInsert, setAllowInsert] = useState(false);
@@ -43,14 +34,24 @@ export default function GruopTable() {
   const [IsAdmin, setIsAdmin] = useState(false);
   const [isLoading, setisLoading] = useState(true);
   const [recordForDelete, setRecordForDelete] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [recordForEdit, setRecordForEdit] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
 
     if (isMounted) {
+      let userID = sessionStorage.getItem("userID");
+      userID = JSON.parse(userID);
+
+      if (userID === null) {
+        userID = localStorage.getItem("userID");
+        userID = JSON.parse(userID);
+      }
+      handleOrdersRequests(userID);
       handlePermissionRequests();
-      handleLabRequests();
     }
+
     return () => {
       isMounted = false;
     };
@@ -60,7 +61,7 @@ export default function GruopTable() {
     const AdminPromise = checkIfAdminPermissions();
     handleAdminPromise(AdminPromise);
 
-    const RequestPromise = getPermissions(10);
+    const RequestPromise = getPermissions(30);
     handlePermissionPromise(RequestPromise);
   }
 
@@ -82,6 +83,9 @@ export default function GruopTable() {
   };
 
   const handleAdminPromise = (AuthPromise) => {
+    if (IsAdmin) {
+      return;
+    }
     {
       if (AuthPromise === undefined) {
         return;
@@ -95,21 +99,24 @@ export default function GruopTable() {
     }
   };
 
-  function handleLabRequests() {
-    const RequestPromise = getLaboratories();
-    handleProductsPromise(RequestPromise);
+  function handleOrdersRequests(userName) {
+    const OrdersPromise = GetCreatedOrders(userName);
+    handleOrderPromise(OrdersPromise);
   }
 
-  const handleProductsPromise = (AuthPromise) => {
+  const handleOrderPromise = (AuthPromise) => {
     {
       if (AuthPromise === undefined) {
+        setTimeout(() => {
+          setisLoading(false);
+        }, 1000);
         return;
       }
 
       AuthPromise.then((response) => {
         if (response !== undefined) {
+          console.log(response);
           setData(response);
-
           setTimeout(() => {
             setisLoading(false);
           }, 1000);
@@ -120,63 +127,42 @@ export default function GruopTable() {
 
   const columns = [
     {
-      title: "Nome",
-      field: "Name",
+      title: "UCC",
+      field: "UCC_Name",
+
       width: "auto",
     },
 
     {
-      title: "Tipo",
-      field: "Type",
-      width: "auto",
-      render: (rowData) => {
-        let rowType = " ";
-        if (rowData.Type === 1) {
-          rowType = "Laboratório";
-        }
-
-        if (rowData.Type === 2) {
-          rowType = "Dispositivos Médicos";
-        }
-
-        if (rowData.Type === 3) {
-          rowType = "Nutrição Especial";
-        }
-        return <p style={{ marginTop: "10px" }}>{rowType}</p>;
-      },
-    },
-
-    {
-      title: "Morada",
-      field: "Address",
+      title: "Farmacêutico",
+      field: "Pharmacist_Name",
       width: "auto",
     },
 
     {
-      title: "Telefone",
-      field: "Phone",
+      title: "Laboratório",
+      field: "Laboratory_Name",
       width: "auto",
+    },
+    {
+      title: "Nº Items",
+      field: "Number_Item",
+      width: "auto",
+      align: "center",
     },
 
     {
-      title: "Num. Contacto",
-      field: "Contact_Phone",
+      title: "Valor Mínimo",
+      field: "Order_Minimum_Amount",
       width: "auto",
+      align: "center",
     },
 
     {
-      title: "Ativo",
-      field: "Active",
+      title: "Valor Total",
+      field: "Total_Amount",
       width: "auto",
-      render: (RowData) => (
-        <Switch
-          value={RowData.Active}
-          disabled={true}
-          id={"Active"}
-          defaultChecked={RowData.Active}
-          label={""}
-        ></Switch>
-      ),
+      align: "center",
     },
   ];
 
@@ -203,36 +189,10 @@ export default function GruopTable() {
     padding: "dense",
   };
 
-  const addOrEdit = (values, resetForm) => {
-    if (isInsert) {
-      InsertLaboratories(values);
-    }
-
-    if (isEdit) {
-      updateLaboratories(values);
-    }
-    resetForm();
-    setisLoading(true);
-    setRecordForEdit(null);
+  const addOrEdit = (values) => {
     setOpenPopup(false);
 
-    setTimeout(() => {
-      handleLabRequests();
-      setisEdit(false);
-      setisInsert(false);
-      setOnlyPreview(false);
-    }, 500);
-  };
-
-  const addonConfirm = (values) => {
-    if (isInsert) {
-      onHandleInsert(values);
-    }
-    setUpdate(!update);
-    setTimeout(() => {
-      setisEdit(false);
-      setisInsert(true);
-    }, 500);
+    setTimeout(() => {}, 500);
   };
 
   const openInPopup = (rowData) => {
@@ -251,9 +211,16 @@ export default function GruopTable() {
 
   const handleDeleteConfirm = (rowData) => {
     setOpen(false);
-    DeleteLaboratory(rowData.ID);
+    DeleteCreatedOrders(rowData.Order_ID);
     setTimeout(() => {
-      handleLabRequests();
+      let userID = sessionStorage.getItem("userID");
+      userID = JSON.parse(userID);
+
+      if (userID === null) {
+        userID = localStorage.getItem("userID");
+        userID = JSON.parse(userID);
+      }
+      handleOrdersRequests(userID);
     }, 1000);
   };
 
@@ -270,11 +237,10 @@ export default function GruopTable() {
               options={options}
               columns={columns}
               data={data}
-              title={<TableTitle text="Laboratórios" />}
+              title={<TableTitle text="Encomendas" />}
               editable={{
                 onRowDelete: (oldData) => new Promise((resolve, reject) => {}),
               }}
-              //aqui new
               components={{
                 Action: (props) => (
                   <div style={{ display: "flex" }}>
@@ -283,7 +249,6 @@ export default function GruopTable() {
                         disabled={!AllowModify && !IsAdmin}
                         onClick={() => {
                           setisEdit(true);
-                          setisInsert(false);
                           setOnlyPreview(false);
                           openInPopup(props.data);
                         }}
@@ -320,26 +285,24 @@ export default function GruopTable() {
                 Toolbar: (props) => (
                   <div>
                     <MTableToolbar {...props} />
-                    <div style={{ padding: "0px 10px", textAlign: "right" }}>
-                      <IconButton
-                        disabled={!AllowInsert && !IsAdmin}
-                        onClick={() => {
-                          setisEdit(false);
-                          setisInsert(true);
-                          setOpenPopup(true);
-                          setRecordForEdit(null);
-                          setOnlyPreview(false);
-                        }}
-                      >
-                        <AddIcon />
-                      </IconButton>
-                    </div>
                   </div>
                 ),
               }}
               localization={{
                 header: { actions: "Ações" },
-                body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
+                body: {
+                  emptyDataSourceMessage: (
+                    <div
+                      style={{
+                        color: "#ad0b90",
+                        fontWeight: "bold",
+                        fontSize: "2rem",
+                      }}
+                    >
+                      Não tem encomendas criadas
+                    </div>
+                  ),
+                },
               }}
             />
           </Paper>
@@ -350,19 +313,15 @@ export default function GruopTable() {
             handleConfirm={handleDeleteConfirm}
           ></DeletePopUp>
           <Popup
-            title="Ficha de Laboratório"
+            title="Ficha de Encomenda"
             openPopup={openPopup}
             setOpenPopup={setOpenPopup}
           >
-            <ProductForm
+            <OrderForm
+              addOrEdit={addOrEdit}
               data={data}
               recordForEdit={recordForEdit}
-              addOrEdit={addOrEdit}
-              addonConfirm={addonConfirm}
-              isEdit={isEdit}
-              LabOptions={LabOptions}
-              OnlyPreview={OnlyPreview}
-            ></ProductForm>
+            ></OrderForm>
           </Popup>
         </>
       );

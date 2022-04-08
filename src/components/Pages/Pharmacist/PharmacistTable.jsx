@@ -66,7 +66,6 @@ export default function GruopTable() {
 
       AuthPromise.then((response) => {
         if (response[0] !== undefined) {
-          console.log(response[0]);
           setAllowRead(response[0].r);
           setAllowModify(response[0].m);
           setAllowInsert(response[0].i);
@@ -104,7 +103,6 @@ export default function GruopTable() {
       }
 
       RequestPromise.then((response) => {
-        console.log(response);
         if (response !== undefined) {
           setData(response);
           setTimeout(() => {
@@ -122,9 +120,7 @@ export default function GruopTable() {
       }
 
       RequestPromise.then((response) => {
-        console.log(response);
         if (response !== undefined) {
-          console.log(response);
           setUsers(response);
         }
       });
@@ -150,10 +146,8 @@ export default function GruopTable() {
       setValue(newValue);
       onChange(newValue);
       setError(null);
-      console.log("rest.rowData");
-      console.log(newValue);
+
       if (newValue === " ") {
-        console.log("erroraqui");
         setError("Utilizador não pode estar vazio");
       } else {
         checkDuplicates(data, rest.rowData.ID, newValue, setError);
@@ -224,7 +218,6 @@ export default function GruopTable() {
         ></Switch>
       ),
       editComponent: (RowData) => {
-        console.log(RowData.value);
         return (
           <Switch
             value={RowData.value !== undefined ? RowData.value : false}
@@ -278,8 +271,6 @@ export default function GruopTable() {
 
                 onRowAdd: (newData) =>
                   new Promise((resolve, reject) => {
-                    console.log("newData");
-                    console.log(newData);
                     let allow_Resolve = true;
 
                     data.map((options) => {

@@ -33,7 +33,6 @@ export default function PagePermissions(props) {
       }
 
       ReturnPromise.then((response) => {
-        console.log(response);
         if (response !== undefined) {
           setData(response);
         }

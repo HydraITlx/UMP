@@ -26,7 +26,6 @@ export default function AlertDialogSlide(props) {
   const { open, handleCancel, handleConfirm, recordForDelete } = props;
   const classes = useStyles();
 
-  console.log(recordForDelete);
   return (
     <div
       style={{

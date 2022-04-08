@@ -76,14 +76,9 @@ export default function GruopTable() {
       }
 
       AuthPromise.then((response) => {
-        console.log("AAQUI VICKTOR");
-        console.log(response);
         if (response[0] !== undefined) {
-          console.log(response[0]);
           setAllowRead(response[0].r);
           setAllowModify(response[0].m);
-          console.log("MODIFY AQUI");
-          console.log(response[0].m);
           setAllowInsert(response[0].i);
           setAllowDelete(response[0].d);
         }
@@ -102,9 +97,7 @@ export default function GruopTable() {
 
       AuthPromise.then((response) => {
         if (response !== undefined) {
-          console.log("ENTOU NO AUTH");
           setIsAdmin(response[0].is_admin);
-          console.log(response[0].is_admin);
         }
       });
     }
@@ -123,7 +116,6 @@ export default function GruopTable() {
 
       AuthPromise.then((response) => {
         if (response !== undefined) {
-          console.log(response);
           setData(response);
           setfilterData(
             response.filter((data) =>
@@ -148,7 +140,6 @@ export default function GruopTable() {
 
       AuthPromise.then((response) => {
         if (response !== undefined) {
-          console.log(response);
           setLabOptions(response);
         }
       });
@@ -431,7 +422,7 @@ export default function GruopTable() {
                             setisInsert(true);
                             setOpenPopup(true);
                             setRecordForEdit(null);
-                            setOnlyPreview(false);
+                            SetOnlyPreview(false);
                           }}
                         >
                           <AddIcon />

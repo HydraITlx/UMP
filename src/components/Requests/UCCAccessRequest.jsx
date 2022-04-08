@@ -90,3 +90,50 @@ export function updateUCCOptions(data) {
     requestOptions
   );
 }
+
+export function InsertUCCOptions(data) {
+  console.log(data);
+  let body = {
+    process: 5,
+    ID: data.ID,
+    Laboratory_ID: data.Laboratory_ID,
+    UCC_ID: data.UCC_ID,
+  };
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.REACT_APP_APITOKEN}`,
+    },
+    body: JSON.stringify(body),
+  };
+
+  return getRequestPromise(
+    process.env.REACT_APP_LABUCCACCESS_MANAGEMENT,
+    requestOptions
+  );
+}
+
+export function DeleteUCCOptions(data) {
+  console.log("WHAASDHASDHASHDHASHD");
+  console.log(data);
+  let body = {
+    process: 6,
+    ID: data.ID,
+  };
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.REACT_APP_APITOKEN}`,
+    },
+    body: JSON.stringify(body),
+  };
+
+  return getRequestPromise(
+    process.env.REACT_APP_LABUCCACCESS_MANAGEMENT,
+    requestOptions
+  );
+}

@@ -1,40 +1,27 @@
 import { useEffect, useState } from "react";
 import MaterialTable, { MTableToolbar } from "@material-table/core";
 import { Paper } from "@mui/material";
-import {
-  getLaboratories,
-  updateLaboratories,
-  InsertLaboratories,
-  DeleteLaboratory,
-} from "../../Requests/LaboratoryRequests";
-import Popup from "../../Helpers/Popup";
+import { getUCCs, getProducts } from "../../Requests/OrdersRequests";
+
 import IconButton from "@mui/material/IconButton";
-import AddIcon from "@mui/icons-material/Add";
-import ProductForm from "./Form/LaboratoryForm";
 import EditIcon from "@mui/icons-material/Edit";
 import PreviewIcon from "@mui/icons-material/RemoveRedEye";
 import TableTitle from "../../Helpers/TableTitle";
-import Switch from "../../Helpers/Switch";
 import NoAccess from "../../Helpers/NoAccess";
 import Spinner from "../../Spinner/Spinner";
 import {
   getPermissions,
   checkIfAdminPermissions,
 } from "../../Requests/PermissionRequests";
+import SelectMui from "../../Helpers/SelectMui";
 
-import DeletePopUp from "../../Helpers/DeletePopUp";
-import DeleteIcon from "@mui/icons-material/Delete";
+import ShoppingCart from "./ShoppingCart";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
-  const [LabOptions, setLabOptions] = useState([]);
   const [update, setUpdate] = useState(true);
-  const [openPopup, setOpenPopup] = useState(false);
-  const [recordForEdit, setRecordForEdit] = useState(null);
-  const [isInsert, setisInsert] = useState(false);
-  const [isEdit, setisEdit] = useState(false);
-  const [OnlyPreview, setOnlyPreview] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [uccOptions, SetUccOptions] = useState([]);
+  const [selectedUCC, SetSelectedUCC] = useState(" ");
 
   const [AllowRead, setAllowRead] = useState(false);
   const [AllowModify, setAllowModify] = useState(false);
@@ -42,15 +29,23 @@ export default function GruopTable() {
   const [AllowDelete, setAllowDelete] = useState(false);
   const [IsAdmin, setIsAdmin] = useState(false);
   const [isLoading, setisLoading] = useState(true);
-  const [recordForDelete, setRecordForDelete] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
 
     if (isMounted) {
+      let userID = sessionStorage.getItem("userID");
+      userID = JSON.parse(userID);
+
+      if (userID === null) {
+        userID = localStorage.getItem("userID");
+        userID = JSON.parse(userID);
+      }
+
+      handleUCCOptionsRequests(userID);
       handlePermissionRequests();
-      handleLabRequests();
     }
+
     return () => {
       isMounted = false;
     };
@@ -60,7 +55,7 @@ export default function GruopTable() {
     const AdminPromise = checkIfAdminPermissions();
     handleAdminPromise(AdminPromise);
 
-    const RequestPromise = getPermissions(10);
+    const RequestPromise = getPermissions(30);
     handlePermissionPromise(RequestPromise);
   }
 
@@ -82,6 +77,9 @@ export default function GruopTable() {
   };
 
   const handleAdminPromise = (AuthPromise) => {
+    if (IsAdmin) {
+      return;
+    }
     {
       if (AuthPromise === undefined) {
         return;
@@ -95,9 +93,9 @@ export default function GruopTable() {
     }
   };
 
-  function handleLabRequests() {
-    const RequestPromise = getLaboratories();
-    handleProductsPromise(RequestPromise);
+  function handleProductsRequests(userName, UCC_ID) {
+    const ProductsPromise = getProducts(userName, UCC_ID);
+    handleProductsPromise(ProductsPromise);
   }
 
   const handleProductsPromise = (AuthPromise) => {
@@ -108,8 +106,8 @@ export default function GruopTable() {
 
       AuthPromise.then((response) => {
         if (response !== undefined) {
+          console.log(response);
           setData(response);
-
           setTimeout(() => {
             setisLoading(false);
           }, 1000);
@@ -118,13 +116,46 @@ export default function GruopTable() {
     }
   };
 
-  const columns = [
-    {
-      title: "Nome",
-      field: "Name",
-      width: "auto",
-    },
+  function handleUCCOptionsRequests(userID) {
+    const UCCPromise = getUCCs(userID);
+    handleUCCOptionsPromise(UCCPromise);
+  }
 
+  const handleUCCOptionsPromise = (AuthPromise) => {
+    {
+      if (AuthPromise === undefined) {
+        return;
+      }
+
+      AuthPromise.then((response) => {
+        if (response !== undefined) {
+          SetUccOptions(response);
+          setTimeout(() => {
+            setisLoading(false);
+          }, 1000);
+        }
+      });
+    }
+  };
+
+  function onOptionsChange(e) {
+    SetSelectedUCC(e.target.value);
+    if (e.target.value === " ") {
+      setData([]);
+      return;
+    }
+
+    let userID = sessionStorage.getItem("userID");
+    userID = JSON.parse(userID);
+
+    if (userID === null) {
+      userID = localStorage.getItem("userID");
+      userID = JSON.parse(userID);
+    }
+    handleProductsRequests(userID, e.target.value);
+  }
+
+  const columns = [
     {
       title: "Tipo",
       field: "Type",
@@ -132,51 +163,83 @@ export default function GruopTable() {
       render: (rowData) => {
         let rowType = " ";
         if (rowData.Type === 1) {
-          rowType = "Laboratório";
+          rowType = "Geral";
         }
 
         if (rowData.Type === 2) {
-          rowType = "Dispositivos Médicos";
+          rowType = "Subst Controladas";
         }
 
         if (rowData.Type === 3) {
-          rowType = "Nutrição Especial";
+          rowType = "Dispositivos Médicos";
         }
+
+        if (rowData.Type === 4) {
+          rowType = "Outros";
+        }
+        if (rowData.Type === 5) {
+          rowType = "Nutrição";
+        }
+        if (rowData.Type === 6) {
+          rowType = "Soros";
+        }
+
         return <p style={{ marginTop: "10px" }}>{rowType}</p>;
       },
     },
 
     {
-      title: "Morada",
-      field: "Address",
+      title: "CHNM",
+      field: "CHNM",
+
       width: "auto",
     },
 
     {
-      title: "Telefone",
-      field: "Phone",
+      title: "Descrição",
+      field: "Description",
       width: "auto",
-    },
-
-    {
-      title: "Num. Contacto",
-      field: "Contact_Phone",
-      width: "auto",
-    },
-
-    {
-      title: "Ativo",
-      field: "Active",
-      width: "auto",
-      render: (RowData) => (
-        <Switch
-          value={RowData.Active}
-          disabled={true}
-          id={"Active"}
-          defaultChecked={RowData.Active}
-          label={""}
-        ></Switch>
+      render: (rowdata) => (
+        <a style={{ whiteSpace: "nowrap" }}>{rowdata.Description}</a>
       ),
+    },
+
+    {
+      title: "Nome Laboratório",
+      field: "Laboratory_Name",
+
+      width: "auto",
+    },
+    {
+      title: "DUP",
+      field: "DUP",
+      width: "auto",
+    },
+
+    {
+      title: "Preço Caixa",
+      field: "Unit_Price_Box",
+      width: "auto",
+    },
+    {
+      title: "Qtd. Caixa",
+      field: "Total_Quantity",
+      width: "auto",
+    },
+    {
+      title: "Preço Unitário",
+      field: "Unit_Price_UN",
+      width: "auto",
+    },
+
+    {
+      title: "Quantidade",
+      width: "auto",
+      align: "center",
+      cellStyle: {
+        textAlign: "right",
+      },
+      render: (rowData) => <ShoppingCart data={rowData} UCCID={selectedUCC} />,
     },
   ];
 
@@ -203,58 +266,9 @@ export default function GruopTable() {
     padding: "dense",
   };
 
-  const addOrEdit = (values, resetForm) => {
-    if (isInsert) {
-      InsertLaboratories(values);
-    }
-
-    if (isEdit) {
-      updateLaboratories(values);
-    }
-    resetForm();
-    setisLoading(true);
-    setRecordForEdit(null);
-    setOpenPopup(false);
-
-    setTimeout(() => {
-      handleLabRequests();
-      setisEdit(false);
-      setisInsert(false);
-      setOnlyPreview(false);
-    }, 500);
-  };
-
-  const addonConfirm = (values) => {
-    if (isInsert) {
-      onHandleInsert(values);
-    }
-    setUpdate(!update);
-    setTimeout(() => {
-      setisEdit(false);
-      setisInsert(true);
-    }, 500);
-  };
-
   const openInPopup = (rowData) => {
     setRecordForEdit(rowData);
     setOpenPopup(true);
-  };
-
-  const handleDeleteOnClick = (rowData) => {
-    setRecordForDelete(rowData.data);
-    setOpen(true);
-  };
-
-  const handleDeleteCancel = () => {
-    setOpen(false);
-  };
-
-  const handleDeleteConfirm = (rowData) => {
-    setOpen(false);
-    DeleteLaboratory(rowData.ID);
-    setTimeout(() => {
-      handleLabRequests();
-    }, 1000);
   };
 
   if (isLoading === true) {
@@ -270,21 +284,17 @@ export default function GruopTable() {
               options={options}
               columns={columns}
               data={data}
-              title={<TableTitle text="Laboratórios" />}
-              editable={{
-                onRowDelete: (oldData) => new Promise((resolve, reject) => {}),
-              }}
-              //aqui new
+              title={<TableTitle text="Adicionar Produtos a Encomenda" />}
               components={{
                 Action: (props) => (
-                  <div style={{ display: "flex" }}>
+                  <div>
                     {(AllowModify === 1 || IsAdmin === true) && (
                       <IconButton
                         disabled={!AllowModify && !IsAdmin}
                         onClick={() => {
                           setisEdit(true);
                           setisInsert(false);
-                          setOnlyPreview(false);
+                          SetOnlyPreview(false);
                           openInPopup(props.data);
                         }}
                       >
@@ -298,72 +308,51 @@ export default function GruopTable() {
                         onClick={() => {
                           setisEdit(true);
                           setisInsert(false);
-                          setOnlyPreview(true);
+                          SetOnlyPreview(true);
                           openInPopup(props.data);
                         }}
                       >
                         <PreviewIcon />
                       </IconButton>
                     )}
-
-                    <IconButton
-                      disabled={!AllowDelete && !IsAdmin}
-                      onClick={() => {
-                        handleDeleteOnClick(props);
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
                   </div>
                 ),
 
                 Toolbar: (props) => (
                   <div>
                     <MTableToolbar {...props} />
-                    <div style={{ padding: "0px 10px", textAlign: "right" }}>
-                      <IconButton
-                        disabled={!AllowInsert && !IsAdmin}
-                        onClick={() => {
-                          setisEdit(false);
-                          setisInsert(true);
-                          setOpenPopup(true);
-                          setRecordForEdit(null);
-                          setOnlyPreview(false);
-                        }}
-                      >
-                        <AddIcon />
-                      </IconButton>
+                    <div style={{ display: "flex" }}>
+                      <SelectMui
+                        style={{ minWidth: 120 }}
+                        variant="standard"
+                        name="UCC"
+                        label="UCC"
+                        value={selectedUCC}
+                        onChange={onOptionsChange}
+                        options={uccOptions}
+                      />
                     </div>
                   </div>
                 ),
               }}
               localization={{
                 header: { actions: "Ações" },
-                body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
+                body: {
+                  emptyDataSourceMessage: (
+                    <div
+                      style={{
+                        color: "#ad0b90",
+                        fontWeight: "bold",
+                        fontSize: "2rem",
+                      }}
+                    >
+                      Escolha um UCC para começar
+                    </div>
+                  ),
+                },
               }}
             />
           </Paper>
-          <DeletePopUp
-            open={open}
-            recordForDelete={recordForDelete}
-            handleCancel={handleDeleteCancel}
-            handleConfirm={handleDeleteConfirm}
-          ></DeletePopUp>
-          <Popup
-            title="Ficha de Laboratório"
-            openPopup={openPopup}
-            setOpenPopup={setOpenPopup}
-          >
-            <ProductForm
-              data={data}
-              recordForEdit={recordForEdit}
-              addOrEdit={addOrEdit}
-              addonConfirm={addonConfirm}
-              isEdit={isEdit}
-              LabOptions={LabOptions}
-              OnlyPreview={OnlyPreview}
-            ></ProductForm>
-          </Popup>
         </>
       );
     } else {

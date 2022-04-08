@@ -44,6 +44,7 @@ export function InsertProducts(rowData) {
     Sold_Out: rowData.Sold_Out,
     Commercial_Name: rowData.Commercial_Name,
     Observations: rowData.Observations,
+    Tax_Percentage: rowData.Tax_Percentage,
     Active: rowData.Active,
   };
 
@@ -125,6 +126,7 @@ export function modifyProducts(rowData) {
     Sold_Out: rowData.Sold_Out,
     Commercial_Name: rowData.Commercial_Name,
     Observations: rowData.Observations,
+    Tax_Percentage: rowData.Tax_Percentage,
     Active: rowData.Active,
   };
 

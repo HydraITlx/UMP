@@ -13,8 +13,6 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
           ...values,
           [name]: value.slice(0, 4).toUpperCase(),
         });
-        console.log(value);
-        console.log("ENTTROU NO PREFIX");
       } else {
         const re = /^[0-9\b]+$/;
         if (value === "" || re.test(value)) {

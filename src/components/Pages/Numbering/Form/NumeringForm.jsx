@@ -14,8 +14,6 @@ const initialFValues = {
 export default function GroupForm(props) {
   const { addOrEdit, recordForEdit, isEdit, data, UCCOptions } = props;
 
-  console.log(recordForEdit);
-
   let btnStyles = "";
   if (isEdit) {
     btnStyles = { minWidth: "100%" };
@@ -24,8 +22,6 @@ export default function GroupForm(props) {
   }
 
   const validate = (fieldValues = values) => {
-    console.log("sumbited");
-    console.log(fieldValues);
     const errorText = "O campo não pode estar vazio";
     const errorText2 = "O valor não é valido";
 
@@ -64,7 +60,6 @@ export default function GroupForm(props) {
         ...recordForEdit,
       });
   }, [recordForEdit]);
-  console.log(values);
 
   return (
     <Form onSubmit={handleSubmit}>

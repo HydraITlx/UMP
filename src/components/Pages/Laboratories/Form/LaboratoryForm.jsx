@@ -36,12 +36,12 @@ const initialFValues = {
   Tecnical_Name: "",
   Tecnical_Phone: "",
   Type: " ",
+  Stockist: false,
 };
 
 const TypeOption = [
   { value: 1, label: "Laboratório" },
-  { value: 2, label: "Dispositivos Médicos" },
-  { value: 3, label: "Nutrição Especial" },
+  { value: 2, label: "Dispositivos Médicos e Nutrição Especial" },
 ];
 
 export default function GroupForm(props) {
@@ -473,6 +473,13 @@ export default function GroupForm(props) {
                 disabled={OnlyPreview}
                 label="Ativo"
                 value={values.Active}
+                onChange={handleInputChange}
+              />
+              <Checkbox
+                name="Stockist"
+                disabled={OnlyPreview}
+                label="Armazenista"
+                value={values.Stockist}
                 onChange={handleInputChange}
               />
             </Grid>

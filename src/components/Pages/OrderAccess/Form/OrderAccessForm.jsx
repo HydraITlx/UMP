@@ -29,10 +29,6 @@ export default function GroupForm(props) {
   }
 
   const validate = (fieldValues = values) => {
-    console.log("sumbited");
-    console.log(fieldValues);
-    console.log("values");
-    console.log(values);
     const errorText = "O campo não pode estar vazio";
     const errorTextExists = "O acesso já existe";
 
@@ -43,12 +39,6 @@ export default function GroupForm(props) {
       temp.UCC_ID = "";
       data.map((options) => {
         if (options.ID !== values.ID) {
-          console.log(
-            `options.Pharmacist_ID ${options.Pharmacist_ID} fieldValues.Pharmacist_ID ${fieldValues.Pharmacist_ID}`
-          );
-          console.log(
-            `options.UCC_ID ${options.UCC_ID}  values.UCC_ID ${values.UCC_ID}`
-          );
           if (
             parseInt(options.Pharmacist_ID) ===
               parseInt(fieldValues.Pharmacist_ID) &&
@@ -77,8 +67,6 @@ export default function GroupForm(props) {
         }
       });
     }
-    console.log("temp");
-    console.log(temp);
     setErrors({
       ...temp,
     });
@@ -104,11 +92,8 @@ export default function GroupForm(props) {
   }, [recordForEdit]);
 
   function checkDuplicates(arr, index, new_id, new_id2, temp) {
-    console.log(index);
     return arr.map((options) => {
       if (options.ID !== index) {
-        console.log("HELO");
-        console.log(`${options.Pharmacist_ID} new_id ${new_id}`);
         if (options.Pharmacist_ID === new_id || options.UCC_ID === new_id2) {
           temp.Pharmacist_ID = "DADASDASDADA";
           return temp;

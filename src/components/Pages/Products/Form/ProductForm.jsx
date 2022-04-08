@@ -17,6 +17,7 @@ const initialFValues = {
   Type: " ",
   Unit_Price_Box: 0,
   Unit_Price_UN: 0,
+  Tax_Percentage: 0,
   Year: 0,
 };
 
@@ -32,8 +33,6 @@ const TypeOption = [
 export default function GroupForm(props) {
   const { addOrEdit, recordForEdit, isEdit, LabOptions, OnlyPreview } = props;
 
-  console.log(recordForEdit);
-
   let btnStyles = "";
   if (isEdit) {
     btnStyles = { minWidth: "100%" };
@@ -42,8 +41,6 @@ export default function GroupForm(props) {
   }
 
   const validate = (fieldValues = values) => {
-    console.log("sumbited");
-    console.log(fieldValues);
     const errorText = "O campo não pode estar vazio";
     const errorText2 = "O valor não é valido";
 
@@ -90,8 +87,6 @@ export default function GroupForm(props) {
         ...recordForEdit,
       });
   }, [recordForEdit]);
-  console.log(values);
-
   return (
     <Form onSubmit={handleSubmit}>
       <Grid container pl={25}>
@@ -212,8 +207,19 @@ export default function GroupForm(props) {
             error={errors.Observations}
           />
         </Grid>
-
         <Grid item xs={12} md={5.34} pt={2}>
+          <Controls.Input
+            type="number"
+            name="Tax_Percentage"
+            label="Iva"
+            disabled={OnlyPreview}
+            value={values.Tax_Percentage}
+            onChange={handleInputChange}
+            error={errors.DUP}
+          />
+        </Grid>
+
+        <Grid item xs={12} md={12} pt={2}>
           <Checkbox
             name="Sold_Out"
             label="Esgotado"

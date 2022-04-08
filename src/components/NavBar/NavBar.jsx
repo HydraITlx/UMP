@@ -3,7 +3,7 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 
-import logo from "../../images/logo.jpeg";
+import logo from "../../images/logo.PNG";
 import Menu from "../Sidebar/Menu";
 import LogOut from "../LogOut/Logout";
 //import IconButton from "@mui/material/IconButton";
@@ -24,8 +24,12 @@ export default function ButtonAppBar() {
             <Menu sx={{ mr: 3 }} />
           </Box>
           <Box display="flex" flexGrow={1}>
-            <img className="logoImage" src={logo} alt="logo"></img>
-            <p></p>
+            <img
+              className="logoImage"
+              src={logo}
+              alt="logo"
+              style={{ paddingBottom: 3 }}
+            ></img>
           </Box>
           <LogOut className="showlogout" />
         </Toolbar>

@@ -5,7 +5,7 @@ import {
   MenuItem,
   FormHelperText,
   InputLabel,
-} from "@material-ui/core";
+} from "@mui/material";
 
 export default function Select(props) {
   const {
@@ -21,7 +21,7 @@ export default function Select(props) {
 
   return (
     <FormControl
-      style={{ minWidth: "15%" }}
+      style={{ width: "15%" }}
       variant={variant}
       {...(error && { error: true })}
     >

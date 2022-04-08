@@ -51,7 +51,6 @@ export default function GruopTable() {
       }
 
       RequestPromise.then((response) => {
-        console.log(response);
         if (response !== undefined) {
           setData(response);
         }
@@ -64,11 +63,8 @@ export default function GruopTable() {
       if (AuthPromise === undefined) {
         return;
       }
-      console.log("ENTOU AQUI UCC");
       AuthPromise.then((response) => {
-        console.log(response);
         if (response !== undefined) {
-          console.log(response);
           SetUCCOptions(response);
         }
       });
@@ -172,11 +168,9 @@ export default function GruopTable() {
 
   const addOrEdit = (values, oldValues, resetForm) => {
     if (isInsert) {
-      console.log("entou no insert");
       InsertNumbering(values);
     }
     if (isEdit) {
-      console.log("entou no edit");
       UpdateNumbering(values, oldValues);
     }
     resetForm();

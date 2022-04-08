@@ -16,7 +16,6 @@ import Popup from "../../Helpers/PopupCustom";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import TableTitle from "../../Helpers/TableTitle";
-import Select from "../../Helpers/SelectRender";
 import { onHandlePharmacistOptions } from "../../Requests/UCCRequests";
 import OrderAccessForm from "./Form/OrderAccessForm";
 import EditIcon from "@mui/icons-material/Edit";
@@ -60,7 +59,6 @@ export default function GruopTable() {
       }
 
       AuthPromise.then((response) => {
-        console.log(response);
         if (response !== undefined) {
           SetpharmacistOptions(response);
         }
@@ -76,7 +74,6 @@ export default function GruopTable() {
       }
 
       AuthPromise.then((response) => {
-        console.log(response);
         if (response !== undefined) {
           SetUCCOptions(response);
         }
@@ -92,7 +89,6 @@ export default function GruopTable() {
       }
 
       RequestPromise.then((response) => {
-        console.log(response);
         if (response !== undefined) {
           setData(response);
         }
@@ -105,7 +101,6 @@ export default function GruopTable() {
       InsertOrderAccess(values);
     }
     if (isEdit) {
-      console.log("entou no edit");
       UpdateOrderAccess(values);
     }
     resetForm();
@@ -190,7 +185,7 @@ export default function GruopTable() {
           options={options}
           columns={columns}
           data={data}
-          title={<TableTitle text="Lista de acesso a encomendas" />}
+          title={<TableTitle text="Permissões UCC/Laboratórios" />}
           editable={{
             onRowDelete: (oldData) =>
               new Promise((resolve, reject) => {
@@ -240,7 +235,7 @@ export default function GruopTable() {
         />
       </Paper>
       <Popup
-        title="Ficha de Permissões"
+        title="Ficha de Encomenda"
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >
