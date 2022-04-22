@@ -122,20 +122,16 @@ export default function GruopTable() {
   const columns = [
     {
       title: "Nome Farmacêutico",
-      field: "Pharmacist_ID",
+      field: "Pharmacist_Name",
       width: "50%",
-      render: (rowData) => {
-        return <a>{rowData.Pharmacist_Name}</a>;
-      },
+      render: (rowData) => rowData.Pharmacist_Name,
     },
 
     {
       title: "Nome UCC",
-      field: "UCC_ID",
+      field: "UCC_Name",
       width: "50%",
-      render: (rowData) => {
-        return <a>{rowData.UCC_Name}</a>;
-      },
+      render: (rowData) => rowData.UCC_Name,
     },
     {
       title: "Editar ",
@@ -157,7 +153,7 @@ export default function GruopTable() {
 
   //Auto Height
   const tableHeight =
-    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 70;
+    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 85;
   //Auto Height
 
   const options = {
@@ -165,14 +161,17 @@ export default function GruopTable() {
     minBodyHeight: `${tableHeight}vh`,
     pageSize: 10,
     paging: true,
+    emptyRowsWhenPaging: false, // To avoid of having empty rows
     headerStyle: {
       position: "sticky",
       top: 0,
       backgroundColor: "#ad0b90",
       color: "#FFFFFF",
       fontWeight: "bold",
-      height: 10,
+      height: 40,
+      fontSize: 12,
     },
+    rowStyle: { fontSize: 14 },
     filtering: false,
     actionsColumnIndex: -1,
     padding: "dense",
@@ -230,7 +229,23 @@ export default function GruopTable() {
           }}
           localization={{
             header: { actions: "Ações" },
-            body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
+            body: {
+              editRow: { deleteText: "Deseja apagar esta linha?" },
+              emptyDataSourceMessage: "Nenhum registro para exibir",
+            },
+            toolbar: {
+              searchTooltip: "Pesquisar",
+              searchPlaceholder: "Pesquisar",
+            },
+            pagination: {
+              labelRowsSelect: "linhas",
+              labelDisplayedRows: "{count} de {from}-{to}",
+              firstTooltip: "Primeira página",
+              previousTooltip: "Página anterior",
+              nextTooltip: "Próxima página",
+              lastTooltip: "Última página",
+              labelRowsPerPage: "Linhas por página:",
+            },
           }}
         />
       </Paper>

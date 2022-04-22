@@ -5,3 +5,7 @@ body {
   background-color: variables.$bg;
   color: var(--text);
 }
+
+.MuiTableCell-root {
+  padding: 0 14px !important;
+}

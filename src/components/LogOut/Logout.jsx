@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
+import LockOpenIcon from "@mui/icons-material/LockOpen";
 import Tooltip from "@mui/material/Tooltip";
 import Logout from "@mui/icons-material/Logout";
 import Button from "@mui/material/Button";
@@ -33,6 +34,10 @@ export default function AccountMenu() {
       sessionStorage.clear();
     });
     navigate("/");
+  };
+
+  const DoChangePassWord = () => {
+    navigate("/changepass");
   };
   return (
     <div className="showlogout">
@@ -89,6 +94,13 @@ export default function AccountMenu() {
           transformOrigin={{ horizontal: "right", vertical: "top" }}
           anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
+          <MenuItem onClick={DoChangePassWord}>
+            <ListItemIcon>
+              <LockOpenIcon fontSize="small" />
+            </ListItemIcon>
+            Alterar palavra passe
+          </MenuItem>
+
           <MenuItem onClick={DoLogout}>
             <ListItemIcon>
               <Logout fontSize="small" />

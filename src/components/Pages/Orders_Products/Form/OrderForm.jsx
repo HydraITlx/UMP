@@ -36,15 +36,30 @@ export default function GroupForm(props) {
   }
 
   const calculateTotal = (data) => {
+    console.log(data.length);
+
     var TotalAmount = data
       .map((bill) => bill.Total_Amount)
-      .reduce((acc, bill) => bill + acc);
+      .reduce(
+        (acc, bill) =>
+          parseFloat(bill.replace(",", ".")) + parseFloat(acc.replace(",", "."))
+      );
 
     var TotalAmountVat = data
       .map((bill) => bill.Total_AmountVat)
-      .reduce((acc, bill) => bill + acc);
-    SetTotalAmount(TotalAmount);
-    SetTotalAmountVat(TotalAmountVat);
+      .reduce(
+        (acc, bill) =>
+          parseFloat(bill.replace(",", ".")) + parseFloat(acc.replace(",", "."))
+      );
+    console.log("TotalAmount");
+    console.log(TotalAmount);
+    if (data.length > 1) {
+      SetTotalAmount(TotalAmount.toFixed(5).toString().replace(".", ","));
+      SetTotalAmountVat(TotalAmountVat.toFixed(5).toString().replace(".", ","));
+    } else {
+      SetTotalAmount(TotalAmount);
+      SetTotalAmountVat(TotalAmountVat);
+    }
   };
 
   const validate = (fieldValues = values) => {

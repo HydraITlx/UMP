@@ -10,7 +10,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
     if (name === "Unit_Price_Box" || name === "Unit_Price_UN") {
       setValues({
         ...values,
-        [name]: value.toFixed(6),
+        [name]: value.toFixed(5),
       });
     } else {
       setValues({
@@ -24,8 +24,13 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
 
   const handleInputQTDChange = (e, QTDValue) => {
     const { name, value } = e.target;
-    const re = /^[+-]?\d*(?:[..]\d*)?$/;
+    const re = /^[+-]?\d*(?:[,,]\d*)?$/;
 
+    let ConvertedValue = value.replace(",", ".");
+    let ConvertedQTDValue = QTDValue.toString().replace(",", ".");
+
+    console.log(ConvertedQTDValue);
+    console.log(QTDValue);
     if (name === "Total_Quantity") {
       if (value === "0" || value === "") {
         setValues({
@@ -38,7 +43,12 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
           setValues({
             ...values,
             [name]: value,
-            Unit_Price_UN: (QTDValue / value).toFixed(6),
+            Unit_Price_UN: (ConvertedQTDValue / ConvertedValue).toLocaleString(
+              navigator.language,
+              {
+                minimumFractionDigits: 5,
+              }
+            ),
           });
         }
       }
@@ -63,7 +73,11 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
             setValues({
               ...values,
               [name]: value,
-              Unit_Price_UN: (value / QTDValue).toFixed(6),
+              Unit_Price_UN: (
+                ConvertedValue / ConvertedQTDValue
+              ).toLocaleString(navigator.language, {
+                minimumFractionDigits: 5,
+              }),
             });
           }
         }
@@ -75,7 +89,12 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
         setValues({
           ...values,
           [name]: value,
-          Unit_Price_Box: (value * QTDValue).toFixed(6),
+          Unit_Price_Box: (ConvertedValue * ConvertedQTDValue).toLocaleString(
+            navigator.language,
+            {
+              minimumFractionDigits: 5,
+            }
+          ),
         });
       }
     }

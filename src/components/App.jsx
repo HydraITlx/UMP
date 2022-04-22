@@ -22,6 +22,7 @@ import UCCAccess from "./Pages/UCCAccess/UCCAccess";
 import Order_Produtos from "./Pages/Orders_Products/Orders_Products";
 import Order_Shopping from "./Pages/Orders_ShoppingCart/Orders_Products";
 import DataImport from "./Pages/DataImport/DataImport";
+import PassChanger from "./Pages/PassChanger/passChanger";
 
 function App() {
   const [shouldNavigate, setshouldNavigate] = useState(false);
@@ -118,6 +119,7 @@ function App() {
                   <Route path="/orders" element={<Order_Produtos />} />
                   <Route path="/addorders" element={<Order_Shopping />} />
                   <Route path="/dataimport" element={<DataImport />} />
+                  <Route path="/changepass" element={<PassChanger />} />
                 </Route>
               </Routes>
             </section>

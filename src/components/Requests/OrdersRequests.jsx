@@ -51,6 +51,7 @@ export function getProducts(userName, UCC_ID) {
 }
 
 export function ProcessCartProdutos(userName, UCC_ID, data, Qtd) {
+  console.log(data);
   let body = {
     UCC_ID: UCC_ID,
     username: userName,

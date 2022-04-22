@@ -159,7 +159,7 @@ export default function GruopTable() {
     {
       title: "Tipo",
       field: "Type",
-      width: "auto",
+      width: "15rem",
       render: (rowData) => {
         let rowType = " ";
         if (rowData.Type === 1) {
@@ -198,17 +198,17 @@ export default function GruopTable() {
     {
       title: "Descrição",
       field: "Description",
-      width: "auto",
+      width: "19rem",
       render: (rowdata) => (
         <a style={{ whiteSpace: "nowrap" }}>{rowdata.Description}</a>
       ),
     },
 
     {
-      title: "Nome Laboratório",
+      title: "Nome Lab.",
       field: "Laboratory_Name",
 
-      width: "auto",
+      width: "12rem",
     },
     {
       title: "DUP",
@@ -219,17 +219,19 @@ export default function GruopTable() {
     {
       title: "Preço Caixa",
       field: "Unit_Price_Box",
-      width: "auto",
+      width: "8rem",
+      render: (rowData) => rowData.Unit_Price_Box,
     },
     {
       title: "Qtd. Caixa",
       field: "Total_Quantity",
-      width: "auto",
+      width: "7.6rem",
     },
     {
-      title: "Preço Unitário",
+      title: "Preço Un.",
       field: "Unit_Price_UN",
-      width: "auto",
+      width: "7rem",
+      render: (rowData) => rowData.Unit_Price_UN,
     },
 
     {
@@ -245,13 +247,15 @@ export default function GruopTable() {
 
   //Auto Height
   const tableHeight =
-    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 70;
+    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 85;
   //Auto Height
 
   const options = {
     maxBodyHeight: `${tableHeight}vh`,
     minBodyHeight: `${tableHeight}vh`,
-    pageSize: 10,
+    pageSize: 20,
+    emptyRowsWhenPaging: false, // To avoid of having empty rows
+    pageSizeOptions: [20, 40, 60], // rows selection options
     paging: true,
     headerStyle: {
       position: "sticky",
@@ -260,7 +264,11 @@ export default function GruopTable() {
       color: "#FFFFFF",
       fontWeight: "bold",
       height: 10,
+      fontSize: 10,
+      height: 40,
+      fontSize: 11,
     },
+    rowStyle: { fontSize: 11 },
     filtering: false,
     actionsColumnIndex: -1,
     padding: "dense",
@@ -324,7 +332,7 @@ export default function GruopTable() {
                     <div style={{ display: "flex" }}>
                       <SelectMui
                         style={{ minWidth: 120 }}
-                        variant="standard"
+                        variant="filled"
                         name="UCC"
                         label="UCC"
                         value={selectedUCC}
@@ -344,11 +352,25 @@ export default function GruopTable() {
                         color: "#ad0b90",
                         fontWeight: "bold",
                         fontSize: "2rem",
+                        top: 0,
                       }}
                     >
                       Escolha um UCC para começar
                     </div>
                   ),
+                },
+                toolbar: {
+                  searchTooltip: "Pesquisar",
+                  searchPlaceholder: "Pesquisar",
+                },
+                pagination: {
+                  labelRowsSelect: "linhas",
+                  labelDisplayedRows: "{count} de {from}-{to}",
+                  firstTooltip: "Primeira página",
+                  previousTooltip: "Página anterior",
+                  nextTooltip: "Próxima página",
+                  lastTooltip: "Última página",
+                  labelRowsPerPage: "Linhas por página:",
                 },
               }}
             />

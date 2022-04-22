@@ -156,22 +156,25 @@ export default function GruopTable() {
 
   //Auto Height
   const tableHeight =
-    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 70;
+    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 85;
   //Auto Height
 
   const options = {
     maxBodyHeight: `${tableHeight}vh`,
     minBodyHeight: `${tableHeight}vh`,
-    pageSize: 10,
+    pageSize: 20,
+    emptyRowsWhenPaging: false, // To avoid of having empty rows
+    pageSizeOptions: [20, 40, 60], // rows selection options
     paging: true,
     headerStyle: {
       position: "sticky",
       top: 0,
       backgroundColor: "#ad0b90",
       color: "#FFFFFF",
-      fontWeight: "bold",
-      height: 10,
+      height: 40,
+      fontSize: 12,
     },
+    rowStyle: { fontSize: 14 },
     filtering: false,
     actionsColumnIndex: -1,
     padding: "dense",
@@ -229,7 +232,23 @@ export default function GruopTable() {
           }}
           localization={{
             header: { actions: "Ações" },
-            body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
+            body: {
+              editRow: { deleteText: "Deseja apagar esta linha?" },
+              emptyDataSourceMessage: "Nenhum registro para exibir",
+            },
+            toolbar: {
+              searchTooltip: "Pesquisar",
+              searchPlaceholder: "Pesquisar",
+            },
+            pagination: {
+              labelRowsSelect: "linhas",
+              labelDisplayedRows: "{count} de {from}-{to}",
+              firstTooltip: "Primeira página",
+              previousTooltip: "Página anterior",
+              nextTooltip: "Próxima página",
+              lastTooltip: "Última página",
+              labelRowsPerPage: "Linhas por página:",
+            },
           }}
         />
       </Paper>

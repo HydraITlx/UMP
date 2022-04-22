@@ -29,6 +29,9 @@ function Users(props) {
 
   const increment = () => {
     {
+      if (Qtd >= 9999) {
+        return;
+      }
       setQtd(Number(Qtd) + 1);
     }
   };
@@ -41,7 +44,15 @@ function Users(props) {
 
   const onQtdChange = (e) => {
     const rx_live = /^[+-]?\d*(?:[.,]\d*)?$/;
-    if (rx_live.test(e.target.value)) setQtd(e.target.value);
+    if (rx_live.test(e.target.value)) {
+      console.log(e.target.value);
+      console.log(e.target.value.length);
+      if (e.target.value > 9999) {
+        return;
+      } else {
+        setQtd(e.target.value);
+      }
+    }
   };
 
   const handleCancel = () => {

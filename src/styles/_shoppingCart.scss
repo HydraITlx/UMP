@@ -22,10 +22,9 @@ $modifier--text-color: #888;
 }
 
 #{$block}__modifier {
-  padding: 0.7rem;
-  width: 3rem;
-  //height: 10%;
-  font-size: 1.5rem;
+  padding: 0.5rem;
+  width: 2rem;
+  font-size: 1rem;
 
   background: $color--primary;
   color: $modifier--text-color;
@@ -50,9 +49,9 @@ $modifier--text-color: #888;
 }
 
 #{$block}__screen {
-  width: 4rem;
-  padding: 0.7rem;
-  font-size: 1.5rem;
+  width: 3rem;
+  padding: 0.3rem;
+  font-size: 1rem;
 
   border: 0;
   border-top: $border;

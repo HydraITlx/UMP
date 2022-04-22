@@ -10,7 +10,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
     if (name === "Unit_Price_Box" || name === "Unit_Price_UN") {
       setValues({
         ...values,
-        [name]: value.toFixed(6),
+        [name]: value.toFixed(5),
       });
     } else {
       setValues({
@@ -38,7 +38,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
           setValues({
             ...values,
             [name]: value,
-            Unit_Price_UN: (QTDValue / value).toFixed(6),
+            Unit_Price_UN: (QTDValue / value).toFixed(5),
           });
         }
       }
@@ -63,7 +63,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
             setValues({
               ...values,
               [name]: value,
-              Unit_Price_UN: (value / QTDValue).toFixed(6),
+              Unit_Price_UN: (value / QTDValue).toFixed(5),
             });
           }
         }
@@ -75,7 +75,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
         setValues({
           ...values,
           [name]: value,
-          Unit_Price_Box: (value * QTDValue).toFixed(6),
+          Unit_Price_Box: (value * QTDValue).toFixed(5),
         });
       }
     }

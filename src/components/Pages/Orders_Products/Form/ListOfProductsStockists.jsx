@@ -110,15 +110,27 @@ export default function PagePermissions(props) {
           if (e.target.value.length > 8) return;
 
           const floatRegExp = new RegExp(
-            "^[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)$"
+            "^[+-]?([0-9]+([,][0-9]*)?|[,][0-9]+)$"
           );
 
-          const value = e.target.value;
+          const orginalValue = e.target.value;
+          let value = e.target.value;
+
           if (value === "" || floatRegExp.test(value)) {
-            let unitprice = value / props.rowData.Box_Quantity;
-            props.rowData.Unit_Price_UN = unitprice.toFixed(6);
-            props.rowData.Total_Amount = props.rowData.Quantity * value;
-            props.onChange(value);
+            value = value.replace(",", ".");
+            let unitprice =
+              value / props.rowData.Box_Quantity.replace(",", ".");
+            console.log(unitprice);
+            console.log(
+              `Value => ${value}  qtd Box =>  ${props.rowData.Box_Quantity}  unitprice => ${unitprice}`
+            );
+            props.rowData.Unit_Price_UN = unitprice
+              .toFixed(5)
+              .replace(".", ",");
+            props.rowData.Total_Amount = (props.rowData.Quantity * value)
+              .toFixed(5)
+              .replace(".", ",");
+            props.onChange(orginalValue);
           }
         }
         return (
@@ -142,14 +154,16 @@ export default function PagePermissions(props) {
           if (value === "" || floatRegExp.test(value)) {
             console.log(value);
             if (value === "" || parseInt(value, 10) === 0) {
-              console.log(props.rowData.Unit_Price_Box);
               let unitprice = 0;
-              props.rowData.Unit_Price_UN = unitprice.toFixed(6);
+              props.rowData.Unit_Price_UN = unitprice.toFixed(5);
               props.onChange(value);
             } else {
               console.log(props.rowData.Unit_Price_Box);
-              let unitprice = props.rowData.Unit_Price_Box / value;
-              props.rowData.Unit_Price_UN = unitprice.toFixed(6);
+              let unitprice =
+                props.rowData.Unit_Price_Box.replace(",", ".") / value;
+              props.rowData.Unit_Price_UN = unitprice
+                .toFixed(5)
+                .replace(".", ",");
               props.onChange(value);
             }
           }
@@ -177,8 +191,11 @@ export default function PagePermissions(props) {
 
           const re = /^[0-9\b]+$/;
           if (e.target.value === "" || re.test(e.target.value)) {
-            props.rowData.Total_Amount =
-              props.rowData.Unit_Price_Box * e.target.value;
+            props.rowData.Total_Amount = (
+              props.rowData.Unit_Price_Box.replace(",", ".") * e.target.value
+            )
+              .toFixed(5)
+              .replace(".", ",");
             props.onChange(e.target.value);
           }
         }

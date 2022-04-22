@@ -116,6 +116,7 @@ export default function GruopTable() {
 
       AuthPromise.then((response) => {
         if (response !== undefined) {
+          console.log(response);
           setData(response);
           setfilterData(
             response.filter((data) =>
@@ -151,8 +152,10 @@ export default function GruopTable() {
       title: "Ano",
       field: "Year",
       width: "auto",
+      cellStyle: {
+        textAlign: "center",
+      },
     },
-
     {
       title: "Tipo",
       field: "Type",
@@ -181,56 +184,50 @@ export default function GruopTable() {
           rowType = "Soros";
         }
 
-        return <p style={{ marginTop: "10px" }}>{rowType}</p>;
+        return rowType;
       },
     },
 
     {
       title: "CHNM",
       field: "CHNM",
-
       width: "auto",
     },
 
     {
       title: "Descrição",
       field: "Description",
-      width: "auto",
-      render: (rowdata) => (
-        <a style={{ whiteSpace: "nowrap" }}>{rowdata.Description}</a>
-      ),
+      width: "35%",
+      render: (rowdata) => rowdata.Description.slice(0, 55),
     },
 
     {
-      title: "Nome Laboratório",
+      title: "Nome Lab.",
       field: "Laboratory_Name",
 
-      width: "auto",
+      width: "10%",
     },
 
     {
       title: "Preço Caixa",
       field: "Unit_Price_Box",
-      width: "auto",
+      width: "9%",
     },
 
     {
       title: "Qtd. Caixa",
       field: "Total_Quantity",
-      width: "auto",
+      width: "9%",
     },
 
     {
-      title: "Preço unit.",
+      title: "Preço Un.",
       field: "Unit_Price_UN",
-
-      width: "auto",
+      width: "9%",
     },
-
     {
       title: "Esgotado",
       field: "Sold_Out",
-
       width: "auto",
       render: (RowData) => (
         <Switch
@@ -262,13 +259,15 @@ export default function GruopTable() {
 
   //Auto Height
   const tableHeight =
-    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 70;
+    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 80;
   //Auto Height
 
   const options = {
     maxBodyHeight: `${tableHeight}vh`,
     minBodyHeight: `${tableHeight}vh`,
-    pageSize: 10,
+    pageSize: 20,
+    emptyRowsWhenPaging: false, // To avoid of having empty rows
+    pageSizeOptions: [20, 40, 60], // rows selection options
     paging: true,
     headerStyle: {
       position: "sticky",
@@ -276,8 +275,10 @@ export default function GruopTable() {
       backgroundColor: "#ad0b90",
       color: "#FFFFFF",
       fontWeight: "bold",
-      height: 10,
+      height: 40,
+      fontSize: 11,
     },
+    rowStyle: { fontSize: 12 },
     filtering: false,
     actionsColumnIndex: -1,
     padding: "dense",
@@ -434,7 +435,23 @@ export default function GruopTable() {
               }}
               localization={{
                 header: { actions: "Ações" },
-                body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
+                body: {
+                  editRow: { deleteText: "Deseja apagar esta linha?" },
+                  emptyDataSourceMessage: "Nenhum registro para exibir",
+                },
+                toolbar: {
+                  searchTooltip: "Pesquisar",
+                  searchPlaceholder: "Pesquisar",
+                },
+                pagination: {
+                  labelRowsSelect: "linhas",
+                  labelDisplayedRows: "{count} de {from}-{to}",
+                  firstTooltip: "Primeira página",
+                  previousTooltip: "Página anterior",
+                  nextTooltip: "Próxima página",
+                  lastTooltip: "Última página",
+                  labelRowsPerPage: "Linhas por página:",
+                },
               }}
             />
           </Paper>

@@ -34,7 +34,7 @@ export default function PagePermissions(props) {
 
   //Auto Height
   const tableHeight =
-    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 70;
+    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 90;
   //Auto Height
 
   const options = {
@@ -49,8 +49,10 @@ export default function PagePermissions(props) {
       backgroundColor: "#ad0b90",
       color: "#FFFFFF",
       fontWeight: "bold",
-      height: 10,
+      height: 40,
+      fontSize: 12,
     },
+    rowStyle: { fontSize: 14 },
     filtering: false,
     addRowPosition: "first",
     actionsColumnIndex: -1,
@@ -79,6 +81,7 @@ export default function PagePermissions(props) {
       width: "auto",
       align: "center",
       editable: "never",
+      render: (RowData) => RowData.Date.slice(0, 10),
     },
   ];
 

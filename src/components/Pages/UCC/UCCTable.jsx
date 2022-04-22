@@ -140,15 +140,19 @@ export default function GruopTable() {
 
     {
       title: "Tipo de Entidade",
-      field: "Entity_Type",
+      field: "UCC_Type",
       width: "auto",
-      render: (RowData) => (
-        <Controls.Select
-          disabled={true}
-          value={RowData.Entity_Type}
-          options={EntityTypeOption}
-        />
-      ),
+      render: (rowData) => {
+        if (rowData.Entity_Type === 1) {
+          rowData.UCC_Type = "IPSS";
+        }
+
+        if (rowData.Entity_Type === 2) {
+          rowData.UCC_Type = "Misericórdia";
+        }
+
+        return rowData.UCC_Type;
+      },
     },
     { title: "NIPC", field: "NIPC", width: "auto" },
     { title: "Morada", field: "Address", width: "auto" },
@@ -157,13 +161,15 @@ export default function GruopTable() {
 
   //Auto Height
   const tableHeight =
-    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 70;
+    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 85;
   //Auto Height
 
   const options = {
     maxBodyHeight: `${tableHeight}vh`,
     minBodyHeight: `${tableHeight}vh`,
-    pageSize: 10,
+    pageSize: 20,
+    emptyRowsWhenPaging: false, // To avoid of having empty rows
+    pageSizeOptions: [20, 40, 60], // rows selection options
     paging: true,
     headerStyle: {
       position: "sticky",
@@ -171,8 +177,10 @@ export default function GruopTable() {
       backgroundColor: "#ad0b90",
       color: "#FFFFFF",
       fontWeight: "bold",
-      height: 10,
+      height: 40,
+      fontSize: 11,
     },
+    rowStyle: { fontSize: 11 },
     filtering: false,
     actionsColumnIndex: -1,
     padding: "dense",
@@ -273,7 +281,7 @@ export default function GruopTable() {
                           openInPopup(props.data);
                         }}
                       >
-                        <EditIcon />
+                        <EditIcon fontSize="small" />
                       </IconButton>
                     )}
 
@@ -287,7 +295,7 @@ export default function GruopTable() {
                           openInPopup(props.data);
                         }}
                       >
-                        <PreviewIcon />
+                        <PreviewIcon fontSize="small" />
                       </IconButton>
                     )}
 
@@ -297,7 +305,7 @@ export default function GruopTable() {
                         handleDeleteOnClick(props);
                       }}
                     >
-                      <DeleteIcon />
+                      <DeleteIcon fontSize="small" />
                     </IconButton>
                   </div>
                 ),
@@ -311,7 +319,7 @@ export default function GruopTable() {
 
                       <div
                         style={{
-                          padding: "0px 10px",
+                          padding: "5px 10px",
                           textAlign: "right",
                           flex: 1,
                         }}
@@ -326,7 +334,7 @@ export default function GruopTable() {
                             setOnlyPreview(false);
                           }}
                         >
-                          <AddIcon />
+                          <AddIcon fontSize="small" />
                         </IconButton>
                       </div>
                     </div>
@@ -335,7 +343,23 @@ export default function GruopTable() {
               }}
               localization={{
                 header: { actions: "Ações" },
-                body: { editRow: { deleteText: "Deseja apagar esta linha?" } },
+                body: {
+                  editRow: { deleteText: "Deseja apagar esta linha?" },
+                  emptyDataSourceMessage: "Nenhum registro para exibir",
+                },
+                toolbar: {
+                  searchTooltip: "Pesquisar",
+                  searchPlaceholder: "Pesquisar",
+                },
+                pagination: {
+                  labelRowsSelect: "linhas",
+                  labelDisplayedRows: "{count} de {from}-{to}",
+                  firstTooltip: "Primeira página",
+                  previousTooltip: "Página anterior",
+                  nextTooltip: "Próxima página",
+                  lastTooltip: "Última página",
+                  labelRowsPerPage: "Linhas por página:",
+                },
               }}
             />
           </Paper>
