@@ -115,7 +115,7 @@ export default function PagePermissions(props) {
 
   //Auto Height
   const tableHeight =
-    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 70;
+    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 75;
   //Auto Height
 
   const options = {
@@ -147,7 +147,7 @@ export default function PagePermissions(props) {
         <Controls.Select
           disabled={true}
           name="departmentId"
-          label="Department"
+          label="Nome"
           value={RowData.permission_id}
           options={lineOptions}
         />

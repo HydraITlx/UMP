@@ -23,10 +23,10 @@ import {
   getPermissions,
   checkIfAdminPermissions,
 } from "../../Requests/PermissionRequests";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import TextField from "@mui/material/TextField";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -394,7 +394,7 @@ export default function GruopTable() {
                     <MTableToolbar {...props} />
                     <div style={{ display: "flex" }}>
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
+                        <DesktopDatePicker
                           readonly="readonly"
                           views={["year"]}
                           label="Filtro Ano"

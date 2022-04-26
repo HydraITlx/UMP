@@ -6,12 +6,19 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-
-    setValues({
-      ...values,
-      [name]: value,
-    });
+    const { name, value, checked } = e.target;
+    if (name === "active" || name === "is_admin") {
+      console.log("esta a alterar o switch aqui2");
+      setValues({
+        ...values,
+        [name]: checked,
+      });
+    } else {
+      setValues({
+        ...values,
+        [name]: value,
+      });
+    }
     if (validateOnChange) validate({ [name]: value });
   };
 

@@ -1,7 +1,7 @@
-import React from "react";
-import { Button as MuiButton, makeStyles } from "@material-ui/core";
+import { styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
 
-export default function Button(props) {
+export default function ButtonLab(props) {
   const {
     style,
     text,
@@ -14,30 +14,22 @@ export default function Button(props) {
     ...other
   } = props;
 
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      margin: theme.spacing(0.5),
-      backgroundColor: backgroundColor,
-      "&:hover": {
-        backgroundColor: backgroundColorHover,
-      },
-    },
-    label: {
-      textTransform: "none",
+  const ColorButton = styled(Button)(({ theme }) => ({
+    backgroundColor: backgroundColor,
+    "&:hover": {
+      backgroundColor: backgroundColorHover,
     },
   }));
 
-  const classes = useStyles();
   return (
-    <MuiButton
+    <ColorButton
       style={style}
       variant={variant || "contained"}
       color={color || "primary"}
       onClick={onClick}
       {...other}
-      classes={{ root: classes.root, label: classes.label }}
     >
       {text}
-    </MuiButton>
+    </ColorButton>
   );
 }

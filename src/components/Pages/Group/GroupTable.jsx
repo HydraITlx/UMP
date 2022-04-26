@@ -14,6 +14,8 @@ import AddIcon from "@mui/icons-material/Add";
 import GroupForm from "./Form/GroupForm";
 import EditIcon from "@mui/icons-material/Edit";
 import TableTitle from "../../Helpers/TableTitle";
+import DeletePopUp from "../../Helpers/DeletePopUp";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -22,6 +24,8 @@ export default function GruopTable() {
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [isInsert, setisInsert] = useState(false);
   const [isEdit, setisEdit] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [recordForDelete, setRecordForDelete] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -42,6 +46,7 @@ export default function GruopTable() {
 
       AuthPromise.then((response) => {
         if (response !== undefined) {
+          console.log(response);
           setData(response);
         }
       });
@@ -55,22 +60,6 @@ export default function GruopTable() {
       width: "auto",
     },
     { title: "Descrição Grupo", field: "label", width: "auto" },
-
-    {
-      title: "Editar ",
-      field: "",
-      render: (rowData) => (
-        <IconButton
-          onClick={() => {
-            setisEdit(true);
-            openInPopup(rowData);
-          }}
-        >
-          <EditIcon />
-        </IconButton>
-      ),
-      width: "10%",
-    },
   ];
 
   //Auto Height
@@ -132,6 +121,29 @@ export default function GruopTable() {
     setOpenPopup(true);
   };
 
+  const handleDeleteOnClick = (rowData) => {
+    console.log(rowData);
+    setRecordForDelete(rowData.data);
+    setOpen(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setOpen(false);
+  };
+
+  const handleDeleteConfirm = (rowData) => {
+    console.log(rowData);
+    setTimeout(() => {
+      const dataDelete = [...data];
+      const index = rowData.value;
+      console.log(index);
+      dataDelete.splice(index, 1);
+      setData([...dataDelete]);
+      onHandleDelete(index);
+    }, 1000);
+    setOpen(false);
+  };
+
   return (
     <>
       <Paper>
@@ -139,18 +151,31 @@ export default function GruopTable() {
           options={options}
           columns={columns}
           data={data}
-          title={<TableTitle text="Grupos de permissões" />}
           editable={{
-            onRowDelete: (oldData) =>
-              new Promise((resolve, reject) => {
-                onHandleDelete(oldData.value);
-                setTimeout(() => {
-                  setUpdate(getGroups());
-                  resolve();
-                }, 1500);
-              }),
+            isDeletable: (rowData) => {},
+            onRowDelete: (oldData) => new Promise((resolve, reject) => {}),
           }}
+          title={<TableTitle text="Grupos de permissões" />}
           components={{
+            Action: (props) => (
+              <div style={{ display: "flex" }}>
+                <IconButton
+                  onClick={() => {
+                    setisEdit(true);
+                    openInPopup(props.data);
+                  }}
+                >
+                  <EditIcon fontSize="small" />
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    handleDeleteOnClick(props);
+                  }}
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </div>
+            ),
             Toolbar: (props) => (
               <div>
                 <MTableToolbar {...props} />
@@ -163,7 +188,7 @@ export default function GruopTable() {
                       setRecordForEdit(null);
                     }}
                   >
-                    <AddIcon />
+                    <AddIcon fontSize="small" />
                   </IconButton>
                 </div>
               </div>
@@ -191,6 +216,12 @@ export default function GruopTable() {
           }}
         />
       </Paper>
+      <DeletePopUp
+        open={open}
+        recordForDelete={recordForDelete}
+        handleCancel={handleDeleteCancel}
+        handleConfirm={handleDeleteConfirm}
+      ></DeletePopUp>
       <Popup
         title="Ficha de Grupo"
         openPopup={openPopup}

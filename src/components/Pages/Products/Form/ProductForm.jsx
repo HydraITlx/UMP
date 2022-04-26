@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import Controls from "../../../Helpers/Controls";
-import Checkbox from "../../../Helpers/Checkbox";
 import { useForm, Form } from "./useForm";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { alpha, styled } from "@mui/material/styles";
+import Switch from "@mui/material/Switch";
+import { purple } from "@mui/material/colors";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import Button from "@mui/material/Button";
 const initialFValues = {
   Active: false,
   CHNM: "",
@@ -20,6 +26,26 @@ const initialFValues = {
   Tax_Percentage: 0,
   Year: 0,
 };
+
+const GreenSwitch = styled(Switch)(({ theme }) => ({
+  "& .MuiSwitch-switchBase.Mui-checked": {
+    color: purple[300],
+    "&:hover": {
+      backgroundColor: alpha(purple[900], theme.palette.action.hoverOpacity),
+    },
+  },
+  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+    backgroundColor: purple[400],
+  },
+}));
+
+const ColorButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: "#ad0b90",
+  "&:hover": {
+    backgroundColor: "#6d085a",
+  },
+}));
 
 const TypeOption = [
   { value: 1, label: "Geral" },
@@ -88,158 +114,171 @@ export default function GroupForm(props) {
       });
   }, [recordForEdit]);
   return (
-    <Form onSubmit={handleSubmit}>
-      <Grid container pl={25}>
-        <Grid item xs={12} md={5.34} pt={2}>
-          <Controls.Input
-            name="Year"
-            label="Ano*"
-            disabled={isEdit}
-            value={values.Year}
-            onChange={handleInputChange}
-            error={errors.Year}
-          />
-          <Controls.Input
-            name="CHNM"
-            label="CHNM*"
-            disabled={isEdit}
-            value={values.CHNM}
-            onChange={handleInputChange}
-            error={errors.CHNM}
-          />
-        </Grid>
-        <Grid item xs={12} md={5.34} pt={2}>
-          <Controls.Select
-            variant="outlined"
-            name="Type"
-            label="Tipo*"
-            disabled={isEdit}
-            value={values.Type}
-            onChange={handleInputChange}
-            options={TypeOption}
-            error={errors.Type}
-          />
+    <>
+      <DialogContent dividers>
+        <Form>
+          <Grid container pl={25}>
+            <Grid item xs={12} md={5.34} pt={2}>
+              <Controls.Input
+                name="Year"
+                label="Ano*"
+                disabled={isEdit}
+                value={values.Year}
+                onChange={handleInputChange}
+                error={errors.Year}
+              />
+              <Controls.Input
+                name="CHNM"
+                label="CHNM*"
+                disabled={isEdit}
+                value={values.CHNM}
+                onChange={handleInputChange}
+                error={errors.CHNM}
+              />
+            </Grid>
+            <Grid item xs={12} md={5.34} pt={2}>
+              <Controls.Select
+                variant="outlined"
+                name="Type"
+                label="Tipo*"
+                disabled={isEdit}
+                value={values.Type}
+                onChange={handleInputChange}
+                options={TypeOption}
+                error={errors.Type}
+              />
 
-          <Controls.Select
-            variant="outlined"
-            name="Laboratory_ID"
-            disabled={isEdit}
-            label="Nome Laboratôrio*"
-            value={values.Laboratory_ID}
-            onChange={handleInputChange}
-            options={LabOptions}
-            error={errors.Laboratory_ID}
-          />
-        </Grid>
+              <Controls.Select
+                variant="outlined"
+                name="Laboratory_ID"
+                disabled={isEdit}
+                label="Nome Laboratôrio*"
+                value={values.Laboratory_ID}
+                onChange={handleInputChange}
+                options={LabOptions}
+                error={errors.Laboratory_ID}
+              />
+            </Grid>
 
-        <Grid item xs={12} md={12} pt={2}>
-          <Controls.Input
-            name="Description"
-            label="Descrição"
-            disabled={OnlyPreview}
-            value={values.Description}
-            onChange={handleInputChange}
-          />
-        </Grid>
+            <Grid item xs={12} md={12} pt={2}>
+              <Controls.Input
+                name="Description"
+                label="Descrição"
+                disabled={OnlyPreview}
+                value={values.Description}
+                onChange={handleInputChange}
+              />
+            </Grid>
 
-        <Grid item xs={12} md={3.43} pt={2}>
-          <Controls.Input
-            type="input"
-            name="Total_Quantity"
-            label="Qtd. por caixa"
-            disabled={OnlyPreview}
-            value={values.Total_Quantity}
-            onChange={(e) => handleInputQTDChange(e, values.Unit_Price_Box)}
-            error={errors.Total_Quantity}
-          />
-        </Grid>
-        <Grid item xs={12} md={3.43} pt={2}>
-          <Controls.Input
-            type="input"
-            name="Unit_Price_Box"
-            label="Preço Caixa"
-            disabled={OnlyPreview}
-            value={values.Unit_Price_Box}
-            onChange={(e) => handleInputQTDChange(e, values.Total_Quantity)}
-            error={errors.Unit_Price_Box}
-          />
-        </Grid>
-        <Grid item xs={12} md={3.43} pt={2}>
-          <Controls.Input
-            type="input"
-            name="Unit_Price_UN"
-            label="Preço Unitário"
-            disabled={OnlyPreview}
-            value={values.Unit_Price_UN}
-            onChange={(e) => handleInputQTDChange(e, values.Total_Quantity)}
-            error={errors.Unit_Price_UN}
-          />
-        </Grid>
+            <Grid item xs={12} md={3.43} pt={2}>
+              <Controls.Input
+                type="input"
+                name="Total_Quantity"
+                label="Qtd. por caixa"
+                disabled={OnlyPreview}
+                value={values.Total_Quantity}
+                onChange={(e) => handleInputQTDChange(e, values.Unit_Price_Box)}
+                error={errors.Total_Quantity}
+              />
+            </Grid>
+            <Grid item xs={12} md={3.43} pt={2}>
+              <Controls.Input
+                type="input"
+                name="Unit_Price_Box"
+                label="Preço Caixa"
+                disabled={OnlyPreview}
+                value={values.Unit_Price_Box}
+                onChange={(e) => handleInputQTDChange(e, values.Total_Quantity)}
+                error={errors.Unit_Price_Box}
+              />
+            </Grid>
+            <Grid item xs={12} md={3.43} pt={2}>
+              <Controls.Input
+                type="input"
+                name="Unit_Price_UN"
+                label="Preço Unitário"
+                disabled={OnlyPreview}
+                value={values.Unit_Price_UN}
+                onChange={(e) => handleInputQTDChange(e, values.Total_Quantity)}
+                error={errors.Unit_Price_UN}
+              />
+            </Grid>
 
-        <Grid item xs={12} md={5.34} pt={2}>
-          <Controls.Input
-            name="DUP"
-            label="DUP"
-            disabled={OnlyPreview}
-            value={values.DUP}
-            onChange={handleInputChange}
-            error={errors.DUP}
-          />
-        </Grid>
+            <Grid item xs={12} md={5.34} pt={2}>
+              <Controls.Input
+                name="DUP"
+                label="DUP"
+                disabled={OnlyPreview}
+                value={values.DUP}
+                onChange={handleInputChange}
+                error={errors.DUP}
+              />
+            </Grid>
 
-        <Grid item xs={12} md={5.34} pt={2}>
-          <Controls.Input
-            name="Commercial_Name"
-            label="Nome Comercial"
-            disabled={OnlyPreview}
-            value={values.Commercial_Name}
-            onChange={handleInputChange}
-            error={errors.Commercial_Name}
-          />
-        </Grid>
-        <Grid item xs={12} md={12} pt={2}>
-          <Controls.Input
-            name="Observations"
-            label="Observações"
-            disabled={OnlyPreview}
-            value={values.Observations}
-            onChange={handleInputChange}
-            error={errors.Observations}
-          />
-        </Grid>
-        <Grid item xs={12} md={5.34} pt={2}>
-          <Controls.Input
-            type="number"
-            name="Tax_Percentage"
-            label="Iva"
-            disabled={OnlyPreview}
-            value={values.Tax_Percentage}
-            onChange={handleInputChange}
-            error={errors.DUP}
-          />
-        </Grid>
+            <Grid item xs={12} md={5.34} pt={2}>
+              <Controls.Input
+                name="Commercial_Name"
+                label="Nome Comercial"
+                disabled={OnlyPreview}
+                value={values.Commercial_Name}
+                onChange={handleInputChange}
+                error={errors.Commercial_Name}
+              />
+            </Grid>
+            <Grid item xs={12} md={12} pt={2}>
+              <Controls.Input
+                name="Observations"
+                label="Observações"
+                disabled={OnlyPreview}
+                value={values.Observations}
+                onChange={handleInputChange}
+                error={errors.Observations}
+              />
+            </Grid>
+            <Grid item xs={12} md={5.34} pt={2}>
+              <Controls.Input
+                type="number"
+                name="Tax_Percentage"
+                label="Iva"
+                disabled={OnlyPreview}
+                value={values.Tax_Percentage}
+                onChange={handleInputChange}
+                error={errors.DUP}
+              />
+            </Grid>
 
-        <Grid item xs={12} md={12} pt={2}>
-          <Checkbox
-            name="Sold_Out"
-            label="Esgotado"
-            disabled={OnlyPreview}
-            value={values.Sold_Out}
-            onChange={handleInputChange}
-          />
-
-          <Checkbox
-            name="Active"
-            label="Ativo"
-            disabled={OnlyPreview}
-            value={values.Active}
-            onChange={handleInputChange}
-          />
-        </Grid>
-      </Grid>
-      <Grid item xs={12} md={12} pt={2}>
-        <Controls.Button style={btnStyles} type="submit" text="Submeter" />
-      </Grid>
-    </Form>
+            <Grid item xs={12} md={12} pt={2}>
+              <FormControlLabel
+                control={
+                  <GreenSwitch
+                    name="Sold_Out"
+                    disabled={OnlyPreview}
+                    checked={values.Sold_Out}
+                    onChange={handleInputChange}
+                  />
+                }
+                label="Esgotado"
+              />
+              <FormControlLabel
+                control={
+                  <GreenSwitch
+                    name="Active"
+                    disabled={OnlyPreview}
+                    checked={values.Active}
+                    onChange={handleInputChange}
+                  />
+                }
+                label="Ativo"
+              />
+            </Grid>
+          </Grid>
+        </Form>
+      </DialogContent>
+      <DialogActions>
+        <ColorButton style={btnStyles} onClick={handleSubmit}>
+          Submeter
+        </ColorButton>
+      </DialogActions>
+    </>
   );
 }

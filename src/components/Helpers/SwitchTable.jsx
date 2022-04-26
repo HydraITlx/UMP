@@ -1,24 +1,21 @@
-import { withStyles } from "@material-ui/core/styles";
-import Switch from "@material-ui/core/Switch";
-import { purple } from "@material-ui/core/colors";
+import { alpha, styled } from "@mui/material/styles";
+import Switch from "@mui/material/Switch";
 
-const PurpleSwitch = withStyles({
-  switchBase: {
-    color: purple[300],
-    "&$checked": {
-      color: purple[500],
-    },
-    "&$checked + $track": {
-      backgroundColor: purple[500],
+const StyleSwitch = styled(Switch)(({ theme }) => ({
+  "& .MuiSwitch-switchBase.Mui-checked": {
+    color: "#ad0b90",
+    "&:hover": {
+      backgroundColor: alpha("#ad0b90", theme.palette.action.hoverOpacity),
     },
   },
-  checked: {},
-  track: {},
-})(Switch);
+  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+    backgroundColor: "#ad0b90",
+  },
+}));
 
 export default function SwitchLabels(props) {
   return (
-    <PurpleSwitch
+    <StyleSwitch
       name={props.name}
       disabled={props.disabled}
       id={props.id}

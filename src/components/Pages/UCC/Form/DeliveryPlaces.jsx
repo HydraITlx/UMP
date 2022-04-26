@@ -40,7 +40,7 @@ export default function PagePermissions(props) {
 
   //Auto Height
   const tableHeight =
-    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 70;
+    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 80;
   //Auto Height
 
   const options = {

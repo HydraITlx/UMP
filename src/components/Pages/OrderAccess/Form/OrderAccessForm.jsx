@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Controls from "../../../Helpers/Controls";
 import { useForm, Form } from "./useForm";
+import { alpha, styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import { purple } from "@mui/material/colors";
 
 const initialFValues = {
   ID: " ",
@@ -10,6 +15,14 @@ const initialFValues = {
   UCC_ID: " ",
   UCC_Name: " ",
 };
+
+const ColorButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: "#ad0b90",
+  "&:hover": {
+    backgroundColor: "#6d085a",
+  },
+}));
 
 export default function GroupForm(props) {
   const {
@@ -103,35 +116,41 @@ export default function GroupForm(props) {
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Grid container>
-        <Grid container pl={15}>
-          <Grid item xs={12} md={12} pb={5}>
-            <Controls.Select
-              variant="outlined"
-              name="Pharmacist_ID"
-              label="Nome Farmacêutico*"
-              value={values.Pharmacist_ID}
-              onChange={handleInputChange}
-              options={pharmacistOptions}
-              error={errors.Pharmacist_ID}
-            />
+    <>
+      <DialogContent dividers>
+        <Form>
+          <Grid container>
+            <Grid container pl={15}>
+              <Grid item xs={12} md={12} pb={5}>
+                <Controls.Select
+                  variant="outlined"
+                  name="Pharmacist_ID"
+                  label="Nome Farmacêutico*"
+                  value={values.Pharmacist_ID}
+                  onChange={handleInputChange}
+                  options={pharmacistOptions}
+                  error={errors.Pharmacist_ID}
+                />
 
-            <Controls.Select
-              variant="outlined"
-              name="UCC_ID"
-              label="Nome UCC*"
-              value={values.UCC_ID}
-              onChange={handleInputChange}
-              options={UCCOptions}
-              error={errors.UCC_ID}
-            />
+                <Controls.Select
+                  variant="outlined"
+                  name="UCC_ID"
+                  label="Nome UCC*"
+                  value={values.UCC_ID}
+                  onChange={handleInputChange}
+                  options={UCCOptions}
+                  error={errors.UCC_ID}
+                />
+              </Grid>
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid item xs={12} md={12}>
-          <Controls.Button style={btnStyles} type="submit" text="Submeter" />
-        </Grid>
-      </Grid>
-    </Form>
+        </Form>
+      </DialogContent>
+      <DialogActions>
+        <ColorButton style={btnStyles} onClick={handleSubmit}>
+          Submeter
+        </ColorButton>
+      </DialogActions>
+    </>
   );
 }

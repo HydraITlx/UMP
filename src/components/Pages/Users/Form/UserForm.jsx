@@ -3,7 +3,34 @@ import Grid from "@mui/material/Grid";
 import Controls from "../../../Helpers/Controls";
 import { useForm, Form } from "./useForm";
 import UserPermissions from "./UserPermissions";
-import Checkbox from "../../../Helpers/Checkbox";
+import Switch from "@mui/material/Switch";
+import { alpha, styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import { purple } from "@mui/material/colors";
+import FormControlLabel from "@mui/material/FormControlLabel";
+
+const GreenSwitch = styled(Switch)(({ theme }) => ({
+  "& .MuiSwitch-switchBase.Mui-checked": {
+    color: purple[300],
+    "&:hover": {
+      backgroundColor: alpha(purple[900], theme.palette.action.hoverOpacity),
+    },
+  },
+  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+    backgroundColor: purple[400],
+  },
+}));
+
+const ColorButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: "#ad0b90",
+  "&:hover": {
+    backgroundColor: "#6d085a",
+  },
+}));
+
 const initialFValues = {
   username: "",
   full_name: "",
@@ -87,77 +114,94 @@ export default function GroupForm(props) {
   }, [recordForEdit]);
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Grid container>
-        <Grid item xs={12} md={4}>
-          <Controls.Input
-            name="username"
-            label="Nome Utilizador"
-            disabled={isEdit || showTable}
-            value={values.username}
-            onChange={handleInputChange}
-            error={errors.username}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Controls.Input
-            label="Nome Completo"
-            name="full_name"
-            value={values.full_name}
-            onChange={handleInputChange}
-            error={errors.full_name}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Controls.Input
-            label="Email"
-            name="email"
-            value={values.email}
-            onChange={handleInputChange}
-            error={errors.email}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={4}>
-          <Checkbox
-            name="is_admin"
-            label="Administrador"
-            value={values.is_admin}
-            onChange={handleInputChange}
-          />
-          <Checkbox
-            name="active"
-            label="Ativo"
-            value={values.active}
-            onChange={handleInputChange}
-          />
-
-          {!isEdit && !showTable && (
-            <Grid item xs={12} md={3}>
-              <div style={{ minWidth: "100%" }}>
-                <Controls.Button text="Confirmar" onClick={handleConfirm} />
-              </div>
+    <>
+      <DialogContent dividers>
+        <Form>
+          <Grid container>
+            <Grid item xs={12} md={4}>
+              <Controls.Input
+                name="username"
+                label="Nome Utilizador"
+                disabled={isEdit || showTable}
+                value={values.username}
+                onChange={handleInputChange}
+                error={errors.username}
+              />
             </Grid>
-          )}
-        </Grid>
 
-        {!isEdit && showTable && (
-          <Grid item xs={12} md={12} sx={{ m: 4 }}>
-            <UserPermissions recordForEdit={values} />
-          </Grid>
-        )}
+            <Grid item xs={12} md={4}>
+              <Controls.Input
+                label="Nome Completo"
+                name="full_name"
+                value={values.full_name}
+                onChange={handleInputChange}
+                error={errors.full_name}
+              />
+            </Grid>
 
-        {isEdit && (
-          <Grid item xs={12} md={12} sx={{ m: 4 }}>
-            <UserPermissions recordForEdit={recordForEdit} values={values} />
+            <Grid item xs={12} md={4}>
+              <Controls.Input
+                label="Email"
+                name="email"
+                value={values.email}
+                onChange={handleInputChange}
+                error={errors.email}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={4}>
+              <FormControlLabel
+                control={
+                  <GreenSwitch
+                    name="is_admin"
+                    checked={values.is_admin}
+                    onChange={handleInputChange}
+                  />
+                }
+                label="Administrador"
+              />
+              <FormControlLabel
+                control={
+                  <GreenSwitch
+                    name="active"
+                    checked={values.active}
+                    onChange={handleInputChange}
+                  />
+                }
+                label="Ativo"
+              />
+
+              {!isEdit && !showTable && (
+                <Grid item xs={12} md={3}>
+                  <div style={{ minWidth: "100%" }}>
+                    <Controls.Button text="Confirmar" onClick={handleConfirm} />
+                  </div>
+                </Grid>
+              )}
+            </Grid>
+
+            {!isEdit && showTable && (
+              <Grid item xs={12} md={12} sx={{ m: 4 }}>
+                <UserPermissions recordForEdit={values} />
+              </Grid>
+            )}
+
+            {isEdit && (
+              <Grid item xs={12} md={12} sx={{ m: 4 }}>
+                <UserPermissions
+                  recordForEdit={recordForEdit}
+                  values={values}
+                />
+              </Grid>
+            )}
           </Grid>
-        )}
-        <Grid item xs={12} md={12}>
-          <Controls.Button style={btnStyles} type="submit" text="Submeter" />
-        </Grid>
-      </Grid>
-    </Form>
+        </Form>
+      </DialogContent>
+      <DialogActions>
+        <ColorButton style={btnStyles} onClick={handleSubmit}>
+          Submeter
+        </ColorButton>
+      </DialogActions>
+    </>
   );
 }

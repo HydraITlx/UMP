@@ -1,51 +1,78 @@
-import { DialogContent, DialogTitle } from "@mui/material";
-import { makeStyles } from "@material-ui/core/styles";
+import * as React from "react";
+import { styled } from "@mui/material/styles";
 import Dialog from "@mui/material/Dialog";
-import Typography from "@mui/material/Typography";
-import Controls from "./Controls";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-
-const useStyles = makeStyles((theme) => ({
-  dialogWrapper: {
+import Typography from "@mui/material/Typography";
+import DialogContent from "@mui/material/DialogContent";
+const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
-    position: "absolute",
-    top: theme.spacing(5),
-    maxWidth: "50%",
-    maxHeight: "80%",
-    minWidth: "50%",
-    minHeight: "50%",
   },
-  DialogTitle: {
-    paddingRight: "0px",
+  "& .MuiDialogActions-root": {
+    padding: theme.spacing(2),
   },
 }));
+
 export default function Popup(props) {
   const { title, children, openPopup, setOpenPopup } = props;
-  const classes = useStyles();
-  return (
-    <Dialog
-      open={openPopup}
-      maxWidth="md"
-      classes={{ paper: classes.dialogWrapper }}
-    >
-      <DialogTitle className={classes.DialogTitle}>
-        <div style={{ display: "flex" }}>
-          <Typography
-            variant="h6"
-            component="div"
-            style={{ flexGrow: 1, color: "#ad0b90" }}
-          >
-            {title}
-          </Typography>
-          <Controls.ActionButton
-            color="secondary"
+
+  const BootstrapDialogTitle = (props: DialogTitleProps) => {
+    const { children, onClose, ...other } = props;
+
+    return (
+      <DialogTitle sx={{ m: 0, p: 2 }} {...other}>
+        {children}
+        {onClose ? (
+          <IconButton
+            aria-label="close"
             onClick={() => setOpenPopup(false)}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 12,
+              color: (theme) => theme.palette.grey[500],
+            }}
           >
-            <CloseIcon sx={{ color: "white" }} />
-          </Controls.ActionButton>
-        </div>
+            <CloseIcon />
+          </IconButton>
+        ) : null}
       </DialogTitle>
-      <DialogContent dividers>{children}</DialogContent>
-    </Dialog>
+    );
+  };
+
+  return (
+    <BootstrapDialog
+      PaperProps={{
+        sx: {
+          top: "1%",
+          position: "absolute",
+          maxWidth: "50%",
+          maxHeight: "80%",
+          minWidth: "50%",
+          minHeight: "50%",
+        },
+      }}
+      aria-labelledby="customized-dialog-title"
+      open={openPopup}
+    >
+      <BootstrapDialogTitle
+        id="customized-dialog-title"
+        onClose={() => setOpenPopup(false)}
+      >
+        <Typography
+          style={{
+            fontSize: "1.4rem",
+            flexGrow: 1,
+            color: "#ad0b90",
+            fontWeight: 450,
+          }}
+        >
+          {title}
+        </Typography>
+      </BootstrapDialogTitle>
+      {children}
+    </BootstrapDialog>
   );
 }

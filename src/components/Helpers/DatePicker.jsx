@@ -1,7 +1,7 @@
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import MobileDatePicker from "@mui/lab/MobileDatePicker";
-import TextField from "@mui/material/TextField";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import TextField from "@mui/material/TextField";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 export default function DatePicker(props) {
   const { name, label, value, onChange, disabled = false, ...other } = props;
@@ -15,7 +15,7 @@ export default function DatePicker(props) {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <MobileDatePicker
+      <DesktopDatePicker
         disableToolbar
         views={["year", "month", "day"]}
         disabled={disabled}

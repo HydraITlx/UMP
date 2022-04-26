@@ -5,6 +5,13 @@ import Checkbox from "../../../Helpers/Checkbox";
 import { useForm, Form } from "./useForm";
 import ReturnConditions from "./ReturnConditions";
 import AttachmentVII from "./AttachmentVII";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import { alpha, styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import { purple } from "@mui/material/colors";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
 
 const initialFValues = {
   Active: false,
@@ -38,6 +45,26 @@ const initialFValues = {
   Type: " ",
   Stockist: false,
 };
+
+const ColorButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: "#ad0b90",
+  "&:hover": {
+    backgroundColor: "#6d085a",
+  },
+}));
+
+const GreenSwitch = styled(Switch)(({ theme }) => ({
+  "& .MuiSwitch-switchBase.Mui-checked": {
+    color: purple[300],
+    "&:hover": {
+      backgroundColor: alpha(purple[900], theme.palette.action.hoverOpacity),
+    },
+  },
+  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+    backgroundColor: purple[400],
+  },
+}));
 
 const TypeOption = [
   { value: 1, label: "Laboratório" },
@@ -272,358 +299,375 @@ export default function GroupForm(props) {
   }, [recordForEdit]);
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Grid container pl={25}>
-        <Grid item xs={12} md={2} pb={3} pr={2}>
-          <Controls.ButtonLabs
-            backgroundColor={btn1bg}
-            backgroundColorHover={btn1hv}
-            style={btnStyles}
-            type="button"
-            text="Dados Lab."
-            id="teste"
-            onClick={handleBtn1}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={2} pb={3} pr={2}>
-          <Controls.ButtonLabs
-            backgroundColor={btn2bg}
-            backgroundColorHover={btn2hv}
-            style={btnStyles}
-            type="button"
-            text="Info. Clientes"
-            onClick={handleBtn2}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={2} pb={3} pr={2}>
-          <Controls.ButtonLabs
-            backgroundColor={btn3bg}
-            backgroundColorHover={btn3hv}
-            style={btnStyles}
-            type="button"
-            text="Info. Técnica"
-            onClick={handleBtn3}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={2} pb={3} pr={2}>
-          <Controls.ButtonLabs
-            disabled={!isEdit}
-            backgroundColor={btn4bg}
-            backgroundColorHover={btn4hv}
-            style={btnStyles}
-            type="button"
-            text="C. Devolução"
-            onClick={handleBtn4}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={2} pb={3} pr={2}>
-          <Controls.ButtonLabs
-            disabled={!isEdit}
-            backgroundColor={btn5bg}
-            backgroundColorHover={btn5hv}
-            style={btnStyles}
-            type="button"
-            text="Anexo VII"
-            onClick={handleBtn5}
-          />
-        </Grid>
-      </Grid>
-
-      {btn1ac && (
-        <>
-          <Grid container pl={35}>
-            <Grid item xs={12} md={5.34} pt={2}>
-              <Controls.Input
-                name="Name"
-                label="Nome"
-                disabled={OnlyPreview}
-                value={values.Name}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={5.34} pt={2}>
-              <Controls.Select
-                variant="outlined"
-                name="Type"
-                disabled={OnlyPreview}
-                label="Tipo*"
-                value={values.Type}
-                onChange={handleInputChange}
-                options={TypeOption}
-                error={errors.Type}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={12} pt={2}>
-              <Controls.Input
-                name="Address"
-                disabled={OnlyPreview}
-                label="Morada"
-                value={values.Address}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={3.43} pt={2}>
-              <Controls.Input
-                name="NIF"
-                disabled={OnlyPreview}
-                label="NIF"
-                value={values.NIF}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={3.43} pt={2}>
-              <Controls.Input
-                name="Phone"
-                disabled={OnlyPreview}
-                label="Telefone"
-                value={values.Phone}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={3.43} pt={2}>
-              <Controls.Input
-                name="Fax"
-                disabled={OnlyPreview}
-                label="Fax"
-                value={values.Fax}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={12} pt={2}>
-              <Controls.Input
-                name="Email"
-                disabled={OnlyPreview}
-                label="Email"
-                value={values.Email}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12} md={12} pt={2}>
-              <Controls.Input
-                name="Comments"
-                disabled={OnlyPreview}
-                label="Comentários"
-                value={values.Comments}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={3.43} pt={2}>
-              <Controls.Input
-                name="Delivery_Terms"
-                disabled={OnlyPreview}
-                label="Prazo de Entrega"
-                value={values.Delivery_Terms}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={3.43} pt={2}>
-              <Controls.Input
-                name="Payment_Terms"
-                disabled={OnlyPreview}
-                label="Prazo de Pagamento"
-                value={values.Payment_Terms}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={3.43} pt={2}>
-              <Controls.Input
-                name="Order_Minimum_Amount"
-                disabled={OnlyPreview}
-                label="Valor min. Encomenda"
-                value={values.Order_Minimum_Amount}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={5.34} pt={2}>
-              <Controls.Input
-                name="Contact_Phone"
-                disabled={OnlyPreview}
-                label="Num. Contacto"
-                value={values.Contact_Phone}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            <Grid item xs={12} md={5.34} pt={2}>
-              <Controls.Input
-                name="Contact_Order"
-                disabled={OnlyPreview}
-                label="Encomenda Contacto"
-                value={values.Contact_Order}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={5.34} pt={2}>
-              <Checkbox
-                name="Active"
-                disabled={OnlyPreview}
-                label="Ativo"
-                value={values.Active}
-                onChange={handleInputChange}
-              />
-              <Checkbox
-                name="Stockist"
-                disabled={OnlyPreview}
-                label="Armazenista"
-                value={values.Stockist}
-                onChange={handleInputChange}
-              />
-            </Grid>
-          </Grid>
-        </>
-      )}
-
-      {btn2ac && (
-        <Grid container pl={35}>
-          <Grid item xs={12} md={5.34} pt={2}>
-            <Controls.Input
-              name="Customer_Contact_Name"
-              disabled={OnlyPreview}
-              label="Nome Contacto"
-              value={values.Customer_Contact_Name}
-              onChange={handleInputChange}
+    <>
+      <DialogContent dividers>
+        <Grid container alignItems="center" justifyContent="center">
+          <Grid item xs={12} md={2} pb={3} pr={2}>
+            <Controls.ButtonLabs
+              backgroundColor={btn1bg}
+              backgroundColorHover={btn1hv}
+              style={btnStyles}
+              type="button"
+              text="Dados Lab."
+              id="teste"
+              onClick={handleBtn1}
             />
           </Grid>
 
-          <Grid item xs={12} md={5.34} pt={2}>
-            <Controls.Input
-              name="Customer_Phone"
-              disabled={OnlyPreview}
-              label="Telefone"
-              value={values.Customer_Phone}
-              onChange={handleInputChange}
+          <Grid item xs={12} md={2} pb={3} pr={2}>
+            <Controls.ButtonLabs
+              backgroundColor={btn2bg}
+              backgroundColorHover={btn2hv}
+              style={btnStyles}
+              type="button"
+              text="Info. Clientes"
+              onClick={handleBtn2}
             />
           </Grid>
 
-          <Grid item xs={12} md={12} pt={2}>
-            <Controls.Input
-              name="Customer_Email"
-              disabled={OnlyPreview}
-              label="E-Mail"
-              value={values.Customer_Email}
-              onChange={handleInputChange}
+          <Grid item xs={12} md={2} pb={3} pr={2}>
+            <Controls.ButtonLabs
+              backgroundColor={btn3bg}
+              backgroundColorHover={btn3hv}
+              style={btnStyles}
+              type="button"
+              text="Info. Técnica"
+              onClick={handleBtn3}
             />
           </Grid>
 
-          <Grid item xs={12} md={12} pt={2}>
-            <Controls.Input
-              name="Documents"
-              disabled={OnlyPreview}
-              label="Documentos"
-              value={values.Documents}
-              onChange={handleInputChange}
+          <Grid item xs={12} md={2} pb={3} pr={2}>
+            <Controls.ButtonLabs
+              disabled={!isEdit}
+              backgroundColor={btn4bg}
+              backgroundColorHover={btn4hv}
+              style={btnStyles}
+              type="button"
+              text="C. Devolução"
+              onClick={handleBtn4}
             />
           </Grid>
 
-          <Grid item xs={12} md={5.34} pt={2}>
-            <Controls.Input
-              name="Payment_Method"
-              disabled={OnlyPreview}
-              label="Forma de Pagamento"
-              value={values.Payment_Method}
-              onChange={handleInputChange}
-            />
-          </Grid>
-          <Grid item xs={12} md={5.34} pt={2}></Grid>
-
-          <Grid item xs={12} md={3.43} pt={2}>
-            <Controls.Input
-              name="NIB"
-              disabled={OnlyPreview}
-              label="NIB"
-              value={values.NIB}
-              onChange={handleInputChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={3.43} pt={2}>
-            <Controls.Input
-              name="IBAN"
-              disabled={OnlyPreview}
-              label="IBAN"
-              value={values.IBAN}
-              onChange={handleInputChange}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={3.43} pt={2}>
-            <Controls.Input
-              name="SWIFT"
-              disabled={OnlyPreview}
-              label="SWIFT"
-              value={values.SWIFT}
-              onChange={handleInputChange}
+          <Grid item xs={12} md={2} pb={3} pr={2}>
+            <Controls.ButtonLabs
+              disabled={!isEdit}
+              backgroundColor={btn5bg}
+              backgroundColorHover={btn5hv}
+              style={btnStyles}
+              type="button"
+              text="Anexo VII"
+              onClick={handleBtn5}
             />
           </Grid>
         </Grid>
-      )}
+        <Form>
+          {btn1ac && (
+            <Grid container pl={35}>
+              <Grid item xs={12} md={5.34} pt={2}>
+                <Controls.Input
+                  name="Name"
+                  label="Nome"
+                  disabled={OnlyPreview}
+                  value={values.Name}
+                  onChange={handleInputChange}
+                />
+              </Grid>
 
-      {btn3ac && (
-        <Grid container pl={35}>
-          <Grid item xs={12} md={5.34} pt={2}>
-            <Controls.Input
-              name="Tecnical_Contact_Name"
-              disabled={OnlyPreview}
-              label="Nome Contacto"
-              value={values.Tecnical_Contact_Name}
-              onChange={handleInputChange}
-            />
-          </Grid>
+              <Grid item xs={12} md={5.34} pt={2}>
+                <Controls.Select
+                  variant="outlined"
+                  name="Type"
+                  disabled={OnlyPreview}
+                  label="Tipo*"
+                  value={values.Type}
+                  onChange={handleInputChange}
+                  options={TypeOption}
+                  error={errors.Type}
+                />
+              </Grid>
 
-          <Grid item xs={12} md={5.34} pt={2}>
-            <Controls.Input
-              name="Tecnical_Email"
-              disabled={OnlyPreview}
-              label="E-Mail"
-              value={values.Tecnical_Email}
-              onChange={handleInputChange}
-            />
-          </Grid>
+              <Grid item xs={12} md={12} pt={2}>
+                <Controls.Input
+                  name="Address"
+                  disabled={OnlyPreview}
+                  label="Morada"
+                  value={values.Address}
+                  onChange={handleInputChange}
+                />
+              </Grid>
 
-          <Grid item xs={12} md={5.34} pt={2}>
-            <Controls.Input
-              name="Tecnical_Phone"
-              disabled={OnlyPreview}
-              label="Telefone"
-              value={values.Tecnical_Phone}
-              onChange={handleInputChange}
-            />
-          </Grid>
+              <Grid item xs={12} md={3.43} pt={2}>
+                <Controls.Input
+                  name="NIF"
+                  disabled={OnlyPreview}
+                  label="NIF"
+                  value={values.NIF}
+                  onChange={handleInputChange}
+                />
+              </Grid>
 
-          <Grid item xs={12} md={5.34} pt={2}>
-            <Controls.Input
-              name="Tecnical_Fax"
-              disabled={OnlyPreview}
-              label="Fax"
-              value={values.Tecnical_Fax}
-              onChange={handleInputChange}
-            />
-          </Grid>
-        </Grid>
-      )}
+              <Grid item xs={12} md={3.43} pt={2}>
+                <Controls.Input
+                  name="Phone"
+                  disabled={OnlyPreview}
+                  label="Telefone"
+                  value={values.Phone}
+                  onChange={handleInputChange}
+                />
+              </Grid>
 
-      {btn4ac && <ReturnConditions ID={values.ID} />}
+              <Grid item xs={12} md={3.43} pt={2}>
+                <Controls.Input
+                  name="Fax"
+                  disabled={OnlyPreview}
+                  label="Fax"
+                  value={values.Fax}
+                  onChange={handleInputChange}
+                />
+              </Grid>
 
-      {btn5ac && <AttachmentVII ID={values.ID} />}
-      <Grid container>
-        <Grid item xs={12} md={12} pt={3}>
-          <Controls.Button style={btnStyles2} type="submit" text="Submeter" />
-        </Grid>
-      </Grid>
-    </Form>
+              <Grid item xs={12} md={12} pt={2}>
+                <Controls.Input
+                  name="Email"
+                  disabled={OnlyPreview}
+                  label="Email"
+                  value={values.Email}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={12} pt={2}>
+                <Controls.Input
+                  name="Comments"
+                  disabled={OnlyPreview}
+                  label="Comentários"
+                  value={values.Comments}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={3.43} pt={2}>
+                <Controls.Input
+                  name="Delivery_Terms"
+                  disabled={OnlyPreview}
+                  label="Prazo de Entrega"
+                  value={values.Delivery_Terms}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={3.43} pt={2}>
+                <Controls.Input
+                  name="Payment_Terms"
+                  disabled={OnlyPreview}
+                  label="Prazo de Pagamento"
+                  value={values.Payment_Terms}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={3.43} pt={2}>
+                <Controls.Input
+                  name="Order_Minimum_Amount"
+                  disabled={OnlyPreview}
+                  label="Valor min. Encomenda"
+                  value={values.Order_Minimum_Amount}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={5.34} pt={2}>
+                <Controls.Input
+                  name="Contact_Phone"
+                  disabled={OnlyPreview}
+                  label="Num. Contacto"
+                  value={values.Contact_Phone}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={5.34} pt={2}>
+                <Controls.Input
+                  name="Contact_Order"
+                  disabled={OnlyPreview}
+                  label="Encomenda Contacto"
+                  value={values.Contact_Order}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid
+                item
+                xs={12}
+                md={5.34}
+                pt={2}
+                alignItems="center"
+                justifyContent="center"
+              >
+                <FormControlLabel
+                  control={
+                    <GreenSwitch
+                      name="Active"
+                      disabled={OnlyPreview}
+                      checked={values.Active}
+                      onChange={handleInputChange}
+                    />
+                  }
+                  label="Ativo"
+                />
+                <FormControlLabel
+                  control={
+                    <GreenSwitch
+                      name="Stockist"
+                      disabled={OnlyPreview}
+                      checked={values.Stockist}
+                      onChange={handleInputChange}
+                    />
+                  }
+                  label="Armazenista"
+                />
+              </Grid>
+            </Grid>
+          )}
+
+          {btn2ac && (
+            <Grid container pl={35}>
+              <Grid item xs={12} md={5.34} pt={2}>
+                <Controls.Input
+                  name="Customer_Contact_Name"
+                  disabled={OnlyPreview}
+                  label="Nome Contacto"
+                  value={values.Customer_Contact_Name}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={5.34} pt={2}>
+                <Controls.Input
+                  name="Customer_Phone"
+                  disabled={OnlyPreview}
+                  label="Telefone"
+                  value={values.Customer_Phone}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={12} pt={2}>
+                <Controls.Input
+                  name="Customer_Email"
+                  disabled={OnlyPreview}
+                  label="E-Mail"
+                  value={values.Customer_Email}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={12} pt={2}>
+                <Controls.Input
+                  name="Documents"
+                  disabled={OnlyPreview}
+                  label="Documentos"
+                  value={values.Documents}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={5.34} pt={2}>
+                <Controls.Input
+                  name="Payment_Method"
+                  disabled={OnlyPreview}
+                  label="Forma de Pagamento"
+                  value={values.Payment_Method}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={12} md={5.34} pt={2}></Grid>
+
+              <Grid item xs={12} md={3.43} pt={2}>
+                <Controls.Input
+                  name="NIB"
+                  disabled={OnlyPreview}
+                  label="NIB"
+                  value={values.NIB}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={3.43} pt={2}>
+                <Controls.Input
+                  name="IBAN"
+                  disabled={OnlyPreview}
+                  label="IBAN"
+                  value={values.IBAN}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={3.43} pt={2}>
+                <Controls.Input
+                  name="SWIFT"
+                  disabled={OnlyPreview}
+                  label="SWIFT"
+                  value={values.SWIFT}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+            </Grid>
+          )}
+
+          {btn3ac && (
+            <Grid container pl={35}>
+              <Grid item xs={12} md={5.34} pt={2}>
+                <Controls.Input
+                  name="Tecnical_Contact_Name"
+                  disabled={OnlyPreview}
+                  label="Nome Contacto"
+                  value={values.Tecnical_Contact_Name}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={5.34} pt={2}>
+                <Controls.Input
+                  name="Tecnical_Email"
+                  disabled={OnlyPreview}
+                  label="E-Mail"
+                  value={values.Tecnical_Email}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={5.34} pt={2}>
+                <Controls.Input
+                  name="Tecnical_Phone"
+                  disabled={OnlyPreview}
+                  label="Telefone"
+                  value={values.Tecnical_Phone}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={5.34} pt={2}>
+                <Controls.Input
+                  name="Tecnical_Fax"
+                  disabled={OnlyPreview}
+                  label="Fax"
+                  value={values.Tecnical_Fax}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+            </Grid>
+          )}
+
+          {btn4ac && <ReturnConditions ID={values.ID} />}
+
+          {btn5ac && <AttachmentVII ID={values.ID} />}
+        </Form>
+      </DialogContent>
+
+      <DialogActions>
+        <ColorButton style={btnStyles} onClick={handleSubmit}>
+          Submeter
+        </ColorButton>
+      </DialogActions>
+    </>
   );
 }

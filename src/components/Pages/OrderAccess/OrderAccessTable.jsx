@@ -19,6 +19,8 @@ import TableTitle from "../../Helpers/TableTitle";
 import { onHandlePharmacistOptions } from "../../Requests/UCCRequests";
 import OrderAccessForm from "./Form/OrderAccessForm";
 import EditIcon from "@mui/icons-material/Edit";
+import DeletePopUp from "../../Helpers/DeletePopUp";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -30,6 +32,8 @@ export default function GruopTable() {
   const [isInsert, setisInsert] = useState(false);
   const [isEdit, setisEdit] = useState(false);
   const [openPopup, setOpenPopup] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [recordForDelete, setRecordForDelete] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -133,22 +137,6 @@ export default function GruopTable() {
       width: "50%",
       render: (rowData) => rowData.UCC_Name,
     },
-    {
-      title: "Editar ",
-      field: "",
-      render: (rowData) => (
-        <IconButton
-          onClick={() => {
-            setisEdit(true);
-            setisInsert(false);
-            openInPopup(rowData);
-          }}
-        >
-          <EditIcon />
-        </IconButton>
-      ),
-      width: "10%",
-    },
   ];
 
   //Auto Height
@@ -177,6 +165,29 @@ export default function GruopTable() {
     padding: "dense",
   };
 
+  const handleDeleteOnClick = (rowData) => {
+    console.log(rowData);
+    setRecordForDelete(rowData.data);
+    setOpen(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setOpen(false);
+  };
+
+  const handleDeleteConfirm = (rowData) => {
+    setOpen(false);
+    setTimeout(() => {
+      console.log(rowData);
+      const dataDelete = [...data];
+      const index = rowData.ID;
+      dataDelete.splice(index, 1);
+      setData([...dataDelete]);
+      DeleteOrderAccess(rowData);
+      MakeRequests();
+    }, 1000);
+  };
+
   return (
     <>
       <Paper>
@@ -186,28 +197,29 @@ export default function GruopTable() {
           data={data}
           title={<TableTitle text="Permissões UCC/Laboratórios" />}
           editable={{
-            onRowDelete: (oldData) =>
-              new Promise((resolve, reject) => {
-                DeleteOrderAccess(oldData);
-                setTimeout(() => {
-                  MakeRequests();
-                  resolve();
-                }, 1500);
-              }),
+            onRowDelete: (oldData) => new Promise((resolve, reject) => {}),
           }}
           components={{
-            Action: (props) => {
-              if (
-                typeof props.action === typeof Function ||
-                props.action.tooltip !== "Add"
-              ) {
-                return <MTableAction {...props} />;
-              } else {
-                return (
-                  <div ref={addActionRef} onClick={props.action.onClick} />
-                );
-              }
-            },
+            Action: (props) => (
+              <div style={{ display: "flex" }}>
+                <IconButton
+                  onClick={() => {
+                    setisEdit(true);
+                    setisInsert(false);
+                    openInPopup(props.data);
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    handleDeleteOnClick(props);
+                  }}
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </div>
+            ),
 
             Toolbar: (props) => (
               <div>
@@ -249,6 +261,12 @@ export default function GruopTable() {
           }}
         />
       </Paper>
+      <DeletePopUp
+        open={open}
+        recordForDelete={recordForDelete}
+        handleCancel={handleDeleteCancel}
+        handleConfirm={handleDeleteConfirm}
+      ></DeletePopUp>
       <Popup
         title="Ficha de Encomenda"
         openPopup={openPopup}

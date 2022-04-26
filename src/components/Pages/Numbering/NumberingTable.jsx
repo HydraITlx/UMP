@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import MaterialTable, { MTableToolbar } from "@material-table/core";
 import { Paper } from "@mui/material";
+import { format } from "date-fns";
 
 import {
   getNumbering,
@@ -17,6 +18,8 @@ import NumeringForm from "./Form/NumeringForm";
 import EditIcon from "@mui/icons-material/Edit";
 import TableTitle from "../../Helpers/TableTitle";
 import Controls from "../../Helpers/Controls";
+import DeletePopUp from "../../Helpers/DeletePopUp";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -25,6 +28,8 @@ export default function GruopTable() {
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [isInsert, setisInsert] = useState(false);
   const [isEdit, setisEdit] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [recordForDelete, setRecordForDelete] = useState(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -52,6 +57,7 @@ export default function GruopTable() {
 
       RequestPromise.then((response) => {
         if (response !== undefined) {
+          console.log(response);
           setData(response);
         }
       });
@@ -75,17 +81,8 @@ export default function GruopTable() {
   const columns = [
     {
       title: "Nome",
-      field: "ID",
+      field: "Name",
       width: "30%",
-      render: (rowData) => (
-        <Controls.Select
-          variant="standard"
-          name="ID"
-          label=""
-          value={rowData.ID}
-          options={UCCOptions}
-        />
-      ),
     },
 
     {
@@ -125,27 +122,11 @@ export default function GruopTable() {
       field: "Number",
       width: "auto",
     },
-    {
-      title: "Editar ",
-      field: "",
-      render: (rowData) => (
-        <IconButton
-          onClick={() => {
-            setisEdit(true);
-            setisInsert(false);
-            openInPopup(rowData);
-          }}
-        >
-          <EditIcon />
-        </IconButton>
-      ),
-      width: "10%",
-    },
   ];
 
   //Auto Height
   const tableHeight =
-    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 70;
+    ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 85;
   //Auto Height
 
   const options = {
@@ -204,6 +185,28 @@ export default function GruopTable() {
     setOpenPopup(true);
   };
 
+  const handleDeleteOnClick = (rowData) => {
+    console.log(rowData);
+    setRecordForDelete(rowData.data);
+    setOpen(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setOpen(false);
+  };
+
+  const handleDeleteConfirm = (rowData) => {
+    setOpen(false);
+    setTimeout(() => {
+      const dataDelete = [...data];
+      const index = rowData.id;
+      dataDelete.splice(index, 1);
+      setData([...dataDelete]);
+      DeleteNumbering(rowData);
+      MakeRequests();
+    }, 1000);
+  };
+
   return (
     <>
       <Paper>
@@ -223,6 +226,28 @@ export default function GruopTable() {
               }),
           }}
           components={{
+            Action: (props) => (
+              <div style={{ display: "flex" }}>
+                {" "}
+                <IconButton
+                  onClick={() => {
+                    setisEdit(true);
+                    setisInsert(false);
+                    openInPopup(props.data);
+                  }}
+                >
+                  <EditIcon />
+                </IconButton>
+                <IconButton
+                  onClick={() => {
+                    handleDeleteOnClick(props);
+                  }}
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </div>
+            ),
+
             Toolbar: (props) => (
               <div>
                 <MTableToolbar {...props} />
@@ -263,6 +288,12 @@ export default function GruopTable() {
           }}
         />
       </Paper>
+      <DeletePopUp
+        open={open}
+        recordForDelete={recordForDelete}
+        handleCancel={handleDeleteCancel}
+        handleConfirm={handleDeleteConfirm}
+      ></DeletePopUp>
       <Popup
         title="Ficha de Numeração"
         openPopup={openPopup}

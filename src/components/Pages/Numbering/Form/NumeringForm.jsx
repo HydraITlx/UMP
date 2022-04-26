@@ -2,6 +2,12 @@ import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Controls from "../../../Helpers/Controls";
 import { useForm, Form } from "./useForm";
+import { styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import { purple } from "@mui/material/colors";
+
 const initialFValues = {
   End_Date: new Date(),
   ID: " ",
@@ -10,6 +16,14 @@ const initialFValues = {
   Starting_Date: new Date(),
   Prefix: "",
 };
+
+const ColorButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: "#ad0b90",
+  "&:hover": {
+    backgroundColor: "#6d085a",
+  },
+}));
 
 export default function GroupForm(props) {
   const { addOrEdit, recordForEdit, isEdit, data, UCCOptions } = props;
@@ -62,60 +76,65 @@ export default function GroupForm(props) {
   }, [recordForEdit]);
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Grid container>
-        <Grid item xs={12} md={12}>
-          <Controls.Select
-            variant="outlined"
-            name="ID"
-            label="Nome*"
-            value={values.ID}
-            onChange={handleInputChange}
-            options={UCCOptions}
-            error={errors.ID}
-          />
-        </Grid>
-        <Grid item xs={12} md={5} pb={5}>
-          <Controls.DatePicker
-            name="Starting_Date"
-            label="Data Inicio"
-            value={values.Starting_Date}
-            onChange={handleInputChange}
-          />
-        </Grid>
+    <>
+      <DialogContent dividers>
+        <Form>
+          <Grid container container pl={15}>
+            <Grid item xs={12} md={12}>
+              <Controls.Select
+                variant="outlined"
+                name="ID"
+                label="Nome*"
+                value={values.ID}
+                onChange={handleInputChange}
+                options={UCCOptions}
+                error={errors.ID}
+              />
+            </Grid>
+            <Grid item xs={12} md={5} pt={5} pb={5}>
+              <Controls.DatePicker
+                name="Starting_Date"
+                label="Data Inicio"
+                value={values.Starting_Date}
+                onChange={handleInputChange}
+              />
+            </Grid>
 
-        <Grid item xs={12} md={5} pb={5}>
-          <Controls.DatePicker
-            name="End_Date"
-            label="Data Fim"
-            value={values.End_Date}
-            onChange={handleInputChange}
-          />
-        </Grid>
+            <Grid item xs={12} md={5} pt={5} pb={5}>
+              <Controls.DatePicker
+                name="End_Date"
+                label="Data Fim"
+                value={values.End_Date}
+                onChange={handleInputChange}
+              />
+            </Grid>
 
-        <Grid item xs={12} md={5} pb={5}>
-          <Controls.Input
-            name="Prefix"
-            label="Prefixo"
-            value={values.Prefix}
-            onChange={handleInputChange}
-          />
-        </Grid>
+            <Grid item xs={12} md={5} pb={5}>
+              <Controls.Input
+                name="Prefix"
+                label="Prefixo"
+                value={values.Prefix}
+                onChange={handleInputChange}
+              />
+            </Grid>
 
-        <Grid item xs={12} md={5}>
-          <Controls.Input
-            type="text"
-            name="Number"
-            label="Numeração"
-            value={values.Number}
-            onChange={handleInputChange}
-          />
-        </Grid>
-
-        <Grid item xs={12} md={12}>
-          <Controls.Button style={btnStyles} type="submit" text="Submeter" />
-        </Grid>
-      </Grid>
-    </Form>
+            <Grid item xs={12} md={5}>
+              <Controls.Input
+                type="text"
+                name="Number"
+                label="Numeração"
+                value={values.Number}
+                onChange={handleInputChange}
+              />
+            </Grid>
+          </Grid>
+        </Form>
+      </DialogContent>
+      <DialogActions>
+        <ColorButton style={btnStyles} onClick={handleSubmit}>
+          Submeter
+        </ColorButton>
+      </DialogActions>
+    </>
   );
 }

@@ -2,8 +2,34 @@ import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Controls from "../../../Helpers/Controls";
 import { useForm, Form } from "./useForm";
-import Checkbox from "../../../Helpers/Checkbox";
+import { alpha, styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Switch from "@mui/material/Switch";
+import { purple } from "@mui/material/colors";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import DeliveryPlaces from "./DeliveryPlaces";
+
+const GreenSwitch = styled(Switch)(({ theme }) => ({
+  "& .MuiSwitch-switchBase.Mui-checked": {
+    color: purple[300],
+    "&:hover": {
+      backgroundColor: alpha(purple[900], theme.palette.action.hoverOpacity),
+    },
+  },
+  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+    backgroundColor: purple[400],
+  },
+}));
+
+const ColorButton = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: "#ad0b90",
+  "&:hover": {
+    backgroundColor: "#6d085a",
+  },
+}));
 
 const initialFValues = {
   Active: false,
@@ -25,10 +51,6 @@ export default function GroupForm(props) {
     props;
 
   const [showDeliveryPlaces, setshowDeliveryPlaces] = useState(false);
-  console.log("isEdit");
-  console.log(isEdit);
-  console.log("recordForEdit");
-  console.log(recordForEdit);
 
   const EntityTypeOption = [
     { value: 0, label: " " },
@@ -79,8 +101,6 @@ export default function GroupForm(props) {
 
   useEffect(() => {
     if (recordForEdit != null) {
-      console.log("ELE ENTROU AQUI CRL");
-      console.log(recordForEdit);
       setValues({
         ...recordForEdit,
       });
@@ -135,22 +155,18 @@ export default function GroupForm(props) {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      {isEdit && (
-        <Grid item xs={12} md={8} p={2}>
-          <Grid item xs={12} md={8}>
-            <Controls.Button
-              text="Locais de Entrega"
-              onClick={handleShowDelivery}
-            />
-          </Grid>
-        </Grid>
-      )}
-      {!showDeliveryPlaces && (
-        <div style={{ display: "flex" }}>
-          <div style={{ minWidth: "70%" }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
+    <>
+      <DialogContent dividers>
+        {isEdit && (
+          <ColorButton onClick={handleShowDelivery}>
+            Locais de Entrega
+          </ColorButton>
+        )}
+
+        {!showDeliveryPlaces && (
+          <Form>
+            <Grid container pt={2} direction="row">
+              <Grid item xs={12} md={4}>
                 <Controls.Input
                   name="Name"
                   disabled={OnlyPreview}
@@ -159,21 +175,6 @@ export default function GroupForm(props) {
                   onChange={handleInputChange}
                   error={errors.Name}
                 />
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <Controls.Select
-                  variant="outlined"
-                  name="Entity_Type"
-                  disabled={OnlyPreview}
-                  label="Tipo de entidade"
-                  value={values.Entity_Type}
-                  onChange={handleInputChange}
-                  options={EntityTypeOption}
-                />
-              </Grid>
-
-              <Grid item xs={12} md={6}>
                 <Controls.Input
                   name="Address"
                   disabled={OnlyPreview}
@@ -181,21 +182,8 @@ export default function GroupForm(props) {
                   value={values.Address}
                   onChange={handleInputChange}
                 />
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <Controls.Input
-                  name="Post_Code"
-                  disabled={OnlyPreview}
-                  label="Código Postal"
-                  value={values.Post_Code}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-
-              <Grid item xs={12} md={6}>
                 <Controls.Select
-                  variant="outlined"
+                  variant="standard"
                   name="Responsible_Pharmacist_ID"
                   disabled={OnlyPreview}
                   label="Nome Responsável"
@@ -205,19 +193,6 @@ export default function GroupForm(props) {
                   options={pharmacistOptions}
                   error={errors.Responsible_Pharmacist_ID}
                 />
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <Controls.Input
-                  disabled={true}
-                  name="Responsible_Pharmacist_Email"
-                  label="E-mail Responsável"
-                  value={values.Responsible_Pharmacist_Email}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-
-              <Grid item xs={12} md={6}>
                 <Controls.Input
                   disabled={true}
                   name="Responsible_Pharmacist_Phone"
@@ -225,9 +200,46 @@ export default function GroupForm(props) {
                   value={values.Responsible_Pharmacist_Phone}
                   onChange={handleInputChange}
                 />
+
+                <Grid item xs={12} md={4}>
+                  <FormControlLabel
+                    control={
+                      <GreenSwitch
+                        name="Active"
+                        disabled={OnlyPreview}
+                        checked={values.Active}
+                        onChange={handleInputChange}
+                      />
+                    }
+                    label="Ativo"
+                  />
+                </Grid>
               </Grid>
 
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={4}>
+                <Controls.Select
+                  variant="standard"
+                  name="Entity_Type"
+                  disabled={OnlyPreview}
+                  label="Tipo de entidade"
+                  value={values.Entity_Type}
+                  onChange={handleInputChange}
+                  options={EntityTypeOption}
+                />
+                <Controls.Input
+                  name="Post_Code"
+                  disabled={OnlyPreview}
+                  label="Código Postal"
+                  value={values.Post_Code}
+                  onChange={handleInputChange}
+                />
+                <Controls.Input
+                  disabled={true}
+                  name="Responsible_Pharmacist_Email"
+                  label="E-mail Responsável"
+                  value={values.Responsible_Pharmacist_Email}
+                  onChange={handleInputChange}
+                />
                 <Controls.Input
                   name="NIPC"
                   disabled={OnlyPreview}
@@ -236,26 +248,13 @@ export default function GroupForm(props) {
                   onChange={handleInputChange}
                 />
               </Grid>
-              <Grid item xs={12} md={6}>
-                <Checkbox
-                  name="Active"
-                  disabled={OnlyPreview}
-                  label="Ativo"
-                  value={values.Active}
-                  onChange={handleInputChange}
-                />
-              </Grid>
-            </Grid>
-          </div>
-          <div style={{ minWidth: "30%", maxHeight: "40%", minHeight: "10%" }}>
-            <Grid container>
-              <Grid item xs={12} md={12}>
+              <Grid item xs={12} md={4}>
                 <img
                   name="Logo"
                   label="Logo"
                   style={{
-                    height: "38vh",
-                    width: "48vh",
+                    height: "50vh",
+                    width: "100%",
                     backgroundSize: "cover",
                     boxShadow: "4px 4px 4px rgba(0, 0, 0, 0.25)",
                     borderRadius: "15px",
@@ -263,15 +262,13 @@ export default function GroupForm(props) {
                   src={values.Logo}
                   alt=""
                 />
-              </Grid>
-              <Grid item xs={12} md={12}>
                 <label
                   htmlFor="filePicker"
                   style={{
                     padding: "5px 10px",
                     backgroundColor: "rgb(1,83,156)",
                     color: "white",
-                    marginBottom: "2%",
+                    marginBottom: "1%",
                     border: "1px solid black",
                     borderRadius: "5px!important",
                     boxShadow: "4px 4px 4px rgba(0, 0, 0, 0.25)",
@@ -285,7 +282,7 @@ export default function GroupForm(props) {
                     padding: "5px 10px",
                     backgroundColor: "#ad0b90",
                     color: "white",
-                    marginBottom: "2%",
+                    marginBottom: "1%",
                     border: "1px solid black",
                     borderRadius: "5px!important",
                     boxShadow: "4px 4px 4px rgba(0, 0, 0, 0.25)",
@@ -310,18 +307,19 @@ export default function GroupForm(props) {
                 />
               </Grid>
             </Grid>
-          </div>
-        </div>
-      )}
-      {showDeliveryPlaces && (
-        <section>
-          <DeliveryPlaces UCCID={values.ID} />
-        </section>
-      )}
-
-      <Grid item xs={12} md={12}>
-        <Controls.Button style={btnStyles} type="submit" text="Submeter" />
-      </Grid>
-    </Form>
+          </Form>
+        )}
+        {showDeliveryPlaces && (
+          <section>
+            <DeliveryPlaces UCCID={values.ID} />
+          </section>
+        )}
+      </DialogContent>
+      <DialogActions>
+        <ColorButton style={btnStyles} onClick={handleSubmit}>
+          Submeter
+        </ColorButton>
+      </DialogActions>
+    </>
   );
 }

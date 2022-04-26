@@ -265,7 +265,7 @@ export default function GruopTable() {
               data={data}
               title={<TableTitle text="Unidades de Cuidados Continuados" />}
               editable={{
-                isDeletable: (rowData) => AllowDelete === 1 || IsAdmin === true,
+                isDeletable: (rowData) => {},
                 onRowDelete: (oldData) => new Promise((resolve, reject) => {}),
               }}
               components={{
@@ -333,9 +333,7 @@ export default function GruopTable() {
                             setRecordForEdit(null);
                             setOnlyPreview(false);
                           }}
-                        >
-                          <AddIcon fontSize="small" />
-                        </IconButton>
+                        ></IconButton>
                       </div>
                     </div>
                   </div>

@@ -228,6 +228,12 @@ export default function GruopTable() {
     }, 1000);
   };
 
+  const HandlePrintDocument = (headerData, rowData) => {
+    console.log(headerData);
+    console.log(rowData);
+    console.log("isprinting");
+  };
+
   if (isLoading === true) {
     return <Spinner />;
   }
@@ -336,6 +342,7 @@ export default function GruopTable() {
           >
             <OrderForm
               addOrEdit={addOrEdit}
+              HandlePrintDocument={HandlePrintDocument}
               data={data}
               recordForEdit={recordForEdit}
             ></OrderForm>
