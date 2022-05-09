@@ -268,7 +268,7 @@ export default function GruopTable() {
         handleConfirm={handleDeleteConfirm}
       ></DeletePopUp>
       <Popup
-        title="Ficha de Encomenda"
+        title="Permissões UCC/Laboratórios"
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
       >

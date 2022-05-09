@@ -1,13 +1,7 @@
-import React from "react";
 import { useEffect, useState } from "react";
 import MaterialTable, { MTableToolbar } from "@material-table/core";
 import { Paper } from "@mui/material";
-import {
-  GetCreatedOrders,
-  DeleteCreatedOrders,
-} from "../../Requests/OrdersRequests";
-
-import { PostOrders } from "../../Requests/Post_OrdersRequest";
+import { GetPostedOrders } from "../../Requests/PostedOrdersRequests";
 import { CreateOrderPDF } from "../../Helpers/CreateOrderPDF";
 
 import OrderForm from "./Form/OrderForm";
@@ -24,12 +18,6 @@ import {
 } from "../../Requests/PermissionRequests";
 import DeleteIcon from "@mui/icons-material/Delete";
 import DeletePopUp from "../../Helpers/DeletePopUp";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -43,12 +31,7 @@ export default function GruopTable() {
   const [AllowDelete, setAllowDelete] = useState(false);
   const [IsAdmin, setIsAdmin] = useState(false);
   const [isLoading, setisLoading] = useState(true);
-  const [recordForDelete, setRecordForDelete] = useState(null);
-  const [open, setOpen] = useState(false);
   const [recordForEdit, setRecordForEdit] = useState(null);
-  const [Alertopen, setAlertopen] = useState(false);
-  const [AlertVariant, setAlertVariant] = useState("");
-  const [AlertMessage, setAlertMessage] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -113,7 +96,7 @@ export default function GruopTable() {
   };
 
   function handleOrdersRequests(userName) {
-    const OrdersPromise = GetCreatedOrders(userName);
+    const OrdersPromise = GetPostedOrders(userName);
     handleOrderPromise(OrdersPromise);
   }
 
@@ -138,40 +121,6 @@ export default function GruopTable() {
     }
   };
 
-  function handleOrdersPost(HeaderData, RowData) {
-    const OrdersPromise = PostOrders(HeaderData.Order_ID);
-    handleOrdersPostPromise(OrdersPromise, HeaderData, RowData);
-  }
-
-  const handleOrdersPostPromise = (OrdersPromise, HeaderData, RowData) => {
-    {
-      OrdersPromise.then((response) => {
-        if (response !== undefined) {
-          console.log("WHAT THE FUCK ");
-          console.log(response[0]);
-          console.log(response[0].warningMessage);
-          if (response[0].NewDocumentNo === "") {
-            setAlertMessage(response[0].warningMessage);
-            setAlertVariant(response[0].variant);
-            setAlertopen(true);
-          } else {
-            setAlertMessage(response[0].warningMessage);
-            setAlertVariant(response[0].variant);
-            setAlertopen(true);
-            CreateOrderPDF(HeaderData, RowData, response[0].NewDocumentNo);
-          }
-        }
-      });
-    }
-  };
-
-  const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setAlertopen(false);
-  };
   const columns = [
     {
       title: "UCC",
@@ -240,13 +189,9 @@ export default function GruopTable() {
     padding: "dense",
   };
 
-  const addOrEdit = (values, rowData) => {
-    console.log("VALUES AQUI VICTOR");
-    console.log(values);
-    handleOrdersPost(values, rowData);
+  const addOrEdit = (values) => {
     setOpenPopup(false);
 
-    console.log("heheheheheheh");
     setTimeout(() => {}, 500);
   };
 
@@ -255,34 +200,11 @@ export default function GruopTable() {
     setOpenPopup(true);
   };
 
-  const handleDeleteOnClick = (rowData) => {
-    setRecordForDelete(rowData.data);
-    setOpen(true);
-  };
-
-  const handleDeleteCancel = () => {
-    setOpen(false);
-  };
-
-  const handleDeleteConfirm = (rowData) => {
-    setOpen(false);
-    DeleteCreatedOrders(rowData.Order_ID);
-    setTimeout(() => {
-      let userID = sessionStorage.getItem("userID");
-      userID = JSON.parse(userID);
-
-      if (userID === null) {
-        userID = localStorage.getItem("userID");
-        userID = JSON.parse(userID);
-      }
-      handleOrdersRequests(userID);
-    }, 1000);
-  };
-
   const HandlePrintDocument = (headerData, rowData) => {
+    console.log("victor AQUI AAAHAHAHAHAH");
     console.log(headerData);
     console.log(rowData);
-    console.log("isprinting");
+    CreateOrderPDF(headerData, rowData, headerData.Order_ID);
   };
 
   if (isLoading === true) {
@@ -331,15 +253,6 @@ export default function GruopTable() {
                         <PreviewIcon />
                       </IconButton>
                     )}
-
-                    <IconButton
-                      disabled={!AllowDelete && !IsAdmin}
-                      onClick={() => {
-                        handleDeleteOnClick(props);
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
                   </div>
                 ),
 
@@ -380,25 +293,6 @@ export default function GruopTable() {
               }}
             />
           </Paper>
-          <Snackbar
-            open={Alertopen}
-            autoHideDuration={3000}
-            onClose={handleClose}
-          >
-            <Alert
-              onClose={handleClose}
-              severity={AlertVariant}
-              sx={{ width: "100%" }}
-            >
-              {AlertMessage}
-            </Alert>
-          </Snackbar>
-          <DeletePopUp
-            open={open}
-            recordForDelete={recordForDelete}
-            handleCancel={handleDeleteCancel}
-            handleConfirm={handleDeleteConfirm}
-          ></DeletePopUp>
           <Popup
             title="Ficha de Encomenda"
             openPopup={openPopup}

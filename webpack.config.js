@@ -60,6 +60,8 @@ if (process.env.NODE_ENV === "production") {
     REACT_APP_ORDERLINES_MANAGEMENT:'https://apifarma.ump.pt/api/orderlinesmanagement/',
     REACT_APP_DATA_IMPORT:'https://apifarma.ump.pt/api/dataimport/',
     REACT_APP_PASS_CHANGER:'https://apifarma.ump.pt/api/passwordchanger/',
+    REACT_APP_POSTEDORDERS_MANAGEMENT:'https://apifarma.ump.pt/api/postedordersmanagement/',
+    REACT_APP_POST_ORDERS:'https://apifarma.ump.pt/api/postorders/',
     REACT_APP_APITOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDE0MjEzMDl9.gul4t_9A7CD67H5qTTjiea6baOcsAERa6gS_JX8e3d4",
   };
 
@@ -107,6 +109,8 @@ if (process.env.SERVE) {
     REACT_APP_ORDERLINES_MANAGEMENT:'http://192.168.1.75:50000/api/orderlinesmanagement/',
     REACT_APP_DATA_IMPORT:'http://192.168.1.75:50000/api/dataimport/',
     REACT_APP_PASS_CHANGER:'http://192.168.1.75:50000/api/passwordchanger/',
+    REACT_APP_POSTEDORDERS_MANAGEMENT:'http://192.168.1.75:50000/api/postedordersmanagement/',
+    REACT_APP_POST_ORDERS:'http://192.168.1.75:50000/api/postorders/',
     REACT_APP_APITOKEN:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDE0MjEzMDl9.gul4t_9A7CD67H5qTTjiea6baOcsAERa6gS_JX8e3d4",
   };
   plugins.push(new EnvironmentPlugin(EnvValues))

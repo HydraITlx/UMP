@@ -17,22 +17,22 @@ const initialFValues = {
   Payment_Terms: " ",
   Order_Minimum_Amount: " ",
   Delivery_Address: "",
+  Total_AmountVat: 0.0,
 };
-
-const TypeOption = [
-  { value: 1, label: "Geral" },
-  { value: 2, label: "Subst Controladas" },
-  { value: 3, label: "Dispositivos Médicos" },
-  { value: 4, label: "Outros" },
-  { value: 5, label: "Nutrição" },
-  { value: 6, label: "Soros" },
-];
 
 const ColorButton = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText(purple[500]),
   backgroundColor: "#ad0b90",
   "&:hover": {
     backgroundColor: "#6d085a",
+  },
+}));
+
+const ColorButton2 = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: "#0b16ad",
+  "&:hover": {
+    backgroundColor: "#070c57",
   },
 }));
 
@@ -50,35 +50,15 @@ export default function GroupForm(props) {
   const [rowData, SetRowData] = useState([]);
   let btnStyles = "";
   if (isEdit) {
-    btnStyles = { minWidth: "100%" };
+    btnStyles = { minWidth: "85%" };
   } else {
-    btnStyles = { minWidth: "100%" };
+    btnStyles = { minWidth: "85%" };
   }
 
   const calculateTotal = (data) => {
+    console.log(data);
+    console.log("AQUI viCTOR!!");
     SetRowData(data);
-
-    var TotalAmount = data
-      .map((bill) => bill.Total_Amount)
-      .reduce(
-        (acc, bill) =>
-          parseFloat(bill.replace(",", ".")) + parseFloat(acc.replace(",", "."))
-      );
-
-    var TotalAmountVat = data
-      .map((bill) => bill.Total_AmountVat)
-      .reduce(
-        (acc, bill) =>
-          parseFloat(bill.replace(",", ".")) + parseFloat(acc.replace(",", "."))
-      );
-
-    if (data.length > 1) {
-      SetTotalAmount(TotalAmount.toFixed(5).toString().replace(".", ","));
-      SetTotalAmountVat(TotalAmountVat.toFixed(5).toString().replace(".", ","));
-    } else {
-      SetTotalAmount(TotalAmount);
-      SetTotalAmountVat(TotalAmountVat);
-    }
   };
 
   const validate = (fieldValues = values) => {
@@ -118,7 +98,7 @@ export default function GroupForm(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    addOrEdit(values, rowData);
+    addOrEdit(values);
   };
 
   useEffect(() => {
@@ -149,7 +129,7 @@ export default function GroupForm(props) {
                 name="Total_Amount"
                 label="Valor Total c/Iva"
                 disabled={true}
-                value={TotalAmountVat}
+                value={values.Total_AmountVat}
                 onChange={handleInputChange}
               />
               <Controls.Input
@@ -184,7 +164,7 @@ export default function GroupForm(props) {
                 name="Total_Amount"
                 label="Valor Total"
                 disabled={true}
-                value={TotalAmount}
+                value={values.Total_Amount}
                 onChange={handleInputChange}
               />
 
@@ -199,6 +179,7 @@ export default function GroupForm(props) {
             </Grid>
             <Grid item xs={12} md={10.5} pt={2}>
               <Controls.Input
+                disabled={true}
                 name="Delivery_Address"
                 label="Morada de Entrega"
                 value={values.Delivery_Address}
@@ -226,8 +207,14 @@ export default function GroupForm(props) {
         </Form>
       </DialogContent>
       <DialogActions>
+        <ColorButton2
+          style={{ minWidth: "15%" }}
+          onClick={() => HandlePrintDocument(values, rowData)}
+        >
+          Imprimir
+        </ColorButton2>
         <ColorButton style={btnStyles} onClick={handleSubmit}>
-          Submeter
+          Encerrar
         </ColorButton>
       </DialogActions>
     </>

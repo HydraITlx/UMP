@@ -121,7 +121,11 @@ export default function TemporaryDrawer(prop) {
           <ListItemText style={{ color: "white" }} primary={"Encomendas"} />
         </ListItem>
 
-        <ListItem onClick={() => navigate("home")} button key={"text43"}>
+        <ListItem
+          onClick={() => navigate("ordershistory")}
+          button
+          key={"text43"}
+        >
           <ListItemIcon>
             <ShoppingCartCheckoutIcon sx={{ color: "white" }} />
           </ListItemIcon>

@@ -25,6 +25,7 @@ const initialFValues = {
   Unit_Price_UN: 0,
   Tax_Percentage: 0,
   Year: 0,
+  CFT: "",
 };
 
 const GreenSwitch = styled(Switch)(({ theme }) => ({
@@ -246,7 +247,16 @@ export default function GroupForm(props) {
                 error={errors.DUP}
               />
             </Grid>
-
+            <Grid item xs={12} md={5.34} pt={2}>
+              <Controls.Input
+                name="CFT"
+                label="CFT"
+                disabled={OnlyPreview}
+                value={values.CFT}
+                onChange={handleInputChange}
+                error={errors.CFT}
+              />
+            </Grid>
             <Grid item xs={12} md={12} pt={2}>
               <FormControlLabel
                 control={

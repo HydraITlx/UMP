@@ -46,6 +46,7 @@ export function InsertProducts(rowData) {
     Observations: rowData.Observations,
     Tax_Percentage: rowData.Tax_Percentage,
     Active: rowData.Active,
+    CFT: rowData.CFT,
   };
 
   const requestOptions = {
@@ -128,6 +129,7 @@ export function modifyProducts(rowData) {
     Observations: rowData.Observations,
     Tax_Percentage: rowData.Tax_Percentage,
     Active: rowData.Active,
+    CFT: rowData.CFT,
   };
 
   const requestOptions = {
