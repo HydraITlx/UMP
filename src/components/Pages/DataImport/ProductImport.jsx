@@ -22,12 +22,14 @@ function App() {
 
         fileReader.onload = (e) => {
           const bufferArray = e.target.result;
+          let sendNotif = true;
 
           const wb = XLSX.read(bufferArray, { type: "buffer" });
           wb.SheetNames.map((value) => {
             const ws = wb.Sheets[value];
             const data = XLSX.utils.sheet_to_json(ws);
-            ImportProducts(value, data, file.name);
+            ImportProducts(value, data, file.name, sendNotif);
+            sendNotif = false;
           });
         };
         setAlertopen(true);

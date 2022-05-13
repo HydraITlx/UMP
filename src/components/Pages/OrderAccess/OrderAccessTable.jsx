@@ -94,6 +94,7 @@ export default function GruopTable() {
 
       RequestPromise.then((response) => {
         if (response !== undefined) {
+          console.log(response);
           setData(response);
         }
       });

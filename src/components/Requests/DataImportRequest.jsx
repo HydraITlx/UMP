@@ -1,8 +1,9 @@
-export function ImportProducts(sheetName, data, FileName) {
+export function ImportProducts(sheetName, data, FileName, sendNotif) {
   let body = {
     sheetName: sheetName,
     data: data,
     FileName: FileName,
+    sendNotif: sendNotif,
   };
 
   const requestOptions = {

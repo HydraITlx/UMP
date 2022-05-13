@@ -355,7 +355,7 @@ export default function GruopTable() {
                         top: 0,
                       }}
                     >
-                      Escolha um UCC para começar
+                      Escolha uma UCC para começar
                     </div>
                   ),
                 },

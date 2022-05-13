@@ -53,7 +53,7 @@ export default function AccountMenu() {
               aria-expanded={open ? "true" : undefined}
               onClick={handleClick}
               style={{ color: "#FFFFFF" }}
-              startIcon={<ArrowDropDownIcon />}
+              endIcon={<ArrowDropDownIcon />}
             >
               {UserStore.username}
             </Button>

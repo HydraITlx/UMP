@@ -16,8 +16,6 @@ import {
   getPermissions,
   checkIfAdminPermissions,
 } from "../../Requests/PermissionRequests";
-import DeleteIcon from "@mui/icons-material/Delete";
-import DeletePopUp from "../../Helpers/DeletePopUp";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -294,7 +292,7 @@ export default function GruopTable() {
             />
           </Paper>
           <Popup
-            title="Ficha de Encomenda"
+            title="Escolha uma UCC para começar"
             openPopup={openPopup}
             setOpenPopup={setOpenPopup}
           >
