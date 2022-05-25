@@ -108,7 +108,6 @@ export default function GruopTable() {
 
       AuthPromise.then((response) => {
         if (response !== undefined) {
-          console.log(response);
           setData(response);
 
           setTimeout(() => {

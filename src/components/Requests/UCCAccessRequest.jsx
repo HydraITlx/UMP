@@ -68,7 +68,6 @@ export function getUCCOptions() {
 }
 
 export function updateUCCOptions(data) {
-  console.log(data);
   let body = {
     process: 4,
     ID: data.ID,
@@ -92,7 +91,6 @@ export function updateUCCOptions(data) {
 }
 
 export function InsertUCCOptions(data) {
-  console.log(data);
   let body = {
     process: 5,
     ID: data.ID,
@@ -116,8 +114,6 @@ export function InsertUCCOptions(data) {
 }
 
 export function DeleteUCCOptions(data) {
-  console.log("WHAASDHASDHASHDHASHD");
-  console.log(data);
   let body = {
     process: 6,
     ID: data.ID,

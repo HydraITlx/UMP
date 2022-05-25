@@ -83,7 +83,6 @@ export default function passChanger() {
   const handleSubmit = (e) => {
     e.preventDefault();
     submit();
-    console.log("acabou");
   };
 
   const clickField = (field, value) => {
@@ -126,7 +125,6 @@ export default function passChanger() {
       };
       setForm(newForm);
       setoldPass(value);
-      console.log(form);
     }
 
     if (field === "newPassFirst") {
@@ -137,7 +135,6 @@ export default function passChanger() {
       };
       setForm(newForm);
       setnewPassFirst(value);
-      console.log(form);
     }
 
     if (field === "newPassSecond") {
@@ -148,7 +145,6 @@ export default function passChanger() {
       };
       setForm(newForm);
       setnewPassSecond(value);
-      console.log(form);
     }
   };
 
@@ -213,11 +209,7 @@ export default function passChanger() {
       await changePassword(data);
     } catch (error) {
       errorMessage = error.response.data;
-      console.log("deu erro crl");
-      console.log(error.response.data);
     }
-
-    console.log(data);
   };
 
   const changePassword = async (data) => {
@@ -233,7 +225,7 @@ export default function passChanger() {
       ...data,
       userName: userID,
     };
-    console.log(newData);
+
     const requestOptions = {
       method: "POST",
       headers: {
@@ -243,14 +235,13 @@ export default function passChanger() {
       body: JSON.stringify(newData),
     };
 
-    console.log("a fazer pass changer");
     return fetch(process.env.REACT_APP_PASS_CHANGER, requestOptions)
       .then((response) => response.json())
       .then((responseData) => {
         setVariant(responseData.variant);
         setMessage(responseData.message);
         setOpen(true);
-        console.log(responseData);
+
         setoldPass("");
         setnewPassFirst("");
         setnewPassSecond("");

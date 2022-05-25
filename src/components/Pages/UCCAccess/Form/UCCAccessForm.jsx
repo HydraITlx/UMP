@@ -36,10 +36,6 @@ export default function GroupForm(props) {
   }
 
   const validate = (fieldValues = values) => {
-    console.log("sumbited");
-    console.log(fieldValues);
-    console.log("values");
-    console.log(values);
     const errorText = "O campo não pode estar vazio";
     const errorTextExists = "O acesso já existe";
 
@@ -106,11 +102,8 @@ export default function GroupForm(props) {
   }, [recordForEdit]);
 
   function checkDuplicates(arr, index, new_id, new_id2, temp) {
-    console.log(index);
     return arr.map((options) => {
       if (options.ID !== index) {
-        console.log("HELO");
-        console.log(`${options.Laboratory_ID} new_id ${new_id}`);
         if (options.Laboratory_ID === new_id || options.UCC_ID === new_id2) {
           temp.Laboratory_ID = "DADASDASDADA";
           w;

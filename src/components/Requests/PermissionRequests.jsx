@@ -6,8 +6,7 @@ export function getPermissions(pageID) {
     userID = localStorage.getItem("userID");
     userID = JSON.parse(userID);
   }
-  console.log("userID");
-  console.log(userID);
+
   let body = {
     process: 1,
     userName: userID,
@@ -37,8 +36,7 @@ export function checkIfAdminPermissions(pageID) {
     userID = localStorage.getItem("userID");
     userID = JSON.parse(userID);
   }
-  console.log("userID");
-  console.log(userID);
+
   let body = {
     process: 2,
     userName: userID,

@@ -18,6 +18,9 @@ const initialFValues = {
   Order_Minimum_Amount: " ",
   Delivery_Address: "",
   Total_AmountVat: 0.0,
+  Email: "",
+  Alliance_Route: "",
+  Alliance_customer_number: "",
 };
 
 const ColorButton = styled(Button)(({ theme }) => ({
@@ -36,6 +39,14 @@ const ColorButton2 = styled(Button)(({ theme }) => ({
   },
 }));
 
+const ColorButton3 = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: "#A43217",
+  "&:hover": {
+    backgroundColor: "#782612",
+  },
+}));
+
 export default function GroupForm(props) {
   const {
     addOrEdit,
@@ -44,6 +55,7 @@ export default function GroupForm(props) {
     LabOptions,
     OnlyPreview,
     HandlePrintDocument,
+    handleCancelOnClick,
   } = props;
   const [TotalAmount, SetTotalAmount] = useState(0.0);
   const [TotalAmountVat, SetTotalAmountVat] = useState(0.0);
@@ -56,8 +68,6 @@ export default function GroupForm(props) {
   }
 
   const calculateTotal = (data) => {
-    console.log(data);
-    console.log("AQUI viCTOR!!");
     SetRowData(data);
   };
 
@@ -108,9 +118,6 @@ export default function GroupForm(props) {
       });
   }, [recordForEdit]);
 
-  console.log("recordForEdit AQUI");
-  console.log(recordForEdit);
-
   return (
     <>
       <DialogContent dividers>
@@ -158,7 +165,15 @@ export default function GroupForm(props) {
                 onChange={handleInputChange}
                 error={errors.Order_Minimum_Amount}
               />
+              <Controls.Input
+                disabled={true}
+                name="Email"
+                label="Endereço eletrónico"
+                value={values.Email}
+                onChange={handleInputChange}
+              />
             </Grid>
+
             <Grid item xs={12} md={3} pt={2}>
               <Controls.Input
                 name="Total_Amount"
@@ -176,14 +191,32 @@ export default function GroupForm(props) {
                 onChange={handleInputChange}
                 error={errors.Delivery_Terms}
               />
+              <Controls.Input
+                name="Alliance_customer_number"
+                label="Nº cliente Alliance"
+                disabled={true}
+                value={values.Alliance_customer_number}
+                onChange={handleInputChange}
+                error={errors.Alliance_customer_number}
+              />
             </Grid>
-            <Grid item xs={12} md={10.5} pt={2}>
+            <Grid item xs={12} md={10.5}>
               <Controls.Input
                 disabled={true}
                 name="Delivery_Address"
                 label="Morada de Entrega"
                 value={values.Delivery_Address}
                 onChange={handleInputChange}
+              />
+            </Grid>
+            <Grid item xs={12} md={10.5}>
+              <Controls.Input
+                name="Alliance_Route"
+                label="Rota Alliance"
+                disabled={true}
+                value={values.Alliance_Route}
+                onChange={handleInputChange}
+                error={errors.Alliance_Route}
               />
             </Grid>
           </Grid>
@@ -207,8 +240,14 @@ export default function GroupForm(props) {
         </Form>
       </DialogContent>
       <DialogActions>
+        <ColorButton3
+          style={{ minWidth: " 7.3%" }}
+          onClick={() => handleCancelOnClick(values.Order_ID)}
+        >
+          Cancelar
+        </ColorButton3>
         <ColorButton2
-          style={{ minWidth: "15%" }}
+          style={{ minWidth: "7.5%" }}
           onClick={() => HandlePrintDocument(values, rowData)}
         >
           Imprimir

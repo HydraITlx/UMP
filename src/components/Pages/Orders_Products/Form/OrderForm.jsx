@@ -9,6 +9,9 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import { alpha, styled } from "@mui/material/styles";
 import { purple } from "@mui/material/colors";
+import Typography from "@mui/material/Typography";
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
 const initialFValues = {
   UCC_Name: "",
   Laboratory_Name: "",
@@ -17,6 +20,10 @@ const initialFValues = {
   Payment_Terms: " ",
   Order_Minimum_Amount: " ",
   Delivery_Address: "",
+  Email: "",
+  sendEmail: false,
+  Alliance_Route: "",
+  Alliance_customer_number: "",
 };
 
 const TypeOption = [
@@ -27,6 +34,18 @@ const TypeOption = [
   { value: 5, label: "Nutrição" },
   { value: 6, label: "Soros" },
 ];
+
+const GreenSwitch = styled(Switch)(({ theme }) => ({
+  "& .MuiSwitch-switchBase.Mui-checked": {
+    color: purple[300],
+    "&:hover": {
+      backgroundColor: alpha(purple[900], theme.palette.action.hoverOpacity),
+    },
+  },
+  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+    backgroundColor: purple[400],
+  },
+}));
 
 const ColorButton = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText(purple[500]),
@@ -58,19 +77,13 @@ export default function GroupForm(props) {
   const calculateTotal = (data) => {
     SetRowData(data);
 
-    var TotalAmount = data
-      .map((bill) => bill.Total_Amount)
-      .reduce(
-        (acc, bill) =>
-          parseFloat(bill.replace(",", ".")) + parseFloat(acc.replace(",", "."))
-      );
+    let TotalAmount = 0;
+    let TotalAmountVat = 0;
 
-    var TotalAmountVat = data
-      .map((bill) => bill.Total_AmountVat)
-      .reduce(
-        (acc, bill) =>
-          parseFloat(bill.replace(",", ".")) + parseFloat(acc.replace(",", "."))
-      );
+    data.map((data) => {
+      TotalAmount += parseFloat(data.Total_Amount.replace(",", "."));
+      TotalAmountVat += parseFloat(data.Total_AmountVat.replace(",", "."));
+    });
 
     if (data.length > 1) {
       SetTotalAmount(TotalAmount.toFixed(5).toString().replace(".", ","));
@@ -128,9 +141,6 @@ export default function GroupForm(props) {
       });
   }, [recordForEdit]);
 
-  console.log("recordForEdit AQUI");
-  console.log(recordForEdit);
-
   return (
     <>
       <DialogContent dividers>
@@ -151,14 +161,6 @@ export default function GroupForm(props) {
                 disabled={true}
                 value={TotalAmountVat}
                 onChange={handleInputChange}
-              />
-              <Controls.Input
-                name="Payment_Terms"
-                label="Prazo Pagamento"
-                disabled={true}
-                value={values.Payment_Terms}
-                onChange={handleInputChange}
-                error={errors.Payment_Terms}
               />
             </Grid>
             <Grid item xs={12} md={3} pt={2}>
@@ -197,13 +199,77 @@ export default function GroupForm(props) {
                 error={errors.Delivery_Terms}
               />
             </Grid>
-            <Grid item xs={12} md={10.5} pt={2}>
+            <Grid item xs={12} md={5}>
+              <Controls.Input
+                name="Payment_Terms"
+                label="Prazo Pagamento"
+                disabled={true}
+                value={values.Payment_Terms}
+                onChange={handleInputChange}
+                error={errors.Payment_Terms}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={5}>
               <Controls.Input
                 name="Delivery_Address"
                 label="Morada de Entrega"
                 value={values.Delivery_Address}
                 onChange={handleInputChange}
               />
+            </Grid>
+            <Grid item xs={12} md={5}>
+              <Controls.Input
+                name="Alliance_customer_number"
+                label="Nº cliente Alliance"
+                value={values.Alliance_customer_number}
+                onChange={handleInputChange}
+                error={errors.Alliance_customer_number}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={5}>
+              <Controls.Input
+                name="Alliance_Route"
+                label="Rota Alliance"
+                value={values.Alliance_Route}
+                onChange={handleInputChange}
+                error={errors.Alliance_Route}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={12}>
+              <Grid item xs={12} md={5}>
+                <FormControlLabel
+                  control={
+                    <GreenSwitch
+                      name="sendEmail"
+                      disabled={OnlyPreview}
+                      checked={values.sendEmail}
+                      onChange={handleInputChange}
+                    />
+                  }
+                  label="Envio automático"
+                />
+              </Grid>
+
+              <Controls.Input
+                disabled={!values.sendEmail}
+                name="Email"
+                label="Endereço eletrónico"
+                value={values.Email}
+                onChange={handleInputChange}
+              />
+              <Typography
+                sx={{ color: "red", fontWeight: 599 }}
+                variant="caption"
+                display="block"
+                gutterBottom
+              >
+                Nota: Para envio automático, o campo "Endereço eletrónico" só
+                pode conter endereços validos, vários destinatários têm que ser
+                separados por ","
+              </Typography>
             </Grid>
           </Grid>
 

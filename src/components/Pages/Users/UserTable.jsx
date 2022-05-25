@@ -17,6 +17,7 @@ export default function GruopTable() {
   const [recordForEdit, setRecordForEdit] = useState(null);
   const [isInsert, setisInsert] = useState(false);
   const [isEdit, setisEdit] = useState(false);
+  const [SendEmail, setSendEmail] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
@@ -52,12 +53,6 @@ export default function GruopTable() {
 
     { title: "Nome Completo", field: "full_name", width: "auto" },
     { title: "Email", field: "email", width: "auto" },
-    {
-      title: "Tent. Autenticação",
-      field: "attempts",
-      width: "auto",
-      align: "center",
-    },
 
     {
       title: "Administrador",
@@ -134,10 +129,11 @@ export default function GruopTable() {
   };
 
   const addOrEdit = (values, resetForm) => {
-    onHandleInsertModify(values, isInsert);
+    onHandleInsertModify(values, SendEmail);
 
     resetForm();
     setRecordForEdit(null);
+    setSendEmail(true);
     setOpenPopup(false);
     setUpdate(!update);
 
@@ -149,12 +145,13 @@ export default function GruopTable() {
 
   const addonConfirm = (values) => {
     if (isInsert) {
-      onHandleInsertModify(values, isInsert);
+      onHandleInsertModify(values, SendEmail);
     }
     setUpdate(!update);
     setTimeout(() => {
       setisEdit(false);
       setisInsert(true);
+      setSendEmail(false);
     }, 500);
   };
 

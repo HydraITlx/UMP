@@ -7,13 +7,16 @@ import Button from "@mui/material/Button";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { purple } from "@mui/material/colors";
-
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
 const initialFValues = {
   ID: " ",
   Pharmacist_ID: " ",
   Pharmacist_Name: " ",
   UCC_ID: " ",
   UCC_Name: " ",
+  Replacement: false,
+  sendNotification: false,
 };
 
 const ColorButton = styled(Button)(({ theme }) => ({
@@ -21,6 +24,18 @@ const ColorButton = styled(Button)(({ theme }) => ({
   backgroundColor: "#ad0b90",
   "&:hover": {
     backgroundColor: "#6d085a",
+  },
+}));
+
+const GreenSwitch = styled(Switch)(({ theme }) => ({
+  "& .MuiSwitch-switchBase.Mui-checked": {
+    color: purple[300],
+    "&:hover": {
+      backgroundColor: alpha(purple[900], theme.palette.action.hoverOpacity),
+    },
+  },
+  "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {
+    backgroundColor: purple[400],
   },
 }));
 
@@ -92,8 +107,12 @@ export default function GroupForm(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const index = pharmacistOptions.findIndex(
+      (e) => e.value == values.Pharmacist_ID
+    );
+
     if (validate()) {
-      addOrEdit(values, resetForm);
+      addOrEdit(values, resetForm, pharmacistOptions[index].Email);
     }
   };
 
@@ -104,24 +123,13 @@ export default function GroupForm(props) {
       });
   }, [recordForEdit]);
 
-  function checkDuplicates(arr, index, new_id, new_id2, temp) {
-    return arr.map((options) => {
-      if (options.ID !== index) {
-        if (options.Pharmacist_ID === new_id || options.UCC_ID === new_id2) {
-          temp.Pharmacist_ID = "DADASDASDADA";
-          return temp;
-        }
-      }
-    });
-  }
-
   return (
     <>
       <DialogContent dividers>
         <Form>
           <Grid container>
             <Grid container pl={15}>
-              <Grid item xs={12} md={12} pb={5}>
+              <Grid item xs={12} md={12}>
                 <Controls.Select
                   variant="outlined"
                   name="Pharmacist_ID"
@@ -140,6 +148,31 @@ export default function GroupForm(props) {
                   onChange={handleInputChange}
                   options={UCCOptions}
                   error={errors.UCC_ID}
+                />
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <FormControlLabel
+                  control={
+                    <GreenSwitch
+                      name="Replacement"
+                      checked={values.Replacement}
+                      onChange={handleInputChange}
+                    />
+                  }
+                  label="Substituto"
+                />
+              </Grid>
+
+              <Grid item xs={12} md={12}>
+                <FormControlLabel
+                  control={
+                    <GreenSwitch
+                      name="sendNotification"
+                      checked={values.sendNotification}
+                      onChange={handleInputChange}
+                    />
+                  }
+                  label="Alertar o farmacêutico"
                 />
               </Grid>
             </Grid>

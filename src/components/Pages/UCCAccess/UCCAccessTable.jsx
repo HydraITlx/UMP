@@ -63,7 +63,6 @@ export default function GruopTable() {
       }
 
       AuthPromise.then((response) => {
-        console.log(response);
         if (response !== undefined) {
           SetlabOptions(response);
         }
@@ -79,7 +78,6 @@ export default function GruopTable() {
       }
 
       AuthPromise.then((response) => {
-        console.log(response);
         if (response !== undefined) {
           SetUCCOptions(response);
         }
@@ -95,8 +93,6 @@ export default function GruopTable() {
       }
 
       RequestPromise.then((response) => {
-        console.log(response);
-        console.log("RESPOSTA AQUI");
         if (response !== undefined) {
           setData(response);
         }
@@ -109,7 +105,6 @@ export default function GruopTable() {
       InsertUCCOptions(values);
     }
     if (isEdit) {
-      console.log("entou no edit");
       updateUCCOptions(values);
     }
     resetForm();
@@ -169,7 +164,6 @@ export default function GruopTable() {
   };
 
   const handleDeleteOnClick = (rowData) => {
-    console.log(rowData);
     setRecordForDelete(rowData.data);
     setOpen(true);
   };
@@ -181,7 +175,6 @@ export default function GruopTable() {
   const handleDeleteConfirm = (rowData) => {
     setOpen(false);
     setTimeout(() => {
-      console.log(rowData);
       const dataDelete = [...data];
       const index = rowData.ID;
       dataDelete.splice(index, 1);

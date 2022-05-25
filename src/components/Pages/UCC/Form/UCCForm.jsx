@@ -44,6 +44,10 @@ const initialFValues = {
   Responsible_Pharmacist_ID: " ",
   Responsible_Pharmacist_Name: "",
   Responsible_Pharmacist_Phone: "",
+  Alliance_customer_number: "",
+  Alliance_Route: "",
+  Lab_print_coding: "",
+  Encoding_of_Stockist: "",
 };
 
 export default function GroupForm(props) {
@@ -201,6 +205,20 @@ export default function GroupForm(props) {
                   onChange={handleInputChange}
                 />
 
+                <Controls.Input
+                  name="Alliance_customer_number"
+                  label="Nº cliente Alliance"
+                  value={values.Alliance_customer_number}
+                  onChange={handleInputChange}
+                />
+
+                <Controls.Input
+                  name="Lab_print_coding"
+                  label="Codificação do impresso Lab"
+                  value={values.Lab_print_coding}
+                  onChange={handleInputChange}
+                />
+
                 <Grid item xs={12} md={4}>
                   <FormControlLabel
                     control={
@@ -245,6 +263,21 @@ export default function GroupForm(props) {
                   disabled={OnlyPreview}
                   label="NIPC"
                   value={values.NIPC}
+                  onChange={handleInputChange}
+                />
+                <Controls.Input
+                  name="Alliance_Route"
+                  disabled={OnlyPreview}
+                  label="Rota Alliance "
+                  value={values.Alliance_Route}
+                  onChange={handleInputChange}
+                />
+
+                <Controls.Input
+                  name="Encoding_of_Stockist"
+                  disabled={OnlyPreview}
+                  label="Codificação do impresso Armazenista"
+                  value={values.Encoding_of_Stockist}
                   onChange={handleInputChange}
                 />
               </Grid>

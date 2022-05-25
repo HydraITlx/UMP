@@ -27,11 +27,16 @@ function getRequestPromise(RequestUrl, requestOptions) {
     .catch((error) => console.warn(error));
 }
 
-export function InsertOrderAccess(values) {
+export function InsertOrderAccess(values, Email, UCC_Label) {
   let body = {
     process: 2,
     Pharmacist_ID: values.Pharmacist_ID,
     UCC_ID: values.UCC_ID,
+    UCC_Name: values.UCC_Name,
+    Replacement: values.Replacement,
+    sendNotification: values.sendNotification,
+    Email: Email,
+    UCC_Label: UCC_Label,
   };
 
   const requestOptions = {
@@ -49,12 +54,17 @@ export function InsertOrderAccess(values) {
   );
 }
 
-export function UpdateOrderAccess(values) {
+export function UpdateOrderAccess(values, Email, UCC_Label) {
   let body = {
     process: 4,
     ID: values.ID,
     Pharmacist_ID: values.Pharmacist_ID,
     UCC_ID: values.UCC_ID,
+    UCC_Name: values.UCC_Name,
+    Replacement: values.Replacement,
+    sendNotification: values.sendNotification,
+    Email: Email,
+    UCC_Label: UCC_Label,
   };
 
   const requestOptions = {

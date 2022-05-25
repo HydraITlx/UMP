@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import MaterialTable, { MTableToolbar } from "@material-table/core";
 import { Paper } from "@mui/material";
-import { GetPostedOrders } from "../../Requests/PostedOrdersRequests";
+import {
+  GetPostedOrders,
+  CancelOrder,
+} from "../../Requests/PostedOrdersRequests";
 import { CreateOrderPDF } from "../../Helpers/CreateOrderPDF";
 
 import OrderForm from "./Form/OrderForm";
@@ -12,10 +15,12 @@ import PreviewIcon from "@mui/icons-material/RemoveRedEye";
 import TableTitle from "../../Helpers/TableTitle";
 import NoAccess from "../../Helpers/NoAccess";
 import Spinner from "../../Spinner/Spinner";
+import DeletePopUp from "../../Helpers/CancelPopUp";
 import {
   getPermissions,
   checkIfAdminPermissions,
 } from "../../Requests/PermissionRequests";
+import Checkbox from "@mui/material/Checkbox";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -30,6 +35,8 @@ export default function GruopTable() {
   const [IsAdmin, setIsAdmin] = useState(false);
   const [isLoading, setisLoading] = useState(true);
   const [recordForEdit, setRecordForEdit] = useState(null);
+  const [recordForCancel, setRecordForCancel] = useState(null);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -109,7 +116,6 @@ export default function GruopTable() {
 
       AuthPromise.then((response) => {
         if (response !== undefined) {
-          console.log(response);
           setData(response);
           setTimeout(() => {
             setisLoading(false);
@@ -119,7 +125,41 @@ export default function GruopTable() {
     }
   };
 
+  const handleCancelOnClick = (Order_ID) => {
+    setRecordForCancel(Order_ID);
+    setOpen(true);
+  };
+
+  const handleCancelCancel = () => {
+    setOpen(false);
+  };
+
+  const handleCancelConfirm = (Order_ID) => {
+    CancelOrder(recordForCancel);
+    setOpenPopup(false);
+    setUpdate(!update);
+    setOpen(false);
+  };
+
   const columns = [
+    {
+      title: "Cancelado",
+      field: "Canceled",
+      width: "auto",
+      render: (rowData) => (
+        <Checkbox
+          disabled
+          defaultChecked={rowData.Canceled}
+          color="secondary"
+        />
+      ),
+    },
+    {
+      title: "NE",
+      field: "Order_ID",
+      width: "auto",
+    },
+
     {
       title: "UCC",
       field: "UCC_Name",
@@ -199,9 +239,6 @@ export default function GruopTable() {
   };
 
   const HandlePrintDocument = (headerData, rowData) => {
-    console.log("victor AQUI AAAHAHAHAHAH");
-    console.log(headerData);
-    console.log(rowData);
     CreateOrderPDF(headerData, rowData, headerData.Order_ID);
   };
 
@@ -291,8 +328,9 @@ export default function GruopTable() {
               }}
             />
           </Paper>
+
           <Popup
-            title="Escolha uma UCC para começar"
+            title="Nota de Encomenda"
             openPopup={openPopup}
             setOpenPopup={setOpenPopup}
           >
@@ -301,7 +339,14 @@ export default function GruopTable() {
               HandlePrintDocument={HandlePrintDocument}
               data={data}
               recordForEdit={recordForEdit}
+              handleCancelOnClick={handleCancelOnClick}
             ></OrderForm>
+            <DeletePopUp
+              open={open}
+              recordForCancel={recordForCancel}
+              handleCancel={handleCancelCancel}
+              handleConfirm={handleCancelConfirm}
+            ></DeletePopUp>
           </Popup>
         </>
       );

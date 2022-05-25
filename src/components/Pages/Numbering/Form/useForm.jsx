@@ -11,14 +11,14 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
       if (name === "Prefix") {
         setValues({
           ...values,
-          [name]: value.slice(0, 4).toUpperCase(),
+          [name]: value.slice(0, 10).toUpperCase(),
         });
       } else {
         const re = /^[0-9\b]+$/;
         if (value === "" || re.test(value)) {
           setValues({
             ...values,
-            [name]: value.slice(0, 9),
+            [name]: value.slice(0, 7),
           });
         }
       }

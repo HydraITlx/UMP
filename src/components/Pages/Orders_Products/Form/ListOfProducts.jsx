@@ -30,7 +30,7 @@ export default function PagePermissions(props) {
       ProductsLines.then((response) => {
         if (response !== undefined) {
           props.calculateTotal(response);
-          console.log(response);
+
           setData(response);
         }
       });
@@ -87,7 +87,7 @@ export default function PagePermissions(props) {
     },
 
     {
-      title: "Total",
+      title: "Total s/IVA",
       field: "Total_Amount",
       width: "auto",
       align: "center",
@@ -95,7 +95,7 @@ export default function PagePermissions(props) {
     },
 
     {
-      title: "Total C/iva",
+      title: "Total C/IVA",
       field: "Total_AmountVat",
       width: "auto",
       align: "center",

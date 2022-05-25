@@ -7,7 +7,7 @@ import {
   DeleteCreatedOrders,
 } from "../../Requests/OrdersRequests";
 
-import { PostOrders } from "../../Requests/Post_OrdersRequest";
+import { PostOrders, SendEmail } from "../../Requests/Post_OrdersRequest";
 import { CreateOrderPDF } from "../../Helpers/CreateOrderPDF";
 
 import OrderForm from "./Form/OrderForm";
@@ -128,9 +128,8 @@ export default function GruopTable() {
 
       AuthPromise.then((response) => {
         if (response !== undefined) {
-          console.log(response);
-          setData(response);
           setTimeout(() => {
+            setData(response);
             setisLoading(false);
           }, 1000);
         }
@@ -139,17 +138,24 @@ export default function GruopTable() {
   };
 
   function handleOrdersPost(HeaderData, RowData) {
-    const OrdersPromise = PostOrders(HeaderData.Order_ID);
-    handleOrdersPostPromise(OrdersPromise, HeaderData, RowData);
+    const OrdersPromise = PostOrders(HeaderData);
+    handleOrdersPostPromise(
+      OrdersPromise,
+      HeaderData,
+      RowData,
+      HeaderData.sendEmail
+    );
   }
 
-  const handleOrdersPostPromise = (OrdersPromise, HeaderData, RowData) => {
+  const handleOrdersPostPromise = (
+    OrdersPromise,
+    HeaderData,
+    RowData,
+    sendEmail
+  ) => {
     {
       OrdersPromise.then((response) => {
         if (response !== undefined) {
-          console.log("WHAT THE FUCK ");
-          console.log(response[0]);
-          console.log(response[0].warningMessage);
           if (response[0].NewDocumentNo === "") {
             setAlertMessage(response[0].warningMessage);
             setAlertVariant(response[0].variant);
@@ -158,7 +164,26 @@ export default function GruopTable() {
             setAlertMessage(response[0].warningMessage);
             setAlertVariant(response[0].variant);
             setAlertopen(true);
-            CreateOrderPDF(HeaderData, RowData, response[0].NewDocumentNo);
+            if (sendEmail) {
+              SendEmail(
+                response[0].NewDocumentNo,
+                HeaderData.Email,
+                CreateOrderPDF(
+                  HeaderData,
+                  RowData,
+                  response[0].NewDocumentNo,
+                  sendEmail
+                ),
+                HeaderData
+              );
+            } else {
+              CreateOrderPDF(
+                HeaderData,
+                RowData,
+                response[0].NewDocumentNo,
+                sendEmail
+              );
+            }
           }
         }
       });
@@ -209,6 +234,31 @@ export default function GruopTable() {
       title: "Valor Total",
       field: "Total_Amount",
       width: "auto",
+      render: (rowData) => {
+        let rowStyle = { color: "black", fontWeight: "bold" };
+        if (rowData.Total_Amount !== null) {
+          if (isNum(rowData.Order_Minimum_Amount)) {
+            //less than 50%
+            const Percentage =
+              (rowData.Total_Amount.replace(",", ".") /
+                rowData.Order_Minimum_Amount) *
+              100;
+
+            if (Percentage > 100) {
+              rowStyle = { color: "#00A20D", fontWeight: "bold" };
+            }
+
+            if (Percentage > 50 && Percentage < 100) {
+              rowStyle = { color: "#FFC500", fontWeight: "bold" };
+            }
+
+            if (Percentage < 50) {
+              rowStyle = { color: "#EF2F00", fontWeight: "bold" };
+            }
+          }
+        }
+        return <a style={rowStyle}>{rowData.Total_Amount}</a>;
+      },
       align: "center",
     },
   ];
@@ -217,6 +267,10 @@ export default function GruopTable() {
   const tableHeight =
     ((window.innerHeight - 64 - 64 - 52 - 1) / window.innerHeight) * 85;
   //Auto Height
+
+  function isNum(val) {
+    return !isNaN(val);
+  }
 
   const options = {
     maxBodyHeight: `${tableHeight}vh`,
@@ -241,12 +295,9 @@ export default function GruopTable() {
   };
 
   const addOrEdit = (values, rowData) => {
-    console.log("VALUES AQUI VICTOR");
-    console.log(values);
     handleOrdersPost(values, rowData);
     setOpenPopup(false);
-
-    console.log("heheheheheheh");
+    setUpdate(!update);
     setTimeout(() => {}, 500);
   };
 
@@ -279,11 +330,7 @@ export default function GruopTable() {
     }, 1000);
   };
 
-  const HandlePrintDocument = (headerData, rowData) => {
-    console.log(headerData);
-    console.log(rowData);
-    console.log("isprinting");
-  };
+  const HandlePrintDocument = (headerData, rowData) => {};
 
   if (isLoading === true) {
     return <Spinner />;
@@ -400,7 +447,7 @@ export default function GruopTable() {
             handleConfirm={handleDeleteConfirm}
           ></DeletePopUp>
           <Popup
-            title="Ficha de Encomenda"
+            title="Nota de Encomenda"
             openPopup={openPopup}
             setOpenPopup={setOpenPopup}
           >

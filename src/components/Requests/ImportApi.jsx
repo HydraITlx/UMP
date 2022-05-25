@@ -1,5 +1,4 @@
 export function ImportAPI() {
-  console.log("ENTOU AQUI");
   const requestOptions = {
     method: "POST",
     headers: {
@@ -17,8 +16,6 @@ export function ImportAPI() {
 function getApiPromise(RequestUrl, requestOptions) {
   fetch(RequestUrl, requestOptions)
     .then((response) => response.json())
-    .then((responseData) => {
-      console.log(responseData);
-    })
+    .then((responseData) => {})
     .catch((error) => console.warn(error));
 }

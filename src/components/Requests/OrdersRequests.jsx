@@ -51,7 +51,6 @@ export function getProducts(userName, UCC_ID) {
 }
 
 export function ProcessCartProdutos(userName, UCC_ID, data, Qtd) {
-  console.log(data);
   let body = {
     UCC_ID: UCC_ID,
     username: userName,
@@ -120,8 +119,6 @@ export function DeleteCreatedOrders(Order_ID) {
 }
 
 export function getProductsLines(Order_ID) {
-  console.log("WHAT IM SENDING?");
-  console.log(Order_ID);
   let body = {
     process: 1,
     Order_ID: Order_ID,
@@ -143,9 +140,6 @@ export function getProductsLines(Order_ID) {
 }
 
 export function DeleteProductsLines(Rowdata) {
-  console.log("DELETE HERE");
-  console.log(Rowdata);
-
   let body = {
     process: 2,
     Order_ID: Rowdata.ID,
@@ -191,7 +185,6 @@ export function EditProductsLines(Rowdata) {
 }
 
 export function EditStockistProductsLines(Rowdata) {
-  console.log(Rowdata);
   let body = {
     process: 4,
     Order_ID: Rowdata.ID,
@@ -200,6 +193,7 @@ export function EditStockistProductsLines(Rowdata) {
     Comercial_Branch: Rowdata.Comercial_Branch,
     Unit_Price_Box: Rowdata.Unit_Price_Box,
     Box_Quantity: Rowdata.Box_Quantity,
+    Unit_Price_UN: Rowdata.Unit_Price_UN,
   };
 
   const requestOptions = {

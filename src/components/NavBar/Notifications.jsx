@@ -37,24 +37,19 @@ export default function AccountMenu(props) {
   };
 
   const MarkAsRead = (rowData) => {
-    console.log(rowData);
-
     setTimeout(() => {
       MarkNotificationAsRead(rowData);
       const dataDelete = [...notifications];
       const index = notifications.findIndex((e) => e.ID == rowData.ID);
       dataDelete.splice(index, 1);
       setNotifications([...dataDelete]);
-      console.log(notifications);
     }, 400);
   };
 
   useEffect(() => {
-    console.log(props.usernameProp);
     props.socket?.on("getNotification", (data) => {
-      console.log(data.result);
       setNotifications(data.result);
-      console.log(props.sendEmail);
+
       setEmailSettings(props.sendEmail);
     });
   }, [props.socket]);
@@ -62,8 +57,6 @@ export default function AccountMenu(props) {
   useEffect(() => {
     setTimeout(() => {
       setEmailSettings(props.sendEmail);
-      console.log("props.sendEmail");
-      console.log(props.sendEmail);
     }, 200);
   }, [props.sendEmail]);
 

@@ -48,7 +48,6 @@ export default function ButtonAppBar() {
       AuthPromise.then((response) => {
         if (response !== undefined) {
           setSendEmail(response[0].DontSendEmail);
-          console.log(response);
         }
       });
     }
@@ -73,7 +72,8 @@ export default function ButtonAppBar() {
               className="logoImage"
               src={logo}
               alt="logo"
-              style={{ paddingBottom: 3 }}
+              style={{ paddingBottom: 3, cursor: "pointer" }}
+              onClick={() => window.location.reload(false)}
             ></img>
           </Box>
 

@@ -26,7 +26,7 @@ import AlignHorizontalRightIcon from "@mui/icons-material/AlignHorizontalRight";
 import DataObjectIcon from "@mui/icons-material/DataObject";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-
+import InsightsIcon from "@mui/icons-material/Insights";
 export default function TemporaryDrawer(prop) {
   let navigate = useNavigate();
   const [state, setState] = React.useState({

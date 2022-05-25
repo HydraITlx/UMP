@@ -83,7 +83,6 @@ export default function GruopTable() {
 
       AuthPromise.then((response) => {
         if (response[0] !== undefined) {
-          console.log(response[0]);
           setAllowRead(response[0].r);
           setAllowModify(response[0].m);
           setAllowInsert(response[0].i);
@@ -124,7 +123,7 @@ export default function GruopTable() {
       AuthPromise.then((response) => {
         if (response !== undefined) {
           setisLoading(false);
-          console.log(response);
+
           setData(response);
         }
       });
@@ -208,8 +207,6 @@ export default function GruopTable() {
   };
 
   const openInPopup = (rowData) => {
-    console.log("rowData");
-    console.log(rowData);
     setRecordForEdit(rowData);
     setOpenPopup(true);
   };
@@ -230,7 +227,6 @@ export default function GruopTable() {
   };
 
   const handleDeleteOnClick = (rowData) => {
-    console.log(rowData);
     setRecordForDelete(rowData.data);
     setOpen(true);
   };
@@ -333,7 +329,9 @@ export default function GruopTable() {
                             setRecordForEdit(null);
                             setOnlyPreview(false);
                           }}
-                        ></IconButton>
+                        >
+                          <AddIcon fontSize="small" />
+                        </IconButton>
                       </div>
                     </div>
                   </div>

@@ -62,6 +62,10 @@ export function onHandleUCCUpdate(values) {
     Responsible_Pharmacist_Email: values.Responsible_Pharmacist_Email,
     Active: values.Active,
     Logo: values.Logo,
+    Alliance_customer_number: values.Alliance_customer_number,
+    Alliance_Route: values.Alliance_Route,
+    Encoding_of_Stockist: values.Encoding_of_Stockist,
+    Lab_print_coding: values.Lab_print_coding,
   };
 
   let requestOptions = {
@@ -94,6 +98,10 @@ export function onHandleUCCInsert(values) {
     Responsible_Pharmacist_Email: values.Responsible_Pharmacist_Email,
     Active: values.Active,
     Logo: values.Logo,
+    Alliance_customer_number: values.Alliance_customer_number,
+    Alliance_Route: values.Alliance_Route,
+    Encoding_of_Stockist: values.Encoding_of_Stockist,
+    Lab_print_coding: values.Lab_print_coding,
   };
 
   let requestOptions = {

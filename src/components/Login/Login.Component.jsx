@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import * as React from "react";
 import { runInAction } from "mobx";
 import { useNavigate } from "react-router-dom";
 import { doLogin, setStorage } from "../Requests/LoginRequests";
@@ -7,7 +8,13 @@ import Button from "../Helpers/Button";
 import Alert from "../Helpers/Alerts";
 import userStore from "../Store/UserStore";
 import logo from "../../images/logo.jpeg";
-
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 export function Login() {
   const [rememberLogin, setrememberLogin] = useState(false);
   const [username, setUsername] = useState("");
@@ -15,6 +22,8 @@ export function Login() {
   const [showError, setShowError] = useState(false);
   const [showWarning, setshowWarning] = useState(false);
   const [shouldNavigate, setshouldNavigate] = useState(false);
+  const [showPassword, SetShowPassword] = useState(false);
+
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -54,6 +63,16 @@ export function Login() {
     const AuthPromise = doLogin(username, password, rememberLogin);
 
     setshouldNavigate(handleAuthPromise(AuthPromise));
+  };
+
+  const handleClickShowPassword = () => {
+    SetShowPassword(!showPassword);
+  };
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
   };
 
   const handleAuthPromise = (AuthPromise) => {
@@ -102,22 +121,45 @@ export function Login() {
         </div>
         <div className="form-group">
           <h3>Faça login na plataforma</h3>
-          <input
-            type="username"
-            className="form-control"
-            placeholder="Utilizador"
-            value={username ? username : ""}
-            onChange={handleChangeUser("username")}
-          />
+
+          <FormControl sx={{ width: "100%" }} variant="outlined">
+            <InputLabel htmlFor="outlined-adornment-password">
+              Utilizador
+            </InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-password"
+              type="username"
+              value={username ? username : ""}
+              onChange={handleChangeUser("username")}
+              label="Password"
+            />
+          </FormControl>
         </div>
         <div className="form-group">
-          <input
-            type="password"
-            className="form-control"
-            placeholder="Palavra-passe"
-            value={password}
-            onChange={handleChangePassword("password")}
-          />
+          <FormControl sx={{ width: "100%" }} variant="outlined">
+            <InputLabel htmlFor="outlined-adornment-password">
+              Password
+            </InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-password"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={handleChangePassword("password")}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Password"
+            />
+          </FormControl>
         </div>
 
         {showError && (

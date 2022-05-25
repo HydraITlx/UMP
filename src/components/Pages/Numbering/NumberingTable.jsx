@@ -57,7 +57,6 @@ export default function GruopTable() {
 
       RequestPromise.then((response) => {
         if (response !== undefined) {
-          console.log(response);
           setData(response);
         }
       });
@@ -186,7 +185,6 @@ export default function GruopTable() {
   };
 
   const handleDeleteOnClick = (rowData) => {
-    console.log(rowData);
     setRecordForDelete(rowData.data);
     setOpen(true);
   };

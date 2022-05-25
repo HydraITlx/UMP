@@ -9,7 +9,6 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
     const { name, value, checked } = e.target;
 
     if (name === "Active") {
-      console.log("esta a alterar o switch aqui2");
       setValues({
         ...values,
         [name]: checked,

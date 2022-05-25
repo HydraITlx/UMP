@@ -26,6 +26,9 @@ function Users(props) {
   const [Qtd, setQtd] = useState(0);
   const [open, setOpen] = useState(false);
   const [Alertopen, setAlertopen] = useState(false);
+  const [AlreadyIn, setAlreadyIn] = useState(
+    props.data.AlreadyIn ? props.data.AlreadyIn : 0
+  );
 
   const increment = () => {
     {
@@ -45,8 +48,6 @@ function Users(props) {
   const onQtdChange = (e) => {
     const rx_live = /^[+-]?\d*(?:[.,]\d*)?$/;
     if (rx_live.test(e.target.value)) {
-      console.log(e.target.value);
-      console.log(e.target.value.length);
       if (e.target.value > 9999) {
         return;
       } else {
@@ -71,6 +72,7 @@ function Users(props) {
     setOpen(false);
     setAlertopen(true);
     setQtd(0);
+    setAlreadyIn(AlreadyIn + Qtd);
   };
 
   const handleClose = (event, reason) => {
@@ -117,7 +119,6 @@ function Users(props) {
       >
         <AddShoppingCartIcon />
       </IconButton>
-
       <Dialog
         open={open}
         TransitionComponent={Transition}
@@ -144,6 +145,9 @@ function Users(props) {
           Produto adicionado com sucesso!
         </Alert>
       </Snackbar>
+      <div
+        style={AlreadyIn ? { fontWeight: "bold" } : {}}
+      >{`(${AlreadyIn})`}</div>
     </section>
   );
 }

@@ -8,7 +8,6 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
   const handleInputChange = (e) => {
     const { name, value, checked } = e.target;
     if (name === "active" || name === "is_admin") {
-      console.log("esta a alterar o switch aqui2");
       setValues({
         ...values,
         [name]: checked,
@@ -16,7 +15,7 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
     } else {
       setValues({
         ...values,
-        [name]: value,
+        [name]: name === "username" ? value.trim() : value,
       });
     }
     if (validateOnChange) validate({ [name]: value });

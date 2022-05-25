@@ -28,8 +28,6 @@ function getRequestPromise(RequestUrl, requestOptions) {
 }
 
 export function updateLaboratories(values) {
-  console.log("VICTOR QUE ->>>");
-  console.log(values);
   let body = {
     process: 3,
     ID: values.ID,

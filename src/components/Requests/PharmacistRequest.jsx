@@ -28,9 +28,6 @@ function getRequestPromise(RequestUrl, requestOptions) {
 }
 
 export function DeletePharmacists(ID) {
-  console.log("ID");
-  console.log(ID);
-
   let body = {
     process: 3,
     ID: ID,
@@ -52,9 +49,6 @@ export function DeletePharmacists(ID) {
 }
 
 export function InsertPharmacists(newData) {
-  console.log("InsertPharmacists");
-  console.log(newData);
-  console.log(newData.Active);
   let body = {
     process: 4,
     Name: newData.Name,
@@ -100,9 +94,6 @@ export function getUserOptions() {
 }
 
 export function UpdatePharmacists(newData) {
-  console.log("InsertPharmacists");
-  console.log(newData);
-  console.log(newData.Active);
   let body = {
     process: 6,
     ID: newData.ID,

@@ -28,8 +28,6 @@ function getRequestPromise(RequestUrl, requestOptions) {
 }
 
 export function InsertProducts(rowData) {
-  console.log("rowData");
-  console.log(rowData);
   let body = {
     process: 2,
     Year: rowData.Year,
@@ -47,6 +45,7 @@ export function InsertProducts(rowData) {
     Tax_Percentage: rowData.Tax_Percentage,
     Active: rowData.Active,
     CFT: rowData.CFT,
+    CFT_Family: rowData.CFT_Family,
   };
 
   const requestOptions = {
@@ -65,8 +64,6 @@ export function InsertProducts(rowData) {
 }
 
 export function DeleteProducts(rowData) {
-  console.log("rowData");
-  console.log(rowData);
   let body = {
     process: 3,
     Year: rowData.Year,
@@ -111,8 +108,6 @@ export function getLabsOptions() {
 }
 
 export function modifyProducts(rowData) {
-  console.log("rowData");
-  console.log(rowData);
   let body = {
     process: 4,
     Year: rowData.Year,
@@ -130,6 +125,7 @@ export function modifyProducts(rowData) {
     Tax_Percentage: rowData.Tax_Percentage,
     Active: rowData.Active,
     CFT: rowData.CFT,
+    CFT_Family: rowData.CFT_Family,
   };
 
   const requestOptions = {

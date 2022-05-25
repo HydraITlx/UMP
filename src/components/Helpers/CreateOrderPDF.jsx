@@ -1,45 +1,80 @@
 import { jsPDF } from "jspdf";
-import logo from "../../images/cofinanciado.png";
 import autoTable from "jspdf-autotable";
-function Header() {}
+import base64 from "base-64";
 
-export function CreateOrderPDF(HeaderData, RowData, DocumentNo) {
-  console.log("HeaderData");
-  console.log(HeaderData);
-  console.log("RowData");
-  console.log(RowData);
+export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
+  let TotalAmount = 0;
+  let TotalAmountVat = 0;
 
+  RowData.map((data) => {
+    TotalAmount = TotalAmount + data.Total_Amount.replace(",", ".");
+    TotalAmountVat = TotalAmountVat + data.Total_AmountVat.replace(",", ".");
+  });
   const doc = new jsPDF();
   var totalPagesExp = "{total_pages_count_string}";
-  let head = [
-    [
-      "CHNM",
-      "Artigo",
-      "Qtd. Caixa",
-      "Preço Un.",
-      "Preço Caixa",
-      "Quantidade",
-      "Preço",
-    ],
-  ];
+  let head = [];
 
   let body = [];
+  if (HeaderData.Stockist == true) {
+    head = [
+      [
+        "CHNM",
+        "Artigo",
+        "Nome C.",
+        "Unid/Embal",
+        "Preço Un.(s/IVA)",
+        "Preço Emb.",
+        "Nº Emb.",
+        "Preço(s/IVA)",
+      ],
+    ];
 
-  RowData.map((item) => {
-    body.push([
-      item.CHNM,
-      item.Description,
-      item.Box_Quantity,
-      item.Unit_Price_UN,
-      item.Unit_Price_Box,
-      item.Quantity,
-      item.Total_Amount,
-    ]);
-  });
+    RowData.map((item) => {
+      body.push([
+        item.CHNM,
+        item.Description.slice(0, 25),
+        item.Comercial_Branch.slice(0, 25),
+        item.Box_Quantity,
+        item.Unit_Price_UN,
+        item.Unit_Price_Box,
+        item.Quantity,
+        item.Total_Amount,
+      ]);
+    });
+  } else {
+    RowData.map((item) => {
+      head = [
+        [
+          "CHNM",
+          "Artigo",
+          "Unid/Embal",
+          "Preço Un.(s/IVA)",
+          "Preço Emb.",
+          "Nº Emb.",
+          "Preço(s/IVA)",
+        ],
+      ];
+
+      body.push([
+        item.CHNM,
+        item.Description.slice(0, 25),
+        item.Box_Quantity,
+        item.Unit_Price_UN,
+        item.Unit_Price_Box,
+        item.Quantity,
+        item.Total_Amount,
+      ]);
+    });
+  }
+
+  let Total_Amount = HeaderData.Total_Amount.replace(",", ".");
+  let Total_AmountVat = HeaderData.Total_AmountVat.replace(",", ".");
 
   body.push([
     {
-      content: `Total s/IVA: ${HeaderData.Total_Amount}`,
+      content: `Total s/IVA: ${Number(TotalAmount)
+        .toFixed(2)
+        .replace(".", ",")}€`,
       colSpan: 7,
       styles: {
         //  fillColor: [196, 189, 151],
@@ -51,7 +86,9 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo) {
 
   body.push([
     {
-      content: `Total c/IVA: ${HeaderData.Total_AmountVat}`,
+      content: `Total c/IVA: ${Number(TotalAmountVat)
+        .toFixed(2)
+        .replace(".", ",")}€`,
       colSpan: 7,
       styles: {
         //   fillColor: [196, 189, 151],
@@ -68,6 +105,7 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo) {
     styles: {
       cellWidth: "wrap",
       fontSize: 8,
+      halign: "center",
     },
     headStyles: { fillColor: [238, 236, 225], textColor: 0 },
     columnStyles: {
@@ -84,9 +122,21 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo) {
       //HEADER
       doc.addImage(HeaderData.Logo, "jpeg", 10, 10, 20, 20, "teste", "none", 0);
       doc.setFontSize(14).setFont(undefined, "bold");
-      doc.text("Unidade de Cuidados Continuados Divina Providência", 40, 20);
+      doc.text("Unidade de Cuidados Continuados", 70, 20);
       doc.setFontSize(12).setFont(undefined, "bold");
       doc.text(HeaderData.UCC_Name, 10, 40);
+
+      if (HeaderData.Stockist == true) {
+        doc.setFontSize(10).setFont(undefined, "bold");
+        doc.text("Cod. impresso Armazenista:", 120, 45);
+        doc.setFontSize(10).setFont(undefined, "normal");
+        doc.text(HeaderData.Encoding_of_Stockist, 169, 45);
+      } else {
+        doc.setFontSize(10).setFont(undefined, "bold");
+        doc.text("Cod. impresso Lab:", 120, 40);
+        doc.setFontSize(10).setFont(undefined, "normal");
+        doc.text(HeaderData.Lab_print_coding, 154, 40);
+      }
       doc.setFontSize(10).setFont(undefined, "normal");
       doc.text(HeaderData.UccAddress, 10, 45);
       doc.setFontSize(10).setFont(undefined, "bold");
@@ -136,12 +186,13 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo) {
       var pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
       var pageWidth = pageSize.width;
 
-      let PharmacSignature = "";
+      let PharmacSignature = `Assinatura: ${HeaderData.Pharmacist_Name}`;
+      let IsSub = "";
 
-      if (HeaderData.Replacement === true) {
-        PharmacSignature = `Assinatura substituto: ${HeaderData.Pharmacist_Name}`;
+      if (HeaderData.Replacement == true) {
+        IsSub = `Farmacêutica substituta`;
       } else {
-        PharmacSignature = `Assinatura: ${HeaderData.Pharmacist_Name}`;
+        IsSub = ``;
       }
 
       doc.setLineWidth(16);
@@ -178,6 +229,8 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo) {
 
       doc.setFontSize(8).setFont(undefined, "bold");
       doc.text(PharmacSignature, 120, pageHeight - 20);
+      doc.setFontSize(8).setFont(undefined, "bold");
+      doc.text(IsSub, 120, pageHeight - 15);
     },
   });
 
@@ -188,5 +241,12 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo) {
   if (typeof doc.putTotalPages === "function") {
     doc.putTotalPages(totalPagesExp);
   }
-  doc.save(`${DocumentNo}.pdf`);
+
+  if (printBase64) {
+    var out = doc.output();
+    var url = "data:application/pdf;base64," + base64.encode(out);
+    return base64.encode(out);
+  } else {
+    doc.save(`${DocumentNo}.pdf`);
+  }
 }

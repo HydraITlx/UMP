@@ -29,9 +29,6 @@ function getRequestPromise(RequestUrl, requestOptions) {
 }
 
 export function InsertReturnConditions(newData, ID) {
-  console.log("InsertPharmacists");
-  console.log(newData);
-
   let body = {
     process: 2,
     ID: ID,

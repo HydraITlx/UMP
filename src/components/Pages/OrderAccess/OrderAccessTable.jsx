@@ -94,19 +94,20 @@ export default function GruopTable() {
 
       RequestPromise.then((response) => {
         if (response !== undefined) {
-          console.log(response);
           setData(response);
         }
       });
     }
   };
 
-  const addOrEdit = (values, resetForm) => {
+  const addOrEdit = (values, resetForm, Email) => {
+    const index = UCCOptions.findIndex((e) => e.value == values.UCC_ID);
+
     if (isInsert) {
-      InsertOrderAccess(values);
+      InsertOrderAccess(values, Email, UCCOptions[index].label);
     }
     if (isEdit) {
-      UpdateOrderAccess(values);
+      UpdateOrderAccess(values, Email, UCCOptions[index].label);
     }
     resetForm();
     setRecordForEdit(null);
@@ -167,7 +168,6 @@ export default function GruopTable() {
   };
 
   const handleDeleteOnClick = (rowData) => {
-    console.log(rowData);
     setRecordForDelete(rowData.data);
     setOpen(true);
   };
@@ -179,7 +179,6 @@ export default function GruopTable() {
   const handleDeleteConfirm = (rowData) => {
     setOpen(false);
     setTimeout(() => {
-      console.log(rowData);
       const dataDelete = [...data];
       const index = rowData.ID;
       dataDelete.splice(index, 1);

@@ -30,7 +30,7 @@ export default function PagePermissions(props) {
       ProductsLines.then((response) => {
         if (response !== undefined) {
           props.calculateTotal(response);
-          console.log(response);
+
           setData(response);
         }
       });
@@ -93,8 +93,16 @@ export default function PagePermissions(props) {
     },
 
     {
-      title: "Total",
+      title: "Total s/IVA",
       field: "Total_Amount",
+      width: "auto",
+      align: "center",
+      editable: "never",
+    },
+
+    {
+      title: "Total c/IVA",
+      field: "Total_AmountVat",
       width: "auto",
       align: "center",
       editable: "never",
@@ -107,30 +115,32 @@ export default function PagePermissions(props) {
       align: "center",
       editComponent: (props) => {
         function onChangeValue(e) {
+          const vatMultiplier = (percentage) => percentage / 100 + 1;
+
           if (e.target.value.length > 8) return;
 
           const floatRegExp = new RegExp(
             "^[+-]?([0-9]+([,][0-9]*)?|[,][0-9]+)$"
           );
 
-          const orginalValue = e.target.value;
           let value = e.target.value;
 
-          if (value === "" || floatRegExp.test(value)) {
-            value = value.replace(",", ".");
-            let unitprice =
-              value / props.rowData.Box_Quantity.replace(",", ".");
-            console.log(unitprice);
-            console.log(
-              `Value => ${value}  qtd Box =>  ${props.rowData.Box_Quantity}  unitprice => ${unitprice}`
-            );
-            props.rowData.Unit_Price_UN = unitprice
-              .toFixed(5)
-              .replace(".", ",");
-            props.rowData.Total_Amount = (props.rowData.Quantity * value)
-              .toFixed(5)
-              .replace(".", ",");
-            props.onChange(orginalValue);
+          if (value == "" || floatRegExp.test(value)) {
+            const convertedValue = parseFloat(value.replace(",", "."));
+
+            let unitprice = convertedValue / props.rowData.Box_Quantity;
+            unitprice = unitprice.toFixed(5);
+            props.rowData.Unit_Price_UN = unitprice.replace(".", ",");
+
+            let Total_Amount = props.rowData.Quantity * convertedValue;
+            Total_Amount = Total_Amount.toFixed(5);
+            let Total_AmountVat =
+              Total_Amount * vatMultiplier(props.rowData.Tax_Percentage);
+
+            Total_AmountVat = Total_AmountVat.toFixed(5);
+            props.rowData.Total_Amount = Total_Amount.replace(".", ",");
+            props.rowData.Total_AmountVat = Total_AmountVat.replace(".", ",");
+            props.onChange(value);
           }
         }
         return (
@@ -146,26 +156,23 @@ export default function PagePermissions(props) {
       align: "center",
       editComponent: (props) => {
         function onChangeValue(e) {
+          const vatMultiplier = (percentage) => percentage / 100 + 1;
+
           if (e.target.value.length > 8) return;
-
           const floatRegExp = new RegExp(/^[0-9\b]+$/);
+          let value = e.target.value;
 
-          const value = e.target.value;
-          if (value === "" || floatRegExp.test(value)) {
-            console.log(value);
-            if (value === "" || parseInt(value, 10) === 0) {
-              let unitprice = 0;
-              props.rowData.Unit_Price_UN = unitprice.toFixed(5);
-              props.onChange(value);
-            } else {
-              console.log(props.rowData.Unit_Price_Box);
-              let unitprice =
-                props.rowData.Unit_Price_Box.replace(",", ".") / value;
-              props.rowData.Unit_Price_UN = unitprice
-                .toFixed(5)
-                .replace(".", ",");
-              props.onChange(value);
-            }
+          if (value == "" || floatRegExp.test(value)) {
+            const convertedValue = parseInt(value);
+            const convertedBoxPrice = parseFloat(
+              props.rowData.Unit_Price_Box.replace(",", ".")
+            );
+
+            let unitprice = convertedBoxPrice / convertedValue;
+            unitprice = unitprice.toFixed(5);
+            props.rowData.Unit_Price_UN = unitprice.replace(".", ",");
+
+            props.onChange(value);
           }
         }
         return (

@@ -65,8 +65,6 @@ export function UpdateNumbering(values, oldValues) {
     Number: values.Number,
     Prefix: values.Prefix,
   };
-  console.log("body");
-  console.log(body);
 
   const requestOptions = {
     method: "POST",

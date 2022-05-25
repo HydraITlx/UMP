@@ -37,8 +37,6 @@ export function useForm(initialFValues, validateOnChange = false, validate) {
     let ConvertedValue = value.replace(",", ".");
     let ConvertedQTDValue = QTDValue.toString().replace(",", ".");
 
-    console.log(ConvertedQTDValue);
-    console.log(QTDValue);
     if (name === "Total_Quantity") {
       if (value === "0" || value === "") {
         setValues({
