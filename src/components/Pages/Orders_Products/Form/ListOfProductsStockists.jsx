@@ -30,7 +30,6 @@ export default function PagePermissions(props) {
       ProductsLines.then((response) => {
         if (response !== undefined) {
           props.calculateTotal(response);
-
           setData(response);
         }
       });
@@ -83,6 +82,21 @@ export default function PagePermissions(props) {
       editComponent: (props) => {
         function onChangeValue(e) {
           if (e.target.value.length > 199) return;
+          props.onChange(e.target.value);
+        }
+        return (
+          <input type="text" value={props.value} onChange={onChangeValue} />
+        );
+      },
+      width: "auto",
+    },
+
+    {
+      title: "Observações",
+      field: "Observations",
+      editComponent: (props) => {
+        function onChangeValue(e) {
+          if (e.target.value.length > 999) return;
           props.onChange(e.target.value);
         }
         return (

@@ -156,6 +156,7 @@ export default function GruopTable() {
   };
 
   const openInPopup = (rowData) => {
+    setSendEmail(false);
     setRecordForEdit(rowData);
     setOpenPopup(true);
   };

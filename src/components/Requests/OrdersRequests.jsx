@@ -194,6 +194,7 @@ export function EditStockistProductsLines(Rowdata) {
     Unit_Price_Box: Rowdata.Unit_Price_Box,
     Box_Quantity: Rowdata.Box_Quantity,
     Unit_Price_UN: Rowdata.Unit_Price_UN,
+    Observations: Rowdata.Observations,
   };
 
   const requestOptions = {

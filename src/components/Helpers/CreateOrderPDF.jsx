@@ -6,15 +6,19 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
   let TotalAmount = 0;
   let TotalAmountVat = 0;
 
-  RowData.map((data) => {
-    TotalAmount = TotalAmount + data.Total_Amount.replace(",", ".");
-    TotalAmountVat = TotalAmountVat + data.Total_AmountVat.replace(",", ".");
-  });
+  //  RowData.map((data) => {
+  //    TotalAmount = TotalAmount + data.Total_Amount.replace(",", ".");
+  //    TotalAmountVat = TotalAmountVat + data.Total_AmountVat.replace(",", ".");
+  //  });
+
   const doc = new jsPDF();
   var totalPagesExp = "{total_pages_count_string}";
   let head = [];
 
   let body = [];
+
+  let columnStyles = [];
+
   if (HeaderData.Stockist == true) {
     head = [
       [
@@ -32,8 +36,8 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
     RowData.map((item) => {
       body.push([
         item.CHNM,
-        item.Description.slice(0, 25),
-        item.Comercial_Branch.slice(0, 25),
+        item.Description,
+        item.Comercial_Branch,
         item.Box_Quantity,
         item.Unit_Price_UN,
         item.Unit_Price_Box,
@@ -41,6 +45,17 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
         item.Total_Amount,
       ]);
     });
+
+    columnStyles = {
+      0: { cellWidth: 18 },
+      1: { cellWidth: 50 },
+      2: { cellWidth: 20 },
+      3: { cellWidth: 20 },
+      4: { cellWidth: 20 },
+      5: { cellWidth: 20 },
+      6: { cellWidth: 20 },
+      7: { cellWidth: 20 },
+    };
   } else {
     RowData.map((item) => {
       head = [
@@ -57,25 +72,113 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
 
       body.push([
         item.CHNM,
-        item.Description.slice(0, 25),
+        item.Description,
         item.Box_Quantity,
         item.Unit_Price_UN,
         item.Unit_Price_Box,
         item.Quantity,
         item.Total_Amount,
       ]);
+      20;
     });
+
+    columnStyles = {
+      0: { cellWidth: 18 },
+      1: { cellWidth: 70 },
+      2: { cellWidth: 20 },
+      3: { cellWidth: 20 },
+      4: { cellWidth: 20 },
+      5: { cellWidth: 20 },
+      6: { cellWidth: 20 },
+    };
   }
 
-  let Total_Amount = HeaderData.Total_Amount.replace(",", ".");
-  let Total_AmountVat = HeaderData.Total_AmountVat.replace(",", ".");
+  //TESTESTETE
+  let TotalIndexes = [];
+  let ArrayAmountVat = 0;
+  let ArrayAmount = 0;
+  const groupBy = (array, key) => {
+    // Return the end result
+    return array.reduce((result, currentValue) => {
+      // If an array already present for key, push it to the array. Else create an array and push the object
+      (result[currentValue[key]] = result[currentValue[key]] || []).push(
+        currentValue
+      );
+      TotalIndexes.indexOf(currentValue.Tax_Percentage) === -1
+        ? TotalIndexes.push(currentValue.Tax_Percentage)
+        : "";
+      // Return the current iteration `result` value, this will be taken as next iteration `result` value and accumulate
+      return result;
+    }, {}); // empty object is the initial value for result object
+  };
+
+  const GroupedByVat = groupBy(RowData, "Tax_Percentage");
+
+  TotalIndexes.map((index) => {
+    body.push([
+      {
+        content: ``,
+        colSpan: 8,
+        styles: {
+          fillColor: [255, 255, 255],
+          halign: "right",
+          fontStyle: "bold",
+        },
+      },
+    ]);
+    ArrayAmount = 0;
+    ArrayAmountVat = 0;
+    GroupedByVat[index].map(({ Total_Amount, Total_AmountVat }) => {
+      ArrayAmount = ArrayAmount + parseFloat(Total_Amount.replace(",", "."));
+      ArrayAmountVat =
+        ArrayAmountVat + parseFloat(Total_AmountVat.replace(",", "."));
+      TotalAmount = TotalAmount + parseFloat(Total_Amount.replace(",", "."));
+      TotalAmountVat =
+        TotalAmountVat + parseFloat(Total_AmountVat.replace(",", "."));
+    });
+    body.push([
+      {
+        content: `Total s/IVA( ${index}% ):  ${Number(ArrayAmount)
+          .toFixed(2)
+          .replace(".", ",")}€`,
+        colSpan: 8,
+        styles: {
+          fillColor: [238, 236, 225],
+          halign: "right",
+          fontStyle: "bold",
+          borders: "t",
+          lineColor: [0, 0, 0],
+          lineWidth: 0.1,
+        },
+      },
+    ]);
+
+    body.push([
+      {
+        content: `Total c/IVA( ${index}% ): ${Number(ArrayAmountVat)
+          .toFixed(2)
+          .replace(".", ",")}€`,
+        colSpan: 8,
+        styles: {
+          fillColor: [238, 236, 225],
+          halign: "right",
+          fontStyle: "bold",
+          borders: "t",
+          lineColor: [0, 0, 0],
+          lineWidth: 0.1,
+        },
+      },
+    ]);
+  });
+
+  //TESTESTETE
 
   body.push([
     {
       content: `Total s/IVA: ${Number(TotalAmount)
         .toFixed(2)
         .replace(".", ",")}€`,
-      colSpan: 7,
+      colSpan: 8,
       styles: {
         //  fillColor: [196, 189, 151],
         halign: "right",
@@ -89,7 +192,7 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
       content: `Total c/IVA: ${Number(TotalAmountVat)
         .toFixed(2)
         .replace(".", ",")}€`,
-      colSpan: 7,
+      colSpan: 8,
       styles: {
         //   fillColor: [196, 189, 151],
         halign: "right",
@@ -107,12 +210,10 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
       fontSize: 8,
       halign: "center",
     },
+
     headStyles: { fillColor: [238, 236, 225], textColor: 0 },
-    columnStyles: {
-      ID: { cellWidth: "auto" },
-      Country: { cellWidth: "auto" },
-      Rank: { cellWidth: "auto" },
-    },
+
+    columnStyles: columnStyles,
     theme: "striped",
     pageBreak: "auto",
     showHead: "everyPage",
@@ -122,7 +223,9 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
       //HEADER
       doc.addImage(HeaderData.Logo, "jpeg", 10, 10, 20, 20, "teste", "none", 0);
       doc.setFontSize(14).setFont(undefined, "bold");
-      doc.text("Unidade de Cuidados Continuados", 70, 20);
+      doc.text("Nota de Encomenda", 90, 20);
+      doc.setFontSize(14).setFont(undefined, "bold");
+      doc.text("Unidade de Cuidados Continuados", 70, 30);
       doc.setFontSize(12).setFont(undefined, "bold");
       doc.text(HeaderData.UCC_Name, 10, 40);
 
@@ -155,9 +258,9 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
       doc.setFontSize(10).setFont(undefined, "normal");
       doc.text(36, 66, HeaderData.Delivery_Address);
       doc.setFontSize(10).setFont(undefined, "bold");
-      doc.text(100, 66, "NE:");
+      doc.text(95, 66, "NE:");
       doc.setFontSize(10).setFont(undefined, "normal");
-      doc.text(108, 66, DocumentNo);
+      doc.text(101, 66, DocumentNo);
       doc.setFontSize(10).setFont(undefined, "bold");
       doc.text(135, 66, "Fornecedor:");
       doc.setFontSize(10).setFont(undefined, "normal");
