@@ -43,6 +43,29 @@ export function onHandleInsertModify(values, sendEmail) {
   getUserPromise(process.env.REACT_APP_ADD_USER, requestOptions);
 }
 
+export function onHandlePassWordUpdate(values) {
+  const body = {
+    username: values.username,
+    full_name: values.full_name,
+    email: values.email,
+    password: Math.random().toString(36).slice(-8),
+    is_admin: values.is_admin,
+    active: values.active,
+    attempts: 0,
+  };
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.REACT_APP_APITOKEN}`,
+    },
+    body: JSON.stringify(body),
+  };
+
+  getUserPromise(process.env.REACT_APP_UPDATE_PASSWORD, requestOptions);
+}
+
 export function onGetPagePermissions(values) {
   const body = {
     username: values.username,

@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import MaterialTable, { MTableToolbar } from "@material-table/core";
 import { Paper } from "@mui/material";
-import { getUsers, onHandleInsertModify } from "../../Requests/UserRequests";
+import {
+  getUsers,
+  onHandleInsertModify,
+  onHandlePassWordUpdate,
+} from "../../Requests/UserRequests";
 import Switch from "../../Helpers/Switch";
 import Popup from "../../Helpers/Popup";
 import IconButton from "@mui/material/IconButton";
@@ -9,6 +13,7 @@ import AddIcon from "@mui/icons-material/Add";
 import UserForm from "./Form/UserForm";
 import EditIcon from "@mui/icons-material/Edit";
 import TableTitle from "../../Helpers/TableTitle";
+import DeletePopUp from "../../Helpers/UpdatepasswordPopup.jsx";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -18,7 +23,8 @@ export default function GruopTable() {
   const [isInsert, setisInsert] = useState(false);
   const [isEdit, setisEdit] = useState(false);
   const [SendEmail, setSendEmail] = useState(true);
-
+  const [RecordForUpdatePass, setSetRecordForUpdatePass] = useState(null);
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     let isMounted = true;
 
@@ -42,6 +48,20 @@ export default function GruopTable() {
         }
       });
     }
+  };
+
+  const handleSendPasswordOnClick = (values) => {
+    setSetRecordForUpdatePass(values);
+    setOpen(true);
+  };
+
+  const handleCancelCancel = () => {
+    setOpen(false);
+  };
+
+  const handleCancelConfirm = (values) => {
+    onHandlePassWordUpdate(RecordForUpdatePass);
+    setOpen(false);
   };
 
   const columns = [
@@ -219,9 +239,17 @@ export default function GruopTable() {
           data={data}
           recordForEdit={recordForEdit}
           addOrEdit={addOrEdit}
+          handleSendPasswordOnClick={handleSendPasswordOnClick}
           addonConfirm={addonConfirm}
           isEdit={isEdit}
         ></UserForm>
+
+        <DeletePopUp
+          open={open}
+          RecordForUpdatePass={RecordForUpdatePass}
+          handleCancel={handleCancelCancel}
+          handleConfirm={handleCancelConfirm}
+        ></DeletePopUp>
       </Popup>
     </>
   );

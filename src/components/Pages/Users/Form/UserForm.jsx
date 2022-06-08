@@ -31,6 +31,14 @@ const ColorButton = styled(Button)(({ theme }) => ({
   },
 }));
 
+const ColorButton2 = styled(Button)(({ theme }) => ({
+  color: theme.palette.getContrastText(purple[500]),
+  backgroundColor: "#0b16ad",
+  "&:hover": {
+    backgroundColor: "#070c57",
+  },
+}));
+
 const initialFValues = {
   username: "",
   full_name: "",
@@ -41,14 +49,21 @@ const initialFValues = {
 };
 
 export default function GroupForm(props) {
-  const { addOrEdit, addonConfirm, recordForEdit, isEdit, data } = props;
+  const {
+    addOrEdit,
+    addonConfirm,
+    recordForEdit,
+    isEdit,
+    data,
+    handleSendPasswordOnClick,
+  } = props;
   const [showTable, setshowTable] = useState(false);
 
   let btnStyles = "";
   if (isEdit) {
-    btnStyles = { minWidth: "100%" };
+    btnStyles = { minWidth: "90%" };
   } else {
-    btnStyles = { minWidth: "100%" };
+    btnStyles = { minWidth: "90%" };
   }
 
   const validate = (fieldValues = values) => {
@@ -198,6 +213,13 @@ export default function GroupForm(props) {
         </Form>
       </DialogContent>
       <DialogActions>
+        <ColorButton2
+          disabled={!isEdit}
+          style={{ minWidth: "10%" }}
+          onClick={() => handleSendPasswordOnClick(values)}
+        >
+          Enviar Password
+        </ColorButton2>
         <ColorButton style={btnStyles} onClick={handleSubmit}>
           Submeter
         </ColorButton>

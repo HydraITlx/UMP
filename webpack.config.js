@@ -82,6 +82,7 @@ if (process.env.NODE_ENV === "production") {
     REACT_APP_NOTIFICATION_MANAGEMENT:
       "https://apifarma.ump.pt/api/notificationmanagement/",
     REACT_APP_CANCEL_ORDER: "https://apifarma.ump.pt/api/cancelpostedorder",
+    REACT_APP_UPDATE_PASSWORD: "https://apifarma.ump.pt/api/updateuserpassword",
     REACT_APP_POWER_BI:
       "https://app.powerbi.com/view?r=eyJrIjoiN2U3NjVmNWMtMjExMy00NzA3LWJkNDUtZTllMzI3ODE3MGJlIiwidCI6IjYxZjViNmZiLWVjYTYtNGRiNS05Y2JmLWM3ZjVmOGQxMGNkNSIsImMiOjl9",
     REACT_APP_APITOKEN:
@@ -99,65 +100,68 @@ if (process.env.SERVE) {
 
   EnvValues = {
     SKIP_PREFLIGHT_CHECK: true,
-    REACT_APP_USER_AUTH: "http://192.168.1.75:50000/api/userAuth/",
-    REACT_APP_ALL_USER: "http://192.168.1.75:50000/api/allusers/",
-    REACT_APP_EDIT_USER: "http://192.168.1.75:50000/api/editusers/",
-    REACT_APP_ADD_USER: "http://192.168.1.75:50000/api/addusers/",
-    REACT_APP_ADD_USERUSERGRUPO: "http://192.168.1.75:50000/api/addusergroups/",
+    REACT_APP_USER_AUTH: "http://192.168.0.117:50000/api/userAuth/",
+    REACT_APP_ALL_USER: "http://192.168.0.117:50000/api/allusers/",
+    REACT_APP_EDIT_USER: "http://192.168.0.117:50000/api/editusers/",
+    REACT_APP_ADD_USER: "http://192.168.0.117:50000/api/addusers/",
+    REACT_APP_ADD_USERUSERGRUPO:
+      "http://192.168.0.117:50000/api/addusergroups/",
     REACT_APP_DELETE_USERUSERGRUPO:
-      "http://192.168.1.75:50000/api/deleteusergroups/",
-    REACT_APP_GET_TOKEN: "http://192.168.1.75:50000/api/getusertoken/",
+      "http://192.168.0.117:50000/api/deleteusergroups/",
+    REACT_APP_GET_TOKEN: "http://192.168.0.117:50000/api/getusertoken/",
     REACT_APP_GET_PERMISSIONGROUPS:
-      "http://192.168.1.75:50000/api/getpermissiongroups/",
+      "http://192.168.0.117:50000/api/getpermissiongroups/",
     REACT_APP_MANAGE_PERMISSIONS:
-      "http://192.168.1.75:50000/api/managepermissiongroups/",
-    REACT_APP_GET_GROUPPAGES: "http://192.168.1.75:50000/api/getgrouppages/",
-    REACT_APP_GET_MANAGEPAGES: "http://192.168.1.75:50000/api/managepages/",
-    REACT_APP_GET_ALLPAGES: "http://192.168.1.75:50000/api/allpages/",
+      "http://192.168.0.117:50000/api/managepermissiongroups/",
+    REACT_APP_GET_GROUPPAGES: "http://192.168.0.117:50000/api/getgrouppages/",
+    REACT_APP_GET_MANAGEPAGES: "http://192.168.0.117:50000/api/managepages/",
+    REACT_APP_GET_ALLPAGES: "http://192.168.0.117:50000/api/allpages/",
     REACT_APP_DELETE_ALLPAGES:
-      "http://192.168.1.75:50000/api/deletepagegroups/",
-    REACT_APP_UPDATE_PAGES: "http://192.168.1.75:50000/api/updatepages/",
-    REACT_APP_DELETE_GROUP: "http://192.168.1.75:50000/api/deleteGroup/",
-    REACT_APP_USER_GROUPS: "http://192.168.1.75:50000/api/usergroups/",
-    REACT_APP_UCC_MANAGEMENT: "http://192.168.1.75:50000/api/uccmanagment/",
+      "http://192.168.0.117:50000/api/deletepagegroups/",
+    REACT_APP_UPDATE_PAGES: "http://192.168.0.117:50000/api/updatepages/",
+    REACT_APP_DELETE_GROUP: "http://192.168.0.117:50000/api/deleteGroup/",
+    REACT_APP_USER_GROUPS: "http://192.168.0.117:50000/api/usergroups/",
+    REACT_APP_UCC_MANAGEMENT: "http://192.168.0.117:50000/api/uccmanagment/",
     REACT_APP_PLACES_MANAGEMENT:
-      "http://192.168.1.75:50000/api/placesmanagment/",
+      "http://192.168.0.117:50000/api/placesmanagment/",
     REACT_APP_PHARMACIST_MANAGEMENT:
-      "http://192.168.1.75:50000/api/pharmacistmanagment/",
-    REACT_APP_ITEM_MANAGEMENT: "http://192.168.1.75:50000/api/itemsmanagment/",
+      "http://192.168.0.117:50000/api/pharmacistmanagment/",
+    REACT_APP_ITEM_MANAGEMENT: "http://192.168.0.117:50000/api/itemsmanagment/",
     REACT_APP_ORDERACCESS_MANAGEMENT:
-      "http://192.168.1.75:50000/api/orderaccessmanagment/",
+      "http://192.168.0.117:50000/api/orderaccessmanagment/",
     REACT_APP_LABORATORY_MANAGEMENT:
-      "http://192.168.1.75:50000/api/laboratorymanagment/",
+      "http://192.168.0.117:50000/api/laboratorymanagment/",
     REACT_APP_RETURN_MANAGEMENT:
-      "http://192.168.1.75:50000/api/returnconditionsmanagment/",
+      "http://192.168.0.117:50000/api/returnconditionsmanagment/",
     REACT_APP_ATTACHMENT_MANAGEMENT:
-      "http://192.168.1.75:50000/api/attachmentmanagment/",
+      "http://192.168.0.117:50000/api/attachmentmanagment/",
     REACT_APP_NUMBERING_MANAGEMENT:
-      "http://192.168.1.75:50000/api/numeringmanagment/",
+      "http://192.168.0.117:50000/api/numeringmanagment/",
     REACT_APP_PERMISSION_MANAGEMENT:
-      "http://192.168.1.75:50000/api/permissionmanagment/",
+      "http://192.168.0.117:50000/api/permissionmanagment/",
     REACT_APP_APIIMPORT_MANAGEMENT:
-      "http://192.168.1.75:50000/api/importapimanagement/",
+      "http://192.168.0.117:50000/api/importapimanagement/",
     REACT_APP_LABUCCACCESS_MANAGEMENT:
-      "http://192.168.1.75:50000/api/labuccaccess/",
+      "http://192.168.0.117:50000/api/labuccaccess/",
     REACT_APP_LABUCCFILTER_MANAGEMENT:
-      "http://192.168.1.75:50000/api/getfilterlabuccaccess/",
+      "http://192.168.0.117:50000/api/getfilterlabuccaccess/",
     REACT_APP_ORDER_MANAGEMENT:
-      "http://192.168.1.75:50000/api/ordermanagement/",
+      "http://192.168.0.117:50000/api/ordermanagement/",
     REACT_APP_CREATEDORDER_MANAGEMENT:
-      "http://192.168.1.75:50000/api/createdordermanagement/",
+      "http://192.168.0.117:50000/api/createdordermanagement/",
     REACT_APP_ORDERLINES_MANAGEMENT:
-      "http://192.168.1.75:50000/api/orderlinesmanagement/",
-    REACT_APP_DATA_IMPORT: "http://192.168.1.75:50000/api/dataimport/",
-    REACT_APP_PASS_CHANGER: "http://192.168.1.75:50000/api/passwordchanger/",
+      "http://192.168.0.117:50000/api/orderlinesmanagement/",
+    REACT_APP_DATA_IMPORT: "http://192.168.0.117:50000/api/dataimport/",
+    REACT_APP_PASS_CHANGER: "http://192.168.0.117:50000/api/passwordchanger/",
     REACT_APP_POSTEDORDERS_MANAGEMENT:
-      "http://192.168.1.75:50000/api/postedordersmanagement/",
-    REACT_APP_POST_ORDERS: "http://192.168.1.75:50000/api/postorders/",
-    REACT_APP_SOCKET_IO: "http://192.168.1.75:50000",
+      "http://192.168.0.117:50000/api/postedordersmanagement/",
+    REACT_APP_POST_ORDERS: "http://192.168.0.117:50000/api/postorders/",
+    REACT_APP_SOCKET_IO: "http://192.168.0.117:50000",
     REACT_APP_NOTIFICATION_MANAGEMENT:
-      "http://192.168.1.75:50000/api/notificationmanagement/",
-    REACT_APP_CANCEL_ORDER: "http://192.168.1.75:50000/api/cancelpostedorder",
+      "http://192.168.0.117:50000/api/notificationmanagement/",
+    REACT_APP_CANCEL_ORDER: "http://192.168.0.117:50000/api/cancelpostedorder",
+    REACT_APP_UPDATE_PASSWORD:
+      "http://192.168.0.117:50000/api/updateuserpassword",
     REACT_APP_POWER_BI:
       "https://app.powerbi.com/view?r=eyJrIjoiN2U3NjVmNWMtMjExMy00NzA3LWJkNDUtZTllMzI3ODE3MGJlIiwidCI6IjYxZjViNmZiLWVjYTYtNGRiNS05Y2JmLWM3ZjVmOGQxMGNkNSIsImMiOjl9",
     REACT_APP_APITOKEN:
@@ -243,7 +247,7 @@ module.exports = {
 
   // required if using webpack-dev-server
   devServer: {
-    host: "192.168.1.75",
+    host: "192.168.0.117",
     historyApiFallback: true,
     contentBase: "./dist",
     hot: true,
