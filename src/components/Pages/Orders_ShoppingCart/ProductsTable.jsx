@@ -219,7 +219,8 @@ export default function GruopTable() {
       title: "Preço Caixa",
       field: "Unit_Price_Box",
       width: "8rem",
-      render: (rowData) => rowData.Unit_Price_Box,
+      render: (rowData) =>
+        rowData.Unit_Price_Box.toFixed(5).toString().replace(".", ","),
     },
     {
       title: "Qtd. Caixa",
@@ -230,7 +231,8 @@ export default function GruopTable() {
       title: "Preço Un.",
       field: "Unit_Price_UN",
       width: "7rem",
-      render: (rowData) => rowData.Unit_Price_UN,
+      render: (rowData) =>
+        rowData.Unit_Price_UN.toFixed(5).toString().replace(".", ","),
     },
 
     {

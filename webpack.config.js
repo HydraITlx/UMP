@@ -231,13 +231,18 @@ module.exports = {
   },
 
   plugins: plugins,
-
   target: target,
 
   //devtool: "source-map",
   devtool: "nosources-source-map",
   resolve: {
     extensions: [".js", ".jsx"],
+    fallback: {
+      fs: false,
+      crypto: require.resolve("crypto-browserify"),
+      buffer: require.resolve("buffer/"),
+      stream: require.resolve("stream-browserify"),
+    },
 
     alias: {
       "@mui/styled-engine": "@mui/styled-engine-sc",

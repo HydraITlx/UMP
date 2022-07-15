@@ -27,6 +27,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import TextField from "@mui/material/TextField";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import ExportToExcel from "../../Helpers/ExportToExcel";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -211,6 +212,7 @@ export default function GruopTable() {
       title: "Preço Caixa",
       field: "Unit_Price_Box",
       width: "9%",
+      render: (rowdata) => rowdata.Unit_Price_Box.toString().replace(".", ","),
     },
 
     {
@@ -223,6 +225,7 @@ export default function GruopTable() {
       title: "Preço Un.",
       field: "Unit_Price_UN",
       width: "9%",
+      render: (rowdata) => rowdata.Unit_Price_UN.toString().replace(".", ","),
     },
     {
       title: "Esgotado",
@@ -315,7 +318,18 @@ export default function GruopTable() {
   };
 
   const openInPopup = (rowData) => {
-    setRecordForEdit(rowData);
+    let rowDataUpdated = rowData;
+    rowDataUpdated.Unit_Price_Box = rowData.Unit_Price_Box.toString().replace(
+      ".",
+      ","
+    );
+
+    rowDataUpdated.Unit_Price_UN = rowData.Unit_Price_UN.toString().replace(
+      ".",
+      ","
+    );
+
+    setRecordForEdit(rowDataUpdated);
     setOpenPopup(true);
   };
 
@@ -391,6 +405,7 @@ export default function GruopTable() {
                 Toolbar: (props) => (
                   <div>
                     <MTableToolbar {...props} />
+
                     <div style={{ display: "flex" }}>
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DesktopDatePicker
@@ -415,6 +430,7 @@ export default function GruopTable() {
                           flex: 1,
                         }}
                       >
+                        <ExportToExcel data={filerData} />
                         <IconButton
                           disabled={!AllowInsert && !IsAdmin}
                           onClick={() => {

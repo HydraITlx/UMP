@@ -21,6 +21,7 @@ const initialFValues = {
   Email: "",
   Alliance_Route: "",
   Alliance_customer_number: "",
+  Observations: "",
 };
 
 const ColorButton = styled(Button)(({ theme }) => ({

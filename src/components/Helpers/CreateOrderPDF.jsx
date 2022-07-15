@@ -3,13 +3,12 @@ import autoTable from "jspdf-autotable";
 import base64 from "base-64";
 
 export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
+  console.log("CRIA O PDF");
+  console.log(HeaderData);
   let TotalAmount = 0;
   let TotalAmountVat = 0;
 
-  //  RowData.map((data) => {
-  //    TotalAmount = TotalAmount + data.Total_Amount.replace(",", ".");
-  //    TotalAmountVat = TotalAmountVat + data.Total_AmountVat.replace(",", ".");
-  //  });
+  console.log({ RowData });
 
   const doc = new jsPDF();
   var totalPagesExp = "{total_pages_count_string}";
@@ -18,6 +17,8 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
   let body = [];
 
   let columnStyles = [];
+
+  let obsLines = [];
 
   if (HeaderData.Stockist == true) {
     head = [
@@ -44,6 +45,26 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
         item.Quantity,
         item.Total_Amount,
       ]);
+      if (item.Observations !== "") {
+        console.log(item.Observations);
+        if (obsLines.length === 0) {
+          console.log(item.CHNM);
+          obsLines.push({
+            content: `Observações: ${item.Observations}(${item.CHNM});`,
+            colSpan: 8,
+            styles: {
+              //   fillColor: [196, 189, 151],
+              halign: "lett",
+              fontStyle: "bold",
+            },
+          });
+          console.log("obsLines");
+          console.log(obsLines[0].content);
+        } else {
+          obsLines[0].content =
+            obsLines[0].content + ` ${item.Observations}(${item.CHNM});`;
+        }
+      }
     });
 
     columnStyles = {
@@ -201,6 +222,8 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
     },
   ]);
 
+  body.push(obsLines);
+
   doc.autoTable({
     head: head,
     body: body,
@@ -221,19 +244,33 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
     margin: { top: 75, bottom: 45 },
     didDrawPage: function (data) {
       //HEADER
-      doc.addImage(HeaderData.Logo, "jpeg", 10, 10, 20, 20, "teste", "none", 0);
+      console.log("HeaderData.Logo");
+      console.log(HeaderData.Logo);
+      if (HeaderData.Logo !== "") {
+        doc.addImage(
+          HeaderData.Logo,
+          "jpeg",
+          10,
+          10,
+          20,
+          20,
+          "teste",
+          "none",
+          0
+        );
+      }
       doc.setFontSize(14).setFont(undefined, "bold");
       doc.text("Nota de Encomenda", 90, 20);
       doc.setFontSize(14).setFont(undefined, "bold");
       doc.text("Unidade de Cuidados Continuados", 70, 30);
       doc.setFontSize(12).setFont(undefined, "bold");
-      doc.text(HeaderData.UCC_Name, 10, 40);
+      doc.text(HeaderData.UCC_Name, 10, 35);
 
       if (HeaderData.Stockist == true) {
         doc.setFontSize(10).setFont(undefined, "bold");
-        doc.text("Cod. impresso Armazenista:", 120, 45);
+        doc.text("Cod. impresso Armazenista:", 120, 40);
         doc.setFontSize(10).setFont(undefined, "normal");
-        doc.text(HeaderData.Encoding_of_Stockist, 169, 45);
+        doc.text(HeaderData.Encoding_of_Stockist, 169, 40);
       } else {
         doc.setFontSize(10).setFont(undefined, "bold");
         doc.text("Cod. impresso Lab:", 120, 40);
@@ -241,7 +278,11 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
         doc.text(HeaderData.Lab_print_coding, 154, 40);
       }
       doc.setFontSize(10).setFont(undefined, "normal");
-      doc.text(HeaderData.UccAddress, 10, 45);
+      doc.text(HeaderData.UccAddress, 10, 40);
+      doc.setFontSize(10).setFont(undefined, "bold");
+      doc.text("Cód. Postal:", 10, 45);
+      doc.setFontSize(10).setFont(undefined, "normal");
+      doc.text(HeaderData.Post_Code, 32, 45);
       doc.setFontSize(10).setFont(undefined, "bold");
       doc.text("Contacto:", 10, 50);
       doc.setFontSize(10).setFont(undefined, "normal");
@@ -250,21 +291,21 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
       doc.text("NIPC:", 10, 55);
       doc.setFontSize(10).setFont(undefined, "normal");
       doc.text(HeaderData.NIPC, 21, 55);
-      doc.setLineWidth(8);
+      doc.setLineWidth(16);
       doc.setDrawColor(238, 236, 225);
       doc.line(210, 65, 0, 65);
       doc.setFontSize(10).setFont(undefined, "bold");
-      doc.text(10, 66, "Local Entrega:");
+      doc.text(10, 70, "Local Entrega:");
       doc.setFontSize(10).setFont(undefined, "normal");
-      doc.text(36, 66, HeaderData.Delivery_Address);
+      doc.text(36, 70, HeaderData.Delivery_Address);
       doc.setFontSize(10).setFont(undefined, "bold");
-      doc.text(95, 66, "NE:");
+      doc.text(10, 63, "NE:");
       doc.setFontSize(10).setFont(undefined, "normal");
-      doc.text(101, 66, DocumentNo);
+      doc.text(17, 63, DocumentNo);
       doc.setFontSize(10).setFont(undefined, "bold");
-      doc.text(135, 66, "Fornecedor:");
+      doc.text(110, 63, "Fornecedor:");
       doc.setFontSize(10).setFont(undefined, "normal");
-      doc.text(157, 66, HeaderData.Laboratory_Name);
+      doc.text(132, 63, HeaderData.Laboratory_Name);
 
       //HEADER
 
@@ -350,6 +391,7 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
     var url = "data:application/pdf;base64," + base64.encode(out);
     return base64.encode(out);
   } else {
+    doc.saveasop;
     doc.save(`${DocumentNo}.pdf`);
   }
 }

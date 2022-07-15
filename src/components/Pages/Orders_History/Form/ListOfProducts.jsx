@@ -73,7 +73,12 @@ export default function PagePermissions(props) {
       width: "auto",
       editable: "never",
     },
-
+    {
+      title: "Observações",
+      field: "Observations",
+      width: "auto",
+      editable: "never",
+    },
     {
       title: "IVA",
       field: "Tax_Percentage",
