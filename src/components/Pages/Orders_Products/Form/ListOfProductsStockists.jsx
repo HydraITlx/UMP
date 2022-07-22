@@ -30,6 +30,7 @@ export default function PagePermissions(props) {
       ProductsLines.then((response) => {
         if (response !== undefined) {
           props.calculateTotal(response);
+          console.log({ response });
           setData(response);
         }
       });

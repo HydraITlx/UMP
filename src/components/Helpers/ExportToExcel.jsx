@@ -33,7 +33,7 @@ export default function ExportToExcel({ data }) {
   return (
     <ExcelFile
       element={
-        <IconButton onClick={() => console.log(GeralSheet)}>
+        <IconButton>
           <SaveAltIcon />
         </IconButton>
       }

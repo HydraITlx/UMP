@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../../../styles/_pagestyles.scss";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import IconButton from "@mui/material/IconButton";
@@ -13,6 +13,8 @@ import Typography from "@mui/material/Typography";
 import { ProcessCartProdutos } from "../../Requests/OrdersRequests";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+
+import TextField from "@mui/material/TextField";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -29,6 +31,7 @@ function Users(props) {
   const [AlreadyIn, setAlreadyIn] = useState(
     props.data.AlreadyIn ? props.data.AlreadyIn : 0
   );
+  const [Dosage, setDosage] = useState(0);
 
   const increment = () => {
     {
@@ -79,18 +82,42 @@ function Users(props) {
     if (reason === "clickaway") {
       return;
     }
-
     setAlertopen(false);
+  };
+
+  const onDosageChange = (e) => {
+    const rx_live = /^[+-]?\d*(?:[.,]\d*)?$/;
+    if (rx_live.test(e.target.value)) {
+      if (e.target.value > 9999) {
+        return;
+      } else {
+        setDosage(e.target.value);
+        setQtd(
+          Math.ceil(
+            (props.NumberOfDays * e.target.value) / props.data.Total_Quantity
+          )
+        );
+      }
+    }
   };
 
   return (
     <section
       style={{
         display: "flex",
-        alignContent: "center",
-        justifyContent: "center",
+        alignContent: "right",
+        justifyContent: "right",
       }}
     >
+      <TextField
+        sx={{ width: "15%", marginRight: "2%" }}
+        hiddenLabel
+        id="filled-hidden-label-small"
+        value={Dosage}
+        variant="filled"
+        size="small"
+        onChange={onDosageChange}
+      />
       <div className="quantity-input">
         <button
           className="quantity-input__modifier quantity-input__modifier--left"

@@ -3,12 +3,8 @@ import autoTable from "jspdf-autotable";
 import base64 from "base-64";
 
 export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
-  console.log("CRIA O PDF");
-  console.log(HeaderData);
   let TotalAmount = 0;
   let TotalAmountVat = 0;
-
-  console.log({ RowData });
 
   const doc = new jsPDF();
   var totalPagesExp = "{total_pages_count_string}";
@@ -46,24 +42,15 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
         item.Total_Amount,
       ]);
       if (item.Observations !== "") {
-        console.log(item.Observations);
-        if (obsLines.length === 0) {
-          console.log(item.CHNM);
-          obsLines.push({
-            content: `Observações: ${item.Observations}(${item.CHNM});`,
-            colSpan: 8,
-            styles: {
-              //   fillColor: [196, 189, 151],
-              halign: "lett",
-              fontStyle: "bold",
-            },
-          });
-          console.log("obsLines");
-          console.log(obsLines[0].content);
-        } else {
-          obsLines[0].content =
-            obsLines[0].content + ` ${item.Observations}(${item.CHNM});`;
-        }
+        obsLines.push({
+          content: `${item.Description}:${item.Observations}.`,
+          colSpan: 8,
+          styles: {
+            //   fillColor: [196, 189, 151],
+            halign: "left",
+            fontStyle: "normal",
+          },
+        });
       }
     });
 
@@ -222,7 +209,24 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
     },
   ]);
 
-  body.push(obsLines);
+  if (obsLines.length !== 0) {
+    body.push([
+      {
+        content: `Observações:`,
+        colSpan: 8,
+        styles: {
+          //   fillColor: [196, 189, 151],
+          halign: "Left",
+          fontStyle: "bold",
+        },
+      },
+    ]);
+    obsLines.map((index) => {
+      console.log(index);
+      body.push([index]);
+    });
+  }
+  //body.push(obsLines);
 
   doc.autoTable({
     head: head,
@@ -244,8 +248,6 @@ export function CreateOrderPDF(HeaderData, RowData, DocumentNo, printBase64) {
     margin: { top: 75, bottom: 45 },
     didDrawPage: function (data) {
       //HEADER
-      console.log("HeaderData.Logo");
-      console.log(HeaderData.Logo);
       if (HeaderData.Logo !== "") {
         doc.addImage(
           HeaderData.Logo,

@@ -14,8 +14,8 @@ import {
   checkIfAdminPermissions,
 } from "../../Requests/PermissionRequests";
 import SelectMui from "../../Helpers/SelectMui";
-
 import ShoppingCart from "./ShoppingCart";
+import CalculateTable from "./CalculateHelper";
 
 export default function GruopTable() {
   const [data, setData] = useState([]);
@@ -29,7 +29,7 @@ export default function GruopTable() {
   const [AllowDelete, setAllowDelete] = useState(false);
   const [IsAdmin, setIsAdmin] = useState(false);
   const [isLoading, setisLoading] = useState(true);
-
+  const [NumberOfDays, setNumberOfDays] = useState(45);
   useEffect(() => {
     let isMounted = true;
 
@@ -197,10 +197,8 @@ export default function GruopTable() {
     {
       title: "Descrição",
       field: "Description",
-      width: "19rem",
-      render: (rowdata) => (
-        <a style={{ whiteSpace: "nowrap" }}>{rowdata.Description}</a>
-      ),
+      width: "auto",
+      render: (rowdata) => rowdata.Description,
     },
 
     {
@@ -236,13 +234,19 @@ export default function GruopTable() {
     },
 
     {
-      title: "Quantidade",
+      title: "Consumo D./Quantidade",
       width: "auto",
-      align: "center",
+      align: "right",
       cellStyle: {
         textAlign: "right",
       },
-      render: (rowData) => <ShoppingCart data={rowData} UCCID={selectedUCC} />,
+      render: (rowData) => (
+        <ShoppingCart
+          data={rowData}
+          UCCID={selectedUCC}
+          NumberOfDays={NumberOfDays}
+        />
+      ),
     },
   ];
 
@@ -340,6 +344,16 @@ export default function GruopTable() {
                         onChange={onOptionsChange}
                         options={uccOptions}
                       />
+                      {selectedUCC !== " " && (
+                        <div>
+                          <CalculateTable
+                            setNumberOfDays={setNumberOfDays}
+                            setUpdate={setUpdate}
+                            update={update}
+                            NumberOfDays={NumberOfDays}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 ),
